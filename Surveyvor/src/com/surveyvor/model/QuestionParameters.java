@@ -1,13 +1,19 @@
 package com.surveyvor.model;
 
 import javax.persistence.Embeddable;
+import javax.validation.constraints.NotNull;
 
 @Embeddable
 public class QuestionParameters {
 	
-	Boolean requested;
-	Boolean severalAnswers;
-	Boolean writable;
+	@NotNull
+	private Boolean requested;
+	
+	@NotNull
+	private Boolean severalAnswers;
+	
+	@NotNull
+	private Boolean writable;
 	
 	public QuestionParameters() {
 	}

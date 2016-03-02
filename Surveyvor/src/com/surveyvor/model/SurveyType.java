@@ -9,8 +9,8 @@ public class SurveyType {
 
 	@Id
 	@Column (name="Id_SurveyType")
-	Long Id_SurveyType;
-	TypeSurvey type;
+	private Long Id_SurveyType;
+	private TypeSurvey type;
 	
 	
 	public SurveyType() {

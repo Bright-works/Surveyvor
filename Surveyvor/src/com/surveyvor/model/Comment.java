@@ -7,25 +7,38 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Comment {
 
 	@Id
 	@Column(name="Id_Column")
-	Long Id_Comment;
+	private Long Id_Comment;
 	
+	@NotNull
+	@Valid
 	@ManyToOne
 	@JoinColumn(name="Id_User")
-	User user;
+	private User user;
 
+	@NotNull
+	@Valid
 	@ManyToOne
 	@JoinColumn(name="Id_Survey")
-	Survey survey;
+	private Survey survey;
 	
-	String comment;
+	@NotNull
+	@Size(min=1)
+	private String comment;
 	
-	Date dateComment;
+	@NotNull
+	@Temporal(TemporalType.DATE)
+	private Date dateComment;
 	
 	
 	public Comment() {

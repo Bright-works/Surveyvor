@@ -5,21 +5,29 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Choice {
 	
 	@Id
 	@Column(name = "Id_Choice")
-	Long Id_Choice;
+	private Long Id_Choice;
 	
-	String label;
+	@NotNull
+	private String label;
 	
-	String description;
+	@NotNull
+	@Size(min=15)
+	private String description;
 	
+	@Valid
+	@NotNull
 	@ManyToOne
 	@JoinColumn(name="Id_Question", insertable=false, updatable=false)
-	Question question;
+	private Question question;
 	
 	public Choice() {
 	}

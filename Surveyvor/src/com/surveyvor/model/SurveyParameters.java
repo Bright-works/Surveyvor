@@ -1,14 +1,22 @@
 package com.surveyvor.model;
 
 import javax.persistence.Embeddable;
+import javax.validation.constraints.NotNull;
 
 @Embeddable
 public class SurveyParameters {
 	
-	Boolean visibility;
-	Boolean questionModify;
-	Boolean privateSurvey;
-	Integer algo;
+	@NotNull
+	private Boolean visibility;
+	
+	@NotNull
+	private Boolean questionModify;
+	
+	@NotNull
+	private Boolean privateSurvey;
+	
+	@NotNull
+	private Integer algo;
 	
 	public SurveyParameters() {
 	}

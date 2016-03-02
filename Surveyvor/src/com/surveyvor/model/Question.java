@@ -9,28 +9,50 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Question {
 	
 	@Id
 	@Column(name ="Id_Question")
-	Long Id_Question;
+	private Long Id_Question;
 	
-	String contenu;
+	@NotNull
+	@Size(min = 15)
+	private String contenu;
 	
-	String description;
+	@NotNull
+	@Size(min = 15)
+	private String description;
 	
+	@Valid
+	@NotNull
 	@ManyToOne
 	@JoinColumn(name="Id_Survey", insertable=false, updatable=false)
-	Survey survey;
+	private Survey survey;
 	
+	@NotNull
+	@Min(1)
+	private int minChoice;
+	
+	@NotNull
+	private int maxChoice;
+	
+	@Valid
+	@NotNull
+	@Size(min = 2)
 	@OneToMany
 	@JoinColumn(name="Id_Choice")
-	List<Choice> choices;
+	private List<Choice> choices;
 	
+	@NotNull
+	@Valid
 	@Embedded
-	QuestionParameters parametres;
+	private QuestionParameters parametres;
 	
 	
 	public Question() {
@@ -95,6 +117,37 @@ public class Question {
 	public void setParametres(QuestionParameters parametres) {
 		this.parametres = parametres;
 	}
+
+
+	public Long getId_Question() {
+		return Id_Question;
+	}
+
+
+	public void setId_Question(Long id_Question) {
+		Id_Question = id_Question;
+	}
+
+
+	public int getMinChoice() {
+		return minChoice;
+	}
+
+
+	public void setMinChoice(int minChoice) {
+		this.minChoice = minChoice;
+	}
+
+
+	public int getMaxChoice() {
+		return maxChoice;
+	}
+
+
+	public void setMaxChoice(int maxChoice) {
+		this.maxChoice = maxChoice;
+	}
+	
 	
 	
 	

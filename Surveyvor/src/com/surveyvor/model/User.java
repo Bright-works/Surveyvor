@@ -2,16 +2,17 @@ package com.surveyvor.model;
 
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.hibernate.validator.constraints.Email;
 
 
 @Entity
@@ -19,22 +20,32 @@ public class User {
 
 	@Id
 	@Column(name = "ID_User")
-	Long Id_User;
+	private Long Id_User;
 
-	String name;
+	@NotNull
+	@Size(min=2, max=15)
+	private String name;
 
-	String lastName;
+	@NotNull
+	@Size(min=2, max=15)
+	private String lastName;
 
-	String mail;
+	@Email
+	@Column(unique = true)
+	private String mail;
 
-	String password;
+	@NotNull
+	@Size(min=8)
+	private String password;
 
-	Boolean admin;
+	@NotNull
+	private Boolean admin;
 
-
+	@Valid
 	@ManyToMany(mappedBy = "answerers")
 	List<Survey> invitedSurveys;
 
+	@Valid
 	@OneToMany
 	@JoinColumn(name = "Id_Survey")
 	List<Survey> ownedSurveys;

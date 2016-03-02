@@ -2,15 +2,18 @@ package com.surveyvor.model;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.validation.constraints.NotNull;
 
 @Embeddable
 public class IdAnswer {
 	
+	@NotNull
 	@Column(name="Id_User")
-	Long Id_User;
+	private Long Id_User;
 	
+	@NotNull
 	@Column(name="Id_Question")
-	Long Id_Question;
+	private Long Id_Question;
 	
 	
 	

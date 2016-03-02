@@ -11,41 +11,63 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.validation.Valid;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Survey {
 	
 	@Id
-	Long Id;
+	private Long Id;
 	
-	String title;  
+	@NotNull
+	@Size(min = 3)
+	private String title;  
 	
-	String description;  
+	@NotNull
+	@Size(min = 15)
+	private String description;  
 	
-	Date startDate;  
+	@NotNull
+	@Temporal(TemporalType.DATE)
+	private Date startDate;  
 	
-	Date endDate;  
+	@NotNull
+	@Temporal(TemporalType.DATE)
+	@Future // a verifier ok pour la création mais voir si ca pose pas de problème sur la duree.
+	private Date endDate;  
 	
-	List<String> diffusion; 
 	
+	private List<String> diffusion; 
+	
+	@Valid
+	@NotNull
 	@ManyToOne
 	@JoinColumn(name="Id_Creator", insertable=false, updatable=false)
-	User creator;  
+	private User creator;  
 	
-	//a voir j'ai mis directement le enum
-	TypeSurvey type;  
+	@NotNull
+	private TypeSurvey type;  
 	
+	@Valid
 	@ManyToMany
 	@JoinTable(name="Surveys_Invited", 
 	joinColumns= @JoinColumn(name="Id_Survey"), inverseJoinColumns= @JoinColumn(name="Id_Invited"))
-	List<User> answerers;  
+	private List<User> answerers;  
 	
+	@NotNull
+	@Valid
 	@OneToMany
 	@JoinColumn(name="Id_Question")
-	List<Question> questions; 
+	private List<Question> questions; 
 	
+	@Valid
 	@Embedded
-	SurveyParameters parametres; 
+	private SurveyParameters parametres; 
 
 	
 	public Survey() {
