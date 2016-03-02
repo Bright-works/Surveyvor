@@ -12,6 +12,9 @@ public class GaleShapley implements IResultGeneratorStrategy<List<User>> {
 	@Override
 	public Map<Long, List<User>> generateResult(Survey survey, List<Answer> answers) {
 		// TODO Auto-generated method stub
+		
+		
+		
 		return null;
 	}
 
