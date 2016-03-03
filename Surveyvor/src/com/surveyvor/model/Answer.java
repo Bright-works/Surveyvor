@@ -11,28 +11,28 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 @Entity
+@Table(name="Answers",uniqueConstraints = {
+		@UniqueConstraint(columnNames = {"Id_Answerer","Id_Question"})})
 public class Answer {
 	
 	@Valid
-	@EmbeddedId
-	private IdAnswer answer;
+	private Long Id_Answer;
 	
 	@Valid
-	@NotNull
-	@MapsId("Id_User")
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "Id_Answerer")
 	private User answerer;
 
 	@Valid
 	@NotNull
-	@MapsId("Id_Question")
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "Id_Question")
 	private Question question;
@@ -86,13 +86,13 @@ public class Answer {
 	}
 
 
-	public IdAnswer getAnswer() {
-		return answer;
+	public Long getAnswer() {
+		return Id_Answer;
 	}
 
 
-	public void setAnswer(IdAnswer answer) {
-		this.answer = answer;
+	public void setAnswer(Long answer) {
+		this.Id_Answer = answer;
 	}
 
 
