@@ -2,6 +2,8 @@ package com.surveyvor.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -13,6 +15,7 @@ import javax.validation.constraints.Size;
 public class Choice {
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "Id_Choice")
 	private Long Id_Choice;
 	
@@ -24,10 +27,12 @@ public class Choice {
 	private String description;
 	
 	@Valid
-	@NotNull
+	//@NotNull
 	@ManyToOne
 	@JoinColumn(name="Id_Question", insertable=false, updatable=false)
 	private Question question;
+	
+	private Integer quotat;
 	
 	public Choice() {
 	}
@@ -62,6 +67,13 @@ public class Choice {
 
 	public void setQuestion(Question question) {
 		this.question = question;
+	}
+
+	public Choice(String label, String description, int quotat) {
+		super();
+		this.label = label;
+		this.description = description;
+		this.quotat = quotat;
 	}
 	
 	

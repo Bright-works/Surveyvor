@@ -43,6 +43,10 @@ public class QuestionParameters {
 	}
 	
 	
-	
+	public QuestionParameters (Boolean requested, Boolean severalAnswers, Boolean writable) {
+		this.requested = requested;
+		this.severalAnswers = severalAnswers;
+		this.writable = writable;
+	}
 
 }
