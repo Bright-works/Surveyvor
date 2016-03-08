@@ -1,5 +1,6 @@
 package com.surveyvor.model;
 
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -191,11 +192,11 @@ public class Survey {
 		this.parametres = parametres;
 	}
 	
-	public Survey(String title, String description, Date start, Date end, List<String> diffusion, TypeSurvey type, List<User> answerers, List<Question> questions, SurveyParameters parametres ) {
+	public Survey(String title, String description, Date df, Date df2, List<String> diffusion, TypeSurvey type, List<User> answerers, List<Question> questions, SurveyParameters parametres ) {
 		this.title = title;
 		this.description = description;
-		this.startDate = start;
-		this.endDate = end;
+		this.startDate = df;
+		this.endDate = df2;
 		this.diffusion = diffusion;
 		this.type = type;
 		this.answerers = answerers;
