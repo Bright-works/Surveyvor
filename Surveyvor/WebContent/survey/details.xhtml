@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"	
+    >
+<ui:composition template="../layouts/layout.xhtml">
+	<ui:define name="titre">Details du sondage	</ui:define>
+	<ui:define name="content">
+		<section class="content-header">
+          <h4>
+            Détails du sondage 
+            <small>Surveyvor</small>
+          </h4>
+          <ol class="breadcrumb">
+            <p:commandButton styleClass="btn btn-warning" value="Consulter les résultats" />
+          </ol>
+     </section>
+	<section class="content">
+		<div class="box box-default" style="text-align: center;">
+				<div class="box-header with-border" >
+					<h3><h:outputText value="Réorientation vers Master1 pour les étudiants de Licence3"/></h3>
+				</div>
+				<div class="box-body">
+					<p:outputLabel value="Le sondage à pour but de voir les préférences des étudiants pour les masters de notre faculté des sciences, ce qui nous permet de choisir le nombre des étudiant externes qui peuvent s'inscrire dans la prochaine année universitére."/>
+				</div>
+		</div>
+		<div class="col-md-6">
+			<div class="box box-warning direct-chat direct-chat-warning">
+				<div class="box-header with-border">
+					<h5>Les commentaires</h5>
+				</div>
+				<div class="box-body">
+					<div class="direct-chat-messages">
+						<c:forEach begin="1" end="6" var="msg" step="1">
+							<div class="direct-chat-msg left">
+								<p:graphicImage styleClass="direct-chat-img" alt="message user image" library="img" name="user1-128x128.jpg"/>
+								<div class="direct-chat-text">
+									<h:outputText value="Commentaire #{msg}"/>
+								</div>
+								<div class="direct-chat-info clearfix">
+									<span class="direct-chat-name pull-left">
+										<h:outputText value="utilisateur #{msg}"/>
+									</span>
+									<span class="direct-chat-timestamp pull-right">
+										<h:outputText value="12/03/2016"/>
+									</span>
+								</div>
+							</div>
+						</c:forEach>
+					</div>
+				</div>
+				<div class="box-footer">
+					<div class="input-group">
+						<p:inputText styleClass="inputs" placeholder=" Repondre aux commentaires ..." id="message"/>
+						<span class="input-group-btn">
+							<p:commandButton styleClass="btn btn-warning btn-flat" value="Envoyer"/>
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+			<div class="box box-danger">
+				<div class="box-header with-border">
+					<h5>Question 1</h5>
+				</div>
+				
+				<div class="box-body chart-responsive">
+					<p:outputLabel value=" Quelle formation péréférez-vous ?"/>
+					<!-- <p:chart type="bar" model="" style="height:270px"/>  -->
+				</div>			
+			</div>
+		</div>
+	</section>
+	</ui:define>
+</ui:composition>
+</html>

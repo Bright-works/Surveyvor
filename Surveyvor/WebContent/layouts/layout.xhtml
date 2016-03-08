@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"	
+    >
+<h:head>
+
+<meta charset="UTF-8"/>
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
+
+<title><ui:insert name="titre" /></title>
+<h:outputStylesheet library="css" name="AdminLTE.css" />
+<h:outputStylesheet library="css2" name="style1.css" />
+<h:outputStylesheet library="css" name="_all-skins.min.css" />
+<h:outputStylesheet library="css" name="bootstrap.min.css" />
+
+<link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css"/>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css"/>
+
+</h:head>
+
+<h:body class="hold-transition skin-blue sidebar-mini fixed ">
+ <div class="wrapper">
+      <h:form>
+      <header class="main-header">
+        <!-- Logo -->
+        <a href="/Surveyvor/user/acceuil.xhtml" class="logo">
+          <!-- logo for regular state and mobile devices -->
+          <span class="logo-lg">
+          		<p:graphicImage library="img" name="logo1blak.gif" width="90%"/>
+          </span>
+        </a>
+        <!-- Header Navbar: style can be found in header.less -->
+        <nav class="navbar navbar-static-top" role="navigation">
+          <!-- Sidebar toggle button-->
+          <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <span class="sr-only">Toggle navigation</span>
+          </a>
+          <div class="navbar-custom-menu">
+            <ul class="nav navbar-nav">
+              <!-- User Account: style can be found in dropdown.less -->
+              <li class="dropdown user user-menu">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <p:graphicImage library="img" name="settings.png" styleClass="user-image" alt="User Image"/>
+                  <span class="hidden-xs">
+                  	<h:outputLabel value="Redouane Bououarour"/>
+                  </span>
+                </a>
+                <ul class="dropdown-menu">
+                  <!-- Menu Footer-->
+                  <li class="user-footer">
+                    <div class="pull-left">
+                      <a href="/Surveyvor/user/edit.xhtml" class="btn btn-warning btn-flat">Profile</a>
+                    </div>
+                    <div class="pull-right">
+                      <p:commandButton  styleClass="btn btn-warning btn-flat" value="Déconnexion"/>
+                    </div>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </nav>
+      </header>
+      </h:form>
+      
+      
+      
+      
+      <!-- Left side column. contains the logo and sidebar -->
+      <aside class="main-sidebar">
+        <!-- sidebar: style can be found in sidebar.less -->
+        <section class="sidebar">
+          <!-- Sidebar user panel -->
+         
+          <!-- search form -->
+          <form action="#" method="get" class="sidebar-form">
+            <div class="input-group">
+              <input type="text" name="q" class="form-control" placeholder="Search..."/>
+              <span class="input-group-btn">
+                <button type="submit" name="search" id="search-btn" class="btn btn-flat"><i class="fa fa-search"></i></button>
+              </span>
+            </div>
+          </form>
+          <!-- /.search form -->
+          <!-- sidebar menu: : style can be found in sidebar.less -->
+          <ul class="sidebar-menu">
+            <li class="header">MENU</li>
+            <li class="treeview">
+              <a href="/Surveyvor/survey/create/1.xhtml">
+                <i class="fa fa-comments-o"></i> <span>Créer un sondage</span> 
+              </a>
+            </li>
+            <li class="treeview">
+              <a href="/Surveyvor/survey/created.xhtml">
+                <i class="fa fa-gears"></i>
+                <span>Gérer mes sondages</span>
+              </a>
+            </li>
+            <li class="treeview">
+              <a href="/Surveyvor/survey/participations.xhtml">
+                <i class="fa fa-bookmark-o"></i>
+                <span>Mes participations</span>
+              </a>
+            </li>
+            <li class="treeview">
+              <a href="#">
+                <i class="fa fa-tasks"></i>
+                <span>Repondre à un sondage</span>
+                <i class="fa fa-angle-left pull-right"></i>
+              </a>
+              <ul class="treeview-menu">
+                <li><a href="pages/UI/general.html"><i class="fa fa-unlock"></i> Les sondages public</a></li>
+                <li><a href="pages/UI/icons.html"><i class="fa fa-expeditedssl"></i> Les sondages privés </a></li>
+              </ul>
+            </li>
+            <li class="treeview">
+            	 <div class="footer">
+          			<hr/>
+          			<p> Copyright © 2016 by<a> Brightworks.</a></p>
+          		</div>
+            </li>
+          </ul>
+         
+        </section>
+        <!-- /.sidebar -->
+      </aside>
+      
+      <!-- Content Wrapper. Contains page content -->
+      <div class="content-wrapper">
+       
+		<ui:insert name="content">
+			contenu
+		</ui:insert>
+      </div><!-- /.content-wrapper -->
+
+      <!-- Control Sidebar -->
+      
+      <!-- Add the sidebar's background. This div must be placed
+           immediately after the control sidebar -->
+      <div class="control-sidebar-bg"></div>
+</div>
+
+<!-- <h:outputScript name="jQuery-2.1.4.min.js" library="js"/> -->
+<h:outputScript name="app.min.js" library="js"/>
+<h:outputScript name="fastclick.min.js" library="js"/>
+<h:outputScript name="bootstrap.min.js" library="js"/>
+<h:outputScript name="dashboard.js" library="js"/>
+
+</h:body>
+</html>
