@@ -1,6 +1,5 @@
 package com.surveyvor.model;
 
-import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -51,7 +50,7 @@ public class Survey {
 	private List<String> diffusion; 
 	
 	@Valid
-	@ManyToOne
+	@ManyToOne ()
 	@JoinColumn(name="Id_Creator", insertable=false, updatable=false)
 	private User creator;  
 	
@@ -59,7 +58,7 @@ public class Survey {
 	private TypeSurvey type;  
 	
 	@Valid
-	@ManyToMany (cascade = CascadeType.ALL)
+	@ManyToMany
 	@JoinTable(name="Surveys_Invited", 
 	joinColumns= @JoinColumn(name="Id_Survey"), inverseJoinColumns= @JoinColumn(name="Id_Invited"))
 	private List<User> answerers;  
