@@ -2,9 +2,13 @@ package com.surveyvor.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -18,6 +22,7 @@ import javax.validation.constraints.Size;
 public class Question {
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name ="Id_Question")
 	private Long Id_Question;
 	
@@ -30,7 +35,7 @@ public class Question {
 	private String description;
 	
 	@Valid
-	@NotNull
+	//@NotNull
 	@ManyToOne
 	@JoinColumn(name="Id_Survey", insertable=false, updatable=false)
 	private Survey survey;
@@ -45,8 +50,8 @@ public class Question {
 	@Valid
 	@NotNull
 	@Size(min = 2)
-	@OneToMany
-	@JoinColumn(name="Id_Choice")
+	@OneToMany (orphanRemoval = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name="Id_Question")
 	private List<Choice> choices;
 	
 	@NotNull
@@ -149,7 +154,16 @@ public class Question {
 	}
 	
 	
-	
+	public Question ( String contenu, String description, int minChoice, int maxChoice, List<Choice> choices, QuestionParameters parametres) {
+		this.contenu = contenu;
+		this.description = description;
+		//this.survey = survey;
+		this.minChoice = minChoice;
+		this.maxChoice = maxChoice;
+		this.choices = choices;
+		this.parametres = parametres;
+
+	}
 	
 
 }

@@ -2,12 +2,17 @@ package com.surveyvor.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -19,6 +24,7 @@ import org.hibernate.validator.constraints.Email;
 public class User {
 
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "ID_User")
 	private Long Id_User;
 
@@ -46,8 +52,8 @@ public class User {
 	List<Survey> invitedSurveys;
 
 	@Valid
-	@OneToMany
-	@JoinColumn(name = "Id_Survey")
+	@OneToMany (fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval=true)
+	@JoinColumn(name = "Id_Creator")
 	List<Survey> ownedSurveys;
 
 
@@ -101,6 +107,13 @@ public class User {
 	}
 	public void setOwnedSurveys(List<Survey> ownedSurveys) {
 		this.ownedSurveys = ownedSurveys;
+	}
+	public User (String nom, String prenom, String mail, String password, String admin) {
+		this.name = nom;
+		this.lastName = prenom;
+		this.mail = mail;
+		this.password = password;
+		this.admin = admin;
 	}
 
 

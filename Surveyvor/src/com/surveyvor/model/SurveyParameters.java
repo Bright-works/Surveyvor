@@ -54,5 +54,12 @@ public class SurveyParameters {
 	}
 
 	
+	public SurveyParameters (Boolean visibility, Boolean questionModify, Boolean privateSurvey, Integer algo) {
+		this.visibility = visibility;
+		this.questionModify = questionModify;
+		this.privateSurvey = privateSurvey;
+		this.algo = algo;
+	}
+	
 	
 }
