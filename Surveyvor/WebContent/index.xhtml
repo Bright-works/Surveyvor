@@ -3,6 +3,7 @@
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:p="http://primefaces.org/ui"
+    xmlns:sec="http://www.springframework.org/security/facelets/tags"
     xmlns:c="http://java.sun.com/jsp/jstl/core"	
     >
 <h:head>
@@ -50,19 +51,21 @@ function hideURLbar(){ window.scrollTo(0,1); }
 			
 </p:dialog>
 <p:dialog header="Se connecter" widgetVar="small-dialog2" height="250" width="350" modal="true">
-                    <h:form id="login">
-                    <p:growl showDetail="true"/>
-					<p:inputText styleClass="inputs"  id="email1" placeholder="Email" required="required"/>
+	<h:form id="login" prependId="false">
+ 	   <p:growl showDetail="true" escape="false"/>
+					<p:inputText styleClass="inputs"  value="#{loginBean.user.mail}" id="j_username" placeholder="Email" required="required"/>
 					<br/>
-					<p:password styleClass="inputs"  id="password1" placeholder="Mot de passe" required="required"  maxlength="20"/>
+					<p:password styleClass="inputs" value="#{loginBean.user.password}" id="j_password" placeholder="Mot de passe" required="required"  maxlength="20"/>
 					<br/>
-					<p:commandButton styleClass="btn orange" action="user/acceuil.xhtml?faces-redirect=true"  value="Connexion"/>
+					<h:commandButton type="submit" styleClass="btn orange" action="#{loginBean.connecter}"  value="Connexion"/>
+					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                     <p:separator/>
                     <p:commandLink style="color:bleu !important;" value="Mot de passe oublié ?"/><br/>
-                    <p>Vous n'avez pas de compte ?<p:spacer height="0px" width="20%"/>
-                    <p:commandLink style="color:bleu !important;" onclick="PF('small-dialog').show();" value="Inscription"/>
+                    <p>Vous n'avez pas de compte ?
+                    	<p:spacer height="0px" width="20%"/>
+                    	<p:commandLink style="color:bleu !important;" onclick="PF('small-dialog').show();" value="Inscription"/>
                     </p>
-					 </h:form>
+	</h:form>
 </p:dialog>
 <!--header-->
 	<div class="header">

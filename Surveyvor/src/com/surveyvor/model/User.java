@@ -39,7 +39,7 @@ public class User {
 	private String password;
 
 	@NotNull
-	private Boolean admin;
+	private String admin;
 
 	@Valid
 	@ManyToMany(mappedBy = "answerers")
@@ -84,10 +84,10 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public Boolean isAdmin() {
+	public String isAdmin() {
 		return admin;
 	}
-	public void setAdmin(Boolean admin) {
+	public void setAdmin(String admin) {
 		this.admin = admin;
 	}
 	public List<Survey> getInvitedSurveys() {

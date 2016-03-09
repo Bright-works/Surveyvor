@@ -37,5 +37,7 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/facelets-taglib-0.2_jsf-2.0_spring-2.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

@@ -8,25 +8,28 @@
 	http://www.springframework.org/schema/security
 	http://www.springframework.org/schema/security/spring-security-4.0.xsd">
 
-	<http auto-config="true">
-		<intercept-url pattern="/user**" access="hasRole('ROLE_USER','ROLE_ADMIN')" />
-		<intercept-url pattern="/survey/create**" access="hasRole('ROLE_USER','ROLE_ADMIN')" />
-		<intercept-url pattern="/survey**" access="hasRole('ROLE_USER','ROLE_ADMIN','ROLE_ANONYME')" />
-		<intercept-url pattern="/layers**" access="permitAll" />
+
+	<http auto-config="true"> 
+		<intercept-url pattern="/index.xhtml" access="permitAll" /> 
+		<intercept-url pattern="/survey/**" access="hasRole('ROLE_USER')" /> 
+		<intercept-url pattern="/user/**" access="hasRole('ROLE_ADMIN')" /> 
 		
-		<access-denied-handler error-page=""/>
-		<form-login login-page="/index.xhtml" default-target-url="/user/acceuil.xhtml"
-		authentication-failure-url=""/>
+		<form-login login-page="/index.xhtml" 
+		login-processing-url="/j_spring_security_check"
+		username-parameter="j_username"
+		password-parameter="j_password" 
+		authentication-failure-url="/login.xhtml"
+		default-target-url="/user/acceuil.xhtml"/>
+				
 	</http>
-	<authentication-manager>
-	<authentication-provider>
- 			<user-service>
- 				<user authorities="ROLE_USER" name="redouane" password="redouane" />
- 				<user authorities="ROLE_USER" name="sarah" password="sarah" />
- 				<user authorities="ROLE_ANONYME" name="david" password="david" />
- 				<user authorities="ROLE_ADMIN" name="laurent" password="laurent" />
- 			</user-service>
- 		</authentication-provider>
+
+	<authentication-manager> 
+		<authentication-provider> 
+			<user-service> 
+				<user name="red1.bouarour@gmail.com" password="red" authorities="ROLE_ADMIN,ROLE_USER" /> 
+				<user name="sarah" password="sarah" authorities="ROLE_USER" /> 
+			</user-service> 
+		</authentication-provider>
 	</authentication-manager>
  	
 </beans:beans>

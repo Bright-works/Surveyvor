@@ -1,10 +1,16 @@
 package com.surveyvor.model;
 
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -14,7 +20,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.Valid;
-import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -22,6 +27,7 @@ import javax.validation.constraints.Size;
 public class Survey {
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long Id;
 	
 	@NotNull
@@ -33,19 +39,18 @@ public class Survey {
 	private String description;  
 	
 	@NotNull
-	@Temporal(TemporalType.DATE)
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date startDate;  
 	
 	@NotNull
-	@Temporal(TemporalType.DATE)
-	@Future // a verifier ok pour la cr√©ation mais voir si ca pose pas de probl√®me sur la duree.
+	@Temporal(TemporalType.TIMESTAMP)
+	//@Future // a verifier ok pour la création mais voir si ca pose pas de problème sur la duree.
 	private Date endDate;  
 	
-	
+	@ElementCollection
 	private List<String> diffusion; 
 	
 	@Valid
-	@NotNull
 	@ManyToOne
 	@JoinColumn(name="Id_Creator", insertable=false, updatable=false)
 	private User creator;  
@@ -54,15 +59,15 @@ public class Survey {
 	private TypeSurvey type;  
 	
 	@Valid
-	@ManyToMany
+	@ManyToMany (cascade = CascadeType.ALL)
 	@JoinTable(name="Surveys_Invited", 
 	joinColumns= @JoinColumn(name="Id_Survey"), inverseJoinColumns= @JoinColumn(name="Id_Invited"))
 	private List<User> answerers;  
 	
 	@NotNull
 	@Valid
-	@OneToMany
-	@JoinColumn(name="Id_Question")
+	@OneToMany (orphanRemoval = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name="Id_Survey")
 	private List<Question> questions; 
 	
 	@Valid
@@ -142,13 +147,15 @@ public class Survey {
 	public void setCreator(User creator) {
 		this.creator = creator;
 	}
+	
+	public void setIdCreator(Long IdCreator) {
+		this.creator.setId(IdCreator);
+	}
 
 
 	/*public SurveyType getType() {
 		return type;
 	}
-
-
 	public void setType(SurveyType type) {
 		this.type = type;
 	}*/
@@ -183,6 +190,17 @@ public class Survey {
 		this.parametres = parametres;
 	}
 	
-	
+	public Survey(String title, String description, Date df, Date df2, List<String> diffusion, TypeSurvey type, List<User> answerers, List<Question> questions, SurveyParameters parametres ) {
+		this.title = title;
+		this.description = description;
+		this.startDate = df;
+		this.endDate = df2;
+		this.diffusion = diffusion;
+		this.type = type;
+		this.answerers = answerers;
+		this.parametres = parametres;
+		//this.creator = user;
+		this.questions = questions;
+	}
 	
 }

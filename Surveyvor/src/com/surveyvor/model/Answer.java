@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Map;
 
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -24,16 +26,17 @@ import javax.validation.constraints.NotNull;
 public class Answer {
 	
 	@Valid
+	@Id
 	private Long Id_Answer;
 	
 	@Valid
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "Id_Answerer")
 	private User answerer;
 
 	@Valid
 	@NotNull
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name = "Id_Question")
 	private Question question;
 	
@@ -44,7 +47,11 @@ public class Answer {
 	private List<Choice> choices;
 	
 	@NotNull
-	private Map<Long,String> values;
+	@ElementCollection
+   /* @MapKeyColumn(name="name")
+    @Column(name="value")
+    @CollectionTable(name="example_attributes", joinColumns=@JoinColumn(name="example_id"))*/
+	private Map<Long,String> valeurs;
 	
 	
 	@Temporal(TemporalType.DATE)
@@ -97,12 +104,12 @@ public class Answer {
 
 
 	public Map<Long, String> getValues() {
-		return values;
+		return valeurs;
 	}
 
 
 	public void setValues(Map<Long, String> values) {
-		this.values = values;
+		this.valeurs = values;
 	}
 
 
