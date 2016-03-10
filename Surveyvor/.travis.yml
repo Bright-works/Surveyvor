@@ -1,0 +1,2 @@
+langage: java
+script: mvn clean verify
