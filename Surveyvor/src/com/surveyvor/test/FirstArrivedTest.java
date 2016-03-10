@@ -1,4 +1,4 @@
-package com.surveyvor.service.test;
+package com.surveyvor.test;
 
 import java.util.ArrayList;
 import java.util.Calendar;
