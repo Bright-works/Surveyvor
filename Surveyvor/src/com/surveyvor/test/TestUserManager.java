@@ -24,7 +24,7 @@ public class TestUserManager {
 		
 	@Test
 	public void testAddUser() {
-		User user = new User("nom", "prenom", "mail@mail.com", "password", false);
+		User user = new User("nom", "prenom", "mail@mail.com", "password", "ROLE_USER");
 		userManager.add(user);
 		List<User> users = (List<User>) userManager.findUsers();
 		assertTrue(users.size() == 1 ); 
@@ -32,7 +32,7 @@ public class TestUserManager {
 	
 	@Test(expected=org.springframework.transaction.TransactionSystemException.class)
 	public void testAddUserNullName() {
-		User user = new User(null, "prenom", "mail@mail.com", "password", false);
+		User user = new User(null, "prenom", "mail@mail.com", "password", "ROLE_USER");
 		userManager.add(user);
 		List<User> users = (List<User>) userManager.findUsers();
 		assertTrue(users.size() == 1 ); 
@@ -41,13 +41,13 @@ public class TestUserManager {
 	
 	@Test(expected=org.springframework.transaction.TransactionSystemException.class)
 	public void testAddUserNotFormatNameShort() {
-		User user = new User("i", "prenom", "mail@mail.com", "password", false);
+		User user = new User("i", "prenom", "mail@mail.com", "password", "ROLE_USER");
 		userManager.add(user);
 		}
 	
 	@Test(expected=org.springframework.transaction.TransactionSystemException.class)
 	public void testAddUserNotFormatNameLong() {
-		User user = new User("azertyuiopmlkjhgfdqswxcv", "prenom", "mail@mail.com", "password", false);
+		User user = new User("azertyuiopmlkjhgfdqswxcv", "prenom", "mail@mail.com", "password", "ROLE_USER");
 		userManager.add(user);
 		}
 	

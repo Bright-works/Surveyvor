@@ -90,7 +90,7 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public String isAdmin() {
+	public String getAdmin() {
 		return admin;
 	}
 	public void setAdmin(String admin) {

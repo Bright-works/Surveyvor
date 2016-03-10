@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+       http://www.springframework.org/schema/beans     
+       http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.2.xsd
+	   http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx-4.2.xsd">
+
+
+	<context:annotation-config />
+	<mvc:annotation-driven />
+	<!-- Utiliser les annotations liÃƒÆ’Ã‚Â©es au module MVC de Spring -->
+	<mvc:annotation-driven enable-matrix-variables="true" />
+	<context:component-scan base-package="com.surveyor.model" />
+	<context:component-scan base-package="com.surveyor.test" />
+	<context:component-scan base-package="com.surveyor.manager" />
+	<context:component-scan base-package="com.surveyor.service" />
+	
+
+	<!-- Usine Ã  fabriquer les EntityManager -->
+	<bean id="myEntityManagerFactory"
+		class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+		<property name="persistenceUnitName" value="myBase" />
+	</bean>
+	
+	<bean id="UserManager"
+		class="com.surveyvor.manager.UserManager">
+	</bean>
+	
+	<bean id="SurveyManager"
+		class="com.surveyvor.manager.SurveyManager">
+	</bean>
+
+
+	<!-- Mon gestionnaire de transactions -->
+	<bean id="txManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="myEntityManagerFactory" />
+	</bean>
+
+	<!-- Prise en compte des annotations @Transactional -->
+	<tx:annotation-driven transaction-manager="txManager" />
+
+
+</beans>

@@ -53,11 +53,12 @@
                 <ul class="dropdown-menu">
                   <!-- Menu Footer-->
                   <li class="user-footer">
+                  				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                     <div class="pull-left">
                       <a href="/Surveyvor/user/edit.xhtml" class="btn btn-warning btn-flat">Profile</a>
                     </div>
                     <div class="pull-right">
-                      <p:commandButton  styleClass="btn btn-warning btn-flat" value="Déconnexion"/>
+                      <h:commandButton action="#{loginBean.logout}" styleClass="btn btn-warning btn-flat" value="Déconnexion"/>
                     </div>
                   </li>
                 </ul>

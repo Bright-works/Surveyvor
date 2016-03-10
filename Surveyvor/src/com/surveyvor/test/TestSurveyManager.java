@@ -41,8 +41,8 @@ public class TestSurveyManager {
 	
 	@Test
 	public void testAddSurvey() throws ParseException {
-		User user = new User("nom", "prenom", "mail5@mail.com", "password", false);
-		User answerer = new User("answerer", "prenom", "mail6@mail.com", "password", false);
+		User user = new User("nom", "prenom", "mail5@mail.com", "password", "ROLE_USER");
+		User answerer = new User("answerer", "prenom", "mail6@mail.com", "password", "ROLE_USER");
 		
 		userManager.add(user);
 		userManager.add(answerer);
