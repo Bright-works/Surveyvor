@@ -16,7 +16,7 @@
 
 	<context:annotation-config />
 	<mvc:annotation-driven />
-	<!-- Utiliser les annotations liÃƒÆ’Ã‚Â©es au module MVC de Spring -->
+	<!-- Utiliser les annotations liées au module MVC de Spring -->
 	<mvc:annotation-driven enable-matrix-variables="true" />
 	<context:component-scan base-package="com.surveyor.model" />
 	<context:component-scan base-package="com.surveyor.test" />
@@ -24,7 +24,7 @@
 	<context:component-scan base-package="com.surveyor.service" />
 	
 
-	<!-- Usine Ã  fabriquer les EntityManager -->
+	<!-- Usine à fabriquer les EntityManager -->
 	<bean id="myEntityManagerFactory"
 		class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
 		<property name="persistenceUnitName" value="myBase" />
