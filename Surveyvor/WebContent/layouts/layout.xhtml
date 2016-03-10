@@ -28,7 +28,7 @@
       <h:form>
       <header class="main-header">
         <!-- Logo -->
-        <a href="/Surveyvor/user/acceuil.xhtml" class="logo">
+        <a href="/Surveyvor/index.xhtml" class="logo">
           <!-- logo for regular state and mobile devices -->
           <span class="logo-lg">
           		<p:graphicImage library="img" name="logo1blak.gif" width="90%"/>
@@ -47,7 +47,7 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                   <p:graphicImage library="img" name="settings.png" styleClass="user-image" alt="User Image"/>
                   <span class="hidden-xs">
-                  	<h:outputLabel value="Redouane Bououarour"/>
+                  	<h:outputLabel value="#{loginBean.user.name} #{loginBean.user.lastName}"/>
                   </span>
                 </a>
                 <ul class="dropdown-menu">

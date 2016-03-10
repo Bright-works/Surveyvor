@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
+import org.hamcrest.core.IsNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,7 +69,7 @@ public class UserManager// implements IUser{
     }
 	
 	public User findByMail(String mail) {
-		
+		    System.out.println("le manager etat : "+em);
 			TypedQuery<User> p = em.createQuery("SELECT u FROM User u WHERE u.mail = '" + mail + "'", User.class);
 			return p.getSingleResult();
 		

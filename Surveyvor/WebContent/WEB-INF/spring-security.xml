@@ -21,11 +21,13 @@
 		password-parameter="j_password" 
 		authentication-failure-url="/login.xhtml"
 		default-target-url="/user/acceuil.xhtml"/>
-				
+						
 	</http>
-	
+ 
 	<authentication-manager> 
 		<authentication-provider user-service-ref="permissionManager"> 
+			<password-encoder hash="md5">
+			</password-encoder>
 		</authentication-provider>
 	</authentication-manager>
 </beans:beans>

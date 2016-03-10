@@ -73,20 +73,33 @@ function hideURLbar(){ window.scrollTo(0,1); }
 			<div class="header-info">
 			<h:form>
                 <div class="logo">
-				<a href="index.xhtml">
-				<h:graphicImage with="50px" library="img" name="logo1orange.gif" styleClass="img-responsive"/>
-				</a>
-			</div>
-				<div class="header-right">
-					<div class="menu">
-						<span class="menu">MENU</span>
-							<ul class="navigatoin">
-                              <li><p:commandLink styleClass="signup play-icon popup-with-zoom-anim"  onclick="PF('small-dialog2').show();">Connexion</p:commandLink></li>
-                              <li><p:commandLink styleClass="signup play-icon popup-with-zoom-anim"  onclick="PF('small-dialog').show();">Inscription</p:commandLink></li>
-							
-							</ul>
-					</div>		
-			</div>
+					<a href="index.xhtml">
+						<h:graphicImage with="50px" library="img" name="logo1orange.gif" styleClass="img-responsive"/>
+					</a>
+				</div>
+				<c:if test="#{loginBean.user.name eq null}">
+					<div class="header-right">
+						<div class="menu">
+							<span class="menu">MENU</span>
+								<ul class="navigatoin">
+                              		<li><p:commandLink styleClass="signup play-icon popup-with-zoom-anim"  onclick="PF('small-dialog2').show();">Connexion</p:commandLink></li>
+                              		<li><p:commandLink styleClass="signup play-icon popup-with-zoom-anim"  onclick="PF('small-dialog').show();">Inscription</p:commandLink></li>
+								</ul>
+						</div>		
+					</div>
+				</c:if>
+				<c:if test="#{loginBean.user.name ne null}">
+					<div class="header-right">
+						<div class="menu">
+							<span class="menu">MENU</span>
+								<ul class="navigatoin">
+									<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                              		<li><h:commandLink styleClass="signup play-icon popup-with-zoom-anim" action="/user/acceuil.xhtml?faces-redirect=true" >Mes informations</h:commandLink></li>
+                              		<li><h:commandLink styleClass="signup play-icon popup-with-zoom-anim" action="#{loginBean.logout}" >Déconnexion</h:commandLink></li>
+								</ul>
+						</div>		
+					</div>
+				</c:if>
 			 </h:form>
 			</div>
 			

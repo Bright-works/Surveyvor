@@ -315,6 +315,7 @@ cursor: default;
 .ui-inputfield, .ui-calendar, .ui-datalist
 {
 	width: 60%;
+	padding :6px 12px !important;
 	margin-left: 10%;
 }
 .ui-datepicker-header{
