@@ -1,3 +1,4 @@
 langage: java
+before_install: cd Surveyvor
 install: mvn install
-script: mvn clean verify -f Surveyvor/pom.xml
+script: mvn clean verify 
