@@ -2,4 +2,12 @@ langage: java
 before_install: cd Surveyvor
 jdk:
  - oraclejdk8
+ 
+#MySQL
+services: 
+ - mysql
+before_script:
+ - mysql -e 'create database projetSondage;'
+
+#Build + test
 script: mvn clean verify
