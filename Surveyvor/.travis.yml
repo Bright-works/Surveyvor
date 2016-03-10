@@ -1,3 +1,0 @@
-langage: java
-install: mvn install
-script: mvn clean verify
