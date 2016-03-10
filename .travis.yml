@@ -1,4 +1,3 @@
 langage: java
 before_install: cd Surveyvor
-install: mvn install
 script: mvn clean verify 
