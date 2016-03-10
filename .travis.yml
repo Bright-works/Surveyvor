@@ -1,3 +1,5 @@
 langage: java
 before_install: cd Surveyvor
+jdk:
+ - oraclejdk8
 script: mvn clean verify -e -X
