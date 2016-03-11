@@ -1,6 +1,5 @@
 package com.surveyvor.test;
 
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -77,5 +76,4 @@ public class TestSurveyManager {
 		userManager.update(user);
 		assertTrue(surveyManager.findSurveys().size()==1);
 		}
-
 }

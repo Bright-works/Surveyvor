@@ -3,7 +3,6 @@ package com.surveyvor.test;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
-
 import javax.validation.ConstraintViolationException;
 
 import org.junit.Test;

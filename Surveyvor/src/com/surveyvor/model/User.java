@@ -108,6 +108,7 @@ public class User {
 	public void setOwnedSurveys(List<Survey> ownedSurveys) {
 		this.ownedSurveys = ownedSurveys;
 	}
+	
 	public User (String nom, String prenom, String mail, String password, String admin) {
 		this.name = nom;
 		this.lastName = prenom;

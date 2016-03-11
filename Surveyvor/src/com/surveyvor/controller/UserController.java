@@ -1,13 +1,12 @@
 package com.surveyvor.controller;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
-import javax.servlet.ServletException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,13 +33,7 @@ public class UserController implements Serializable {
 	private Question question=new Question();
 	private SurveyParameters parameters=new SurveyParameters();
 	
-	public SurveyParameters getParameters() {
-		return parameters;
-	}
-
-	public void setParameters(SurveyParameters parameters) {
-		this.parameters = parameters;
-	}
+	
 
 	public UserController() {
 		// TODO Auto-generated constructor stub
@@ -48,10 +41,18 @@ public class UserController implements Serializable {
 
 	//------------------------methodes et fonctions ----->
 
+	@PostConstruct
+	public void init(){
+		choix.add(new Choice());
+		choix.add(new Choice());
+	}
 	public TypeSurvey[] getTypes() {
         return TypeSurvey.values();
     }
 
+	public void addNewChoice(){
+		choix.add(new Choice());
+	}
 	//------------------------getters and setters ----->
 	public User getUser() {
 		return user;
@@ -111,5 +112,11 @@ public class UserController implements Serializable {
 		this.question = question;
 	}
 	
-	
+	public SurveyParameters getParameters() {
+		return parameters;
+	}
+
+	public void setParameters(SurveyParameters parameters) {
+		this.parameters = parameters;
+	}
 }

@@ -69,7 +69,7 @@
 				                      	 	<br/>
 				                       	  	<p:inputText type="text" styleClass="inputs form-control choix" requiredMessage="L'option #{var} est obligatoire" required="true"  placeholder="Option #{var}"/>                       	                          		
 				                       	 </c:forEach>
-				                       	 <p:commandButton icon="ui-icon-plus" styleClass="form-control orange"/>
+				                       	 <p:commandButton action="#{userBean.addNewChoice}" icon="ui-icon-plus" styleClass="form-control orange"/>
 				                      </div>
 				           		</div>
 				          	</c:if>

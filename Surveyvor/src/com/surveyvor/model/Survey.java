@@ -1,6 +1,5 @@
 package com.surveyvor.model;
 
-import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -44,14 +43,14 @@ public class Survey {
 	
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
-	//@Future // a verifier ok pour la création mais voir si ca pose pas de problème sur la duree.
+	//@Future // a verifier ok pour la cr√©ation mais voir si ca pose pas de probl√®me sur la duree.
 	private Date endDate;  
 	
 	@ElementCollection
 	private List<String> diffusion; 
 	
 	@Valid
-	@ManyToOne
+	@ManyToOne ()
 	@JoinColumn(name="Id_Creator", insertable=false, updatable=false)
 	private User creator;  
 	
@@ -153,9 +152,6 @@ public class Survey {
 	}
 
 
-	
-
-
 	public List<User> getAnswerers() {
 		return answerers;
 	}
@@ -185,17 +181,6 @@ public class Survey {
 		this.parametres = parametres;
 	}
 	
-	
-	public TypeSurvey getType() {
-		return type;
-	}
-
-
-	public void setType(TypeSurvey type) {
-		this.type = type;
-	}
-
-
 	public Survey(String title, String description, Date df, Date df2, List<String> diffusion, TypeSurvey type, List<User> answerers, List<Question> questions, SurveyParameters parametres ) {
 		this.title = title;
 		this.description = description;
@@ -209,4 +194,14 @@ public class Survey {
 		this.questions = questions;
 	}
 	
+	public TypeSurvey getType() {
+		return type;
+	}
+
+
+	public void setType(TypeSurvey type) {
+		this.type = type;
+	}
+
+
 }

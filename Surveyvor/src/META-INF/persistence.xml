@@ -4,7 +4,7 @@
       http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
    version="1.0">
    
-   <persistence-unit name="Surveyvor" transaction-type="RESOURCE_LOCAL">
+   <persistence-unit name="myBase" transaction-type="RESOURCE_LOCAL">
    <provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<class>com.surveyvor.model.User</class>
 		<properties>
