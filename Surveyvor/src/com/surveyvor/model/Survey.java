@@ -153,12 +153,7 @@ public class Survey {
 	}
 
 
-	/*public SurveyType getType() {
-		return type;
-	}
-	public void setType(SurveyType type) {
-		this.type = type;
-	}*/
+	
 
 
 	public List<User> getAnswerers() {
@@ -190,6 +185,17 @@ public class Survey {
 		this.parametres = parametres;
 	}
 	
+	
+	public TypeSurvey getType() {
+		return type;
+	}
+
+
+	public void setType(TypeSurvey type) {
+		this.type = type;
+	}
+
+
 	public Survey(String title, String description, Date df, Date df2, List<String> diffusion, TypeSurvey type, List<User> answerers, List<Question> questions, SurveyParameters parametres ) {
 		this.title = title;
 		this.description = description;

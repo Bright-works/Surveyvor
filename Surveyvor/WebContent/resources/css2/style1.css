@@ -210,7 +210,7 @@ ui-state-hover{
     width: 100% !important;
     height: 40px;
     border-style: 1px solid !important;
-    border-color: #339933 !important;
+    border-color: #555 !important;
     border-radius: 2px;
 	transition: 0.5s all;
 	-webkit-transition: 0.5s all;

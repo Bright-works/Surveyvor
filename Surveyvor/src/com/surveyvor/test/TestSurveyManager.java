@@ -68,7 +68,7 @@ public class TestSurveyManager {
 		questions.add(question);
 		
 		SurveyParameters parametres = new SurveyParameters(true, true, true, 1);
-		Survey survey = new Survey("title", "descriiiiiiiiiption", date, date, diffusion, TypeSurvey.OPINION, answerers, questions, parametres);		
+		Survey survey = new Survey("title", "descriiiiiiiiiption", date, date, diffusion, TypeSurvey.MONOCHOIX, answerers, questions, parametres);		
 		List<Survey> surveys = new ArrayList<Survey>();
 		surveys.add(survey);
 		
