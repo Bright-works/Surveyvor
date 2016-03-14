@@ -10,7 +10,7 @@
 <body>
     <div align="center">
         <h1>Spring MVC PDF View Demo (using iText library)</h1>
-        <h3><a href="/Surveyvor/downloadPDF">Download PDF Document</a></h3>
+        <h3><a href="/downloadPDF">Download PDF Document</a></h3>
     </div>
 </body>
 </html>
