@@ -23,7 +23,7 @@ public class MainController {
      */
    /* @RequestMapping(value = "/", method = RequestMethod.GET)
     public String viewHome() {
-        return "home";
+        return "test";
     }*/
  
     /**
