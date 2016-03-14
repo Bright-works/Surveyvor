@@ -5,18 +5,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ManagedProperty;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.surveyvor.manager.UserManager;
 import com.surveyvor.model.*;
 
 
-@SessionScoped
 @Component("userBean")
+@Scope("session")
 public class UserController implements Serializable {
 	
 	@Autowired
@@ -25,13 +27,14 @@ public class UserController implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	
-	@ManagedProperty(value="#{loginBean}")
-	private LoginController login;
 	private User user=new User();
 	private Survey survey=new Survey();
 	private List<Choice> choix=new ArrayList<Choice>();
 	private Question question=new Question();
+	private List<Question> allquestion=new ArrayList<Question>();
 	private SurveyParameters parameters=new SurveyParameters();
+	private List<String> diffusion= new ArrayList<String>();
+	private String email="";
 	
 	
 
@@ -43,6 +46,7 @@ public class UserController implements Serializable {
 
 	@PostConstruct
 	public void init(){
+		allquestion.add(new Question());
 		choix.add(new Choice());
 		choix.add(new Choice());
 	}
@@ -50,12 +54,30 @@ public class UserController implements Serializable {
         return TypeSurvey.values();
     }
 
+	public void addNewQuestion(){
+		allquestion.add(new Question());
+	}
 	public void addNewChoice(){
 		choix.add(new Choice());
+	}
+	public void deleteChoice(Choice choice){
+		choix.remove(choice);
+	}
+	public void deleteQuestion(Question question){
+		allquestion.remove(question);
+	}
+	public void addEmail(){
+		diffusion.add(email);
+		email="";
 	}
 	//------------------------getters and setters ----->
 	public User getUser() {
 		return user;
+	}
+	public void test(){
+		System.out.println("dsdsdqsdqsdqsdqsdqsd");
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+	    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Email ou mot de passe invalid !",""));
 	}
 
 	public void setUser(User user) {
@@ -78,14 +100,6 @@ public class UserController implements Serializable {
 
 	public void setUserManager(UserManager userManager) {
 		this.userManager = userManager;
-	}
-
-	public LoginController getLogin() {
-		return login;
-	}
-
-	public void setLogin(LoginController login) {
-		this.login = login;
 	}
 
 	public Survey getSurvey() {
@@ -119,4 +133,29 @@ public class UserController implements Serializable {
 	public void setParameters(SurveyParameters parameters) {
 		this.parameters = parameters;
 	}
+
+	public List<Question> getAllquestion() {
+		return allquestion;
+	}
+
+	public void setAllquestion(List<Question> allquestion) {
+		this.allquestion = allquestion;
+	}
+
+	public List<String> getDiffusion() {
+		return diffusion;
+	}
+
+	public void setDiffusion(List<String> diffusion) {
+		this.diffusion = diffusion;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	
 }

@@ -24,10 +24,9 @@ id="WebApp_ID" version="3.0">
     	<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
    		<load-on-startup>1</load-on-startup>
   </servlet>
-    
   <servlet-mapping>
     <servlet-name>Faces Servlet</servlet-name>
-    <url-pattern>*.xhtml</url-pattern>
+    <url-pattern>*.xhtml</url-pattern>    
   </servlet-mapping>
   
   

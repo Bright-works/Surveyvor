@@ -13,7 +13,10 @@
 	
 		<intercept-url pattern="/survey/**" access="hasAnyRole('ROLE_USER','ROLE_ADMIN')" /> 
 		<intercept-url pattern="/user/**" access="hasAnyRole('ROLE_ADMIN','ROLE_USER')" /> 
+		<intercept-url pattern="/javax.faces.resource/**" access="permitAll" /> 	
 		<intercept-url pattern="/**" access="permitAll" /> 	
+		
+		<csrf disabled="true"/>
 		
 		<form-login login-page="/index.xhtml" 
 		login-processing-url="/j_spring_security_check"
@@ -21,12 +24,16 @@
 		password-parameter="j_password" 
 		authentication-failure-url="/login.xhtml"
 		default-target-url="/user/acceuil.xhtml"/>
-						
+		
+		<logout invalidate-session="true" logout-success-url="/index.xhtml" logout-url="/j_spring_security_logout"/>	
+
 	</http>
- 
+ 	<beans:bean id="encoder" 
+	class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+	
 	<authentication-manager> 
 		<authentication-provider user-service-ref="permissionManager"> 
-			<password-encoder hash="md5">
+			<password-encoder ref="encoder">
 			</password-encoder>
 		</authentication-provider>
 	</authentication-manager>

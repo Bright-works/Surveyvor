@@ -9,17 +9,21 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.surveyvor.model.User;
 
 @Service
+@EnableTransactionManagement
 @Transactional
 public class UserManager// implements IUser{
 {
 
-	@Autowired
 	@PersistenceContext(unitName = "myBase")
 	private EntityManager em;
 
@@ -44,7 +48,7 @@ public class UserManager// implements IUser{
 		System.out.println("CLOSE UserManager = " + this);
 
 	}
-
+    
 	public void add(User user) {
 		em.persist(user);
 	}
@@ -68,7 +72,6 @@ public class UserManager// implements IUser{
     }
 	
 	public User findByMail(String mail) {
-		
 			TypedQuery<User> p = em.createQuery("SELECT u FROM User u WHERE u.mail = '" + mail + "'", User.class);
 			return p.getSingleResult();
 		

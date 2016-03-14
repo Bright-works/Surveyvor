@@ -9,4 +9,14 @@
     		    org.springframework.web.jsf.el.SpringBeanFacesELResolver
 		</el-resolver>
   	</application>
+	<managed-bean>
+		<managed-bean-name>loginBean</managed-bean-name>
+		<managed-bean-class>com.surveyvor.controller.LoginController</managed-bean-class>
+		<managed-bean-scope>request</managed-bean-scope>
+	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>userBean</managed-bean-name>
+		<managed-bean-class>com.surveyvor.controller.UserController</managed-bean-class>
+		<managed-bean-scope>session</managed-bean-scope>
+	</managed-bean>
 </faces-config>

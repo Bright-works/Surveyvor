@@ -3,7 +3,6 @@
     xmlns:f="http://java.sun.com/jsf/core"
     xmlns:h="http://java.sun.com/jsf/html"
     xmlns:p="http://primefaces.org/ui"
-    xmlns:sec="http://www.springframework.org/security/facelets/tags"
     xmlns:c="http://java.sun.com/jsp/jstl/core"	
     >
 <h:head>
@@ -21,7 +20,6 @@ function hideURLbar(){ window.scrollTo(0,1); }
 <h:outputStylesheet library="css2" name="style.css" />
 <h:outputStylesheet library="css2" name="style1.css" />
 <h:outputStylesheet library="css2" name="bootstrap.css" />
-<h:outputStylesheet library="css2" name="popuo-box.css"/>
 
 
 </h:head>
@@ -29,35 +27,40 @@ function hideURLbar(){ window.scrollTo(0,1); }
 <!--Modal inscription form-->
 <p:dialog widgetVar="small-dialog" header="Inscription" height="500" width="350" modal="true">	
  	<h:form id="register">
-    	<p:growl showDetail="true"/>
-        <p:inputText  id="prenom" styleClass="inputs" value="" placeholder="Prènom" required="required"/>
-        <br/>
-                    <p:inputText styleClass="inputs" id="nom" value="" placeholder="Nom" required="required"/>
+    				<p:growl showDetail="true"/>
+        			<p:inputText  id="prenom" styleClass="inputs" value="#{loginBean.user.lastName}" placeholder="Prènom" required="required"/>
+        			<br/>
+                    <p:inputText styleClass="inputs" id="nom" value="#{loginBean.user.name}" placeholder="Nom" required="required"/>
 					<br/>
-					<p:inputText styleClass="inputs" type="email" id="mail2" value="" placeholder="Adresse E-mail" required="required"/>
+					<p:inputText styleClass="inputs" type="email" id="mail2" value="#{loginBean.user.mail}" placeholder="Adresse E-mail" required="required"/>
 					<br/>
-					<p:password styleClass="inputs" id="password2" value="" placeholder="Mot de passe" required="required"  maxlength="20"/>
+					<p:password feedback="true" styleClass="inputs" id="password2" value="#{loginBean.user.password}"  placeholder="Mot de passe" 
+						required="required" requiredMessage="Le mot de passe et obligatoir">
+						<f:validateLength minimum="8"  for="password2"/>
+					</p:password>
                     <br/>
-                    <p:password styleClass="inputs" value="" placeholder="Confirmer le mot de passe" required="required"  maxlength="20"/>                    
+                    <p:password feedback="true"  styleClass="inputs" id="confirmPassword" value="#{loginBean.verifPassword}" 
+                    	placeholder="Confirmer le mot de passe" required="required" requiredMessage="Confirmer le mot de passe pour s'enregistrer"  >
+						<f:validateLength minimum="8"  for="confirmPassword" />
+                    </p:password>                    
 					<br/>
-					<p:captcha styleClass="inputs" label="Captcha" />
+					<p:captcha id="captcha" styleClass="inputs" label="Captcha" />
 					<br/>
-					<p:commandButton styleClass="btn orange"  value="Inscription"/>
+					<h:commandButton action="#{loginBean.register}" styleClass="btn orange"  value="Inscription"/>
                     <p:separator/>
                     <p>Déja membre ?<p:spacer height="0px" width="50%"/>
                     <p:commandLink  onclick="PF('small-dialog2').show();" value="Connexion"/>
                     </p>
-                    </h:form>
-			
+      </h:form>
 </p:dialog>
 <p:dialog header="Se connecter" widgetVar="small-dialog2" height="250" width="350" modal="true">
 	<h:form id="login" prependId="false">
  	   <p:growl showDetail="true" escape="false"/>
 					<p:inputText styleClass="inputs"  value="#{loginBean.user.mail}" id="j_username" placeholder="Email" required="required"/>
 					<br/>
-					<p:password styleClass="inputs" value="#{loginBean.user.password}" id="j_password" placeholder="Mot de passe" required="required"  maxlength="20"/>
+					<p:password styleClass="inputs" value="#{loginBean.user.password}" id="j_password" placeholder="Mot de passe" required="required"/>
 					<br/>
-					<h:commandButton type="submit" styleClass="btn orange" action="#{loginBean.connecter}"  value="Connexion"/>
+					<h:commandButton  styleClass="btn orange" action="#{loginBean.connecter}"  value="Connexion"/>
 					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                     <p:separator/>
                     <p:commandLink style="color:bleu !important;" value="Mot de passe oublié ?"/><br/>
@@ -72,12 +75,13 @@ function hideURLbar(){ window.scrollTo(0,1); }
 		<div class="container">
 			<div class="header-info">
 			<h:form>
+				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                 <div class="logo">
 					<a href="index.xhtml">
 						<h:graphicImage with="50px" library="img" name="logo1orange.gif" styleClass="img-responsive"/>
 					</a>
 				</div>
-				<c:if test="#{loginBean.user.name eq null}">
+				<c:if test="#{loginBean.user.id eq 0}">
 					<div class="header-right">
 						<div class="menu">
 							<span class="menu">MENU</span>
@@ -88,12 +92,11 @@ function hideURLbar(){ window.scrollTo(0,1); }
 						</div>		
 					</div>
 				</c:if>
-				<c:if test="#{loginBean.user.name ne null}">
+				<c:if test="#{loginBean.user.id ne 0}">
 					<div class="header-right">
 						<div class="menu">
 							<span class="menu">MENU</span>
 								<ul class="navigatoin">
-									<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                               		<li><h:commandLink styleClass="signup play-icon popup-with-zoom-anim" action="/user/acceuil.xhtml?faces-redirect=true" >Mes informations</h:commandLink></li>
                               		<li><h:commandLink styleClass="signup play-icon popup-with-zoom-anim" action="#{loginBean.logout}" >Déconnexion</h:commandLink></li>
 								</ul>
@@ -111,9 +114,10 @@ function hideURLbar(){ window.scrollTo(0,1); }
 				<div class="buttons">
                     <div class="contact-info" style="">
 		                <h:form action="recherche.html">
+		                	<p:growl/>
 		                    <p:commandButton styleClass="btn white"  value="Créer un Sondage"/>
 		                    <p:spacer width="30px"/>
-		                    <p:commandButton styleClass="btn white"  value="Participer à des Sondages"/>
+		                    <p:commandButton actionListener="#{userBean.test}"  styleClass="btn white"  value="Participer à des Sondages"/>
                         </h:form>
                     </div>
 				</div>
@@ -139,7 +143,7 @@ function hideURLbar(){ window.scrollTo(0,1); }
 <div class="footer">
 	<div class="container">
 		<div class="copy-rights">
-				 <p>  Created in 2016 by<a> Brightworks.</a></p>
+				 <p>  Created by<a> Brightworks - 2016.</a></p>
 			</div>
 	
 			<a href="#" id="toTop" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>

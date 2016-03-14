@@ -316,8 +316,13 @@ cursor: default;
 {
 	width: 60%;
 	padding :6px 12px !important;
-	margin-left: 10%;
 }
 .ui-datepicker-header{
 	background-color: #FF9900 !important;
+}
+.ui-fieldset-toggleable .ui-fieldset-legend {
+    cursor: pointer;
+    padding: 0.5em 1em 0.5em 0.5em;
+    background-color: #FF9900;
+    font-size: 14px;
 }

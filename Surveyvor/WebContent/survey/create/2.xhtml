@@ -33,7 +33,7 @@
                   <h3 class="box-title">Création du sondage</h3>
                 </div><!-- /.box-header -->
                 <!-- form start -->
-                <h:form class="form-horizontal">
+                <h:form id="myform" class="form-horizontal">
                   <p:messages autoUpdate="true"/>
                   <div class="box-body">
                    <div class="form-group">
@@ -44,40 +44,55 @@
                       </div>
                     </div>
                     <div class="form-group">
-                      <label for="desc" class="col-sm-2 control-label">Description</label>
+                      <label for="desc" class="col-sm-2 control-label">Description *</label>
                       <div class="col-sm-10">
-                        <p:inputTextarea type="text" value="#{userBean.survey.description}" 
+                        <p:inputTextarea type="text" value="#{userBean.survey.description}" required="true" requiredMessage="La description est obligatoire"
                         styleClass="inputs " id="desc" placeholder="Titre du sondage"/>
                       </div>
                     </div>
-                    <hr/>
-	                    <h4 class="box-title">Question 1</h4>
-							
+                    
+	               
+                    <c:forEach id="all" var="question"  items="#{userBean.allquestion}">
+	                    <p:fieldset toggleable="true" legend="   Question #{userBean.allquestion.indexOf(question)+1}" >
 							<br/>
 		                    <div class="form-group">
-		                      <label for="question" class="col-sm-2 control-label">Question *</label>
+		                      <label for="question" class="col-sm-2 control-label">Question * </label>
 		                      <div class="col-sm-10">
-		                        <p:inputText value="#{userBean.question.contenu}"  type="text" required="true" requiredMessage="Question est obligatoire"
-		                         styleClass="inputs" id="question" placeholder="Titre du sondage"/>
+		                        <p:inputText value="#{question.contenu}"  type="text" required="true" requiredMessage="Question est obligatoire"
+		                         styleClass="inputs form-control choix" style="width: 80% !important" id="question" placeholder="Titre du sondage"/>
+		                      <c:if test="#{userBean.allquestion.size() gt 1}">
+		                         	<p:commandButton action="#{userBean.deleteQuestion(question)}" icon="ui-icon-trash" update="myform"
+		                         	title="Supprimer la question"   styleClass="form-control orange btn-flat"/>
+		                      </c:if>
 		                      </div>
 		                    </div>
 		                    <c:if test="#{userBean.survey.type ne 'OPINION'}">
 				           		 <div class="form-group">
-				                      <label for="inputs" class="col-sm-2 control-label">Options</label>
+				                      <label for="inputs" class="col-sm-2 control-label">Options * :</label>
 				                      <div class="col-sm-10">
-				                      	 <c:forEach begin="1" step="1" end="2" var="var">
+				                      	 <c:forEach  items="#{userBean.choix}" var="choice">
 				                      	 	<br/>
-				                       	  	<p:inputText type="text" styleClass="inputs form-control choix" requiredMessage="L'option #{var} est obligatoire" required="true"  placeholder="Option #{var}"/>                       	                          		
+				                       	  	<p:inputText type="text" styleClass="inputs form-control choix" requiredMessage="L'option #{userBean.choix.indexOf(choice)+1} est obligatoire" 
+				                       	  	required="true"  value="#{choice.label}"/>
+				                       	  	<c:if test="#{userBean.choix.size() gt 2}">
+				                       	  		<p:commandButton action="#{userBean.deleteChoice(choice)}" update="myform" icon="ui-icon-trash" styleClass="form-control orange"/>
+				                       	 	</c:if>
 				                       	 </c:forEach>
-				                       	 <p:commandButton action="#{userBean.addNewChoice}" icon="ui-icon-plus" styleClass="form-control orange"/>
+				                       	 <p:commandButton action="#{userBean.addNewChoice}" update="myform" icon="ui-icon-plus" styleClass="form-control orange"/>
 				                      </div>
 				           		</div>
 				          	</c:if>
-				          						<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-				          	
+				          <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+				          </p:fieldset>
+				          <br/>
+				      </c:forEach>    	
+					
                   </div><!-- /.box-body -->
                   <div class="box-footer">
-                    <p:commandButton styleClass="btn btn-warning pull-right" action="3.xhtml?faces-redirect=true" value="Suivant"/>
+                  <c:if test="#{userBean.survey.type ne 'RÉPARTITION'}">
+                  	<p:commandButton action="#{userBean.addNewQuestion}" update="myform" icon="ui-icon-plus" value="Ajouter une question" styleClass="btn btn-warning pull-left"/>
+                  </c:if>	
+                  	<p:commandButton styleClass="btn btn-warning pull-right" action="3.xhtml?faces-redirect=true" value="Suivant"/>
                   </div><!-- /.box-footer -->
                 </h:form>
               </div><!-- /.box -->
