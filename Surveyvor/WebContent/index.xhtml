@@ -24,52 +24,6 @@ function hideURLbar(){ window.scrollTo(0,1); }
 
 </h:head>
 <h:body>
-<!--Modal inscription form-->
-<p:dialog widgetVar="small-dialog" header="Inscription" height="500" width="350" modal="true">	
- 	<h:form id="register">
-    				<p:growl showDetail="true"/>
-        			<p:inputText  id="prenom" styleClass="inputs" value="#{loginBean.user.lastName}" placeholder="Prènom" required="required"/>
-        			<br/>
-                    <p:inputText styleClass="inputs" id="nom" value="#{loginBean.user.name}" placeholder="Nom" required="required"/>
-					<br/>
-					<p:inputText styleClass="inputs" type="email" id="mail2" value="#{loginBean.user.mail}" placeholder="Adresse E-mail" required="required"/>
-					<br/>
-					<p:password feedback="true" styleClass="inputs" id="password2" value="#{loginBean.user.password}"  placeholder="Mot de passe" 
-						required="required" requiredMessage="Le mot de passe et obligatoir">
-						<f:validateLength minimum="8"  for="password2"/>
-					</p:password>
-                    <br/>
-                    <p:password feedback="true"  styleClass="inputs" id="confirmPassword" value="#{loginBean.verifPassword}" 
-                    	placeholder="Confirmer le mot de passe" required="required" requiredMessage="Confirmer le mot de passe pour s'enregistrer"  >
-						<f:validateLength minimum="8"  for="confirmPassword" />
-                    </p:password>                    
-					<br/>
-					<p:captcha id="captcha" styleClass="inputs" label="Captcha" />
-					<br/>
-					<h:commandButton action="#{loginBean.register}" styleClass="btn orange"  value="Inscription"/>
-                    <p:separator/>
-                    <p>Déja membre ?<p:spacer height="0px" width="50%"/>
-                    <p:commandLink  onclick="PF('small-dialog2').show();" value="Connexion"/>
-                    </p>
-      </h:form>
-</p:dialog>
-<p:dialog header="Se connecter" widgetVar="small-dialog2" height="250" width="350" modal="true">
-	<h:form id="login" prependId="false">
- 	   <p:growl showDetail="true" escape="false"/>
-					<p:inputText styleClass="inputs"  value="#{loginBean.user.mail}" id="j_username" placeholder="Email" required="required"/>
-					<br/>
-					<p:password styleClass="inputs" value="#{loginBean.user.password}" id="j_password" placeholder="Mot de passe" required="required"/>
-					<br/>
-					<h:commandButton  styleClass="btn orange" action="#{loginBean.connecter}"  value="Connexion"/>
-					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                    <p:separator/>
-                    <p:commandLink style="color:bleu !important;" value="Mot de passe oublié ?"/><br/>
-                    <p>Vous n'avez pas de compte ?
-                    	<p:spacer height="0px" width="20%"/>
-                    	<p:commandLink style="color:bleu !important;" onclick="PF('small-dialog').show();" value="Inscription"/>
-                    </p>
-	</h:form>
-</p:dialog>
 <!--header-->
 	<div class="header">
 		<div class="container">
@@ -86,8 +40,8 @@ function hideURLbar(){ window.scrollTo(0,1); }
 						<div class="menu">
 							<span class="menu">MENU</span>
 								<ul class="navigatoin">
-                              		<li><p:commandLink styleClass="signup play-icon popup-with-zoom-anim"  onclick="PF('small-dialog2').show();">Connexion</p:commandLink></li>
-                              		<li><p:commandLink styleClass="signup play-icon popup-with-zoom-anim"  onclick="PF('small-dialog').show();">Inscription</p:commandLink></li>
+                              		<li><p:commandLink styleClass="signup play-icon popup-with-zoom-anim"  action="/login.xhtml?faces-redirect=true">Connexion</p:commandLink></li>
+                              		<li><p:commandLink styleClass="signup play-icon popup-with-zoom-anim"  action="/register.xhtml?faces-redirect=true">Inscription</p:commandLink></li>
 								</ul>
 						</div>		
 					</div>
@@ -143,11 +97,9 @@ function hideURLbar(){ window.scrollTo(0,1); }
 <div class="footer">
 	<div class="container">
 		<div class="copy-rights">
-				 <p>  Created by<a> Brightworks - 2016.</a></p>
-			</div>
-	
-			<a href="#" id="toTop" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
-
+			<p>  Created by<a> Brightworks - 2016.</a></p>
+		</div>
+		<a href="#" id="toTop" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
 	</div>
 </div>
 <!--/footer-->

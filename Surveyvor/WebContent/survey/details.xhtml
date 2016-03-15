@@ -21,10 +21,10 @@
 	<section class="content">
 		<div class="box box-default" style="text-align: center;">
 				<div class="box-header with-border" >
-					<h3><h:outputText value="Réorientation vers Master1 pour les étudiants de Licence3"/></h3>
+					<h3><h:outputText value="#{surveyBean.selected.title}"/></h3>
 				</div>
 				<div class="box-body">
-					<p:outputLabel value="Le sondage à pour but de voir les préférences des étudiants pour les masters de notre faculté des sciences, ce qui nous permet de choisir le nombre des étudiant externes qui peuvent s'inscrire dans la prochaine année universitére."/>
+					<p:outputLabel value="#{surveyBean.selected.description}"/>
 				</div>
 		</div>
 		<div class="col-md-6">

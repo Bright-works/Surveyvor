@@ -14,6 +14,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+import org.primefaces.context.RequestContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
@@ -53,7 +54,6 @@ public class LoginController implements Serializable {
 	public String connecter() throws ServletException, IOException{
 		try{
 			user=userManager.findByMail(user.getMail());
-		login=new UserController();
 		login.setUser(user);
 		ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
 	    RequestDispatcher dispatcher = ((ServletRequest) context.getRequest())
@@ -95,6 +95,7 @@ public class LoginController implements Serializable {
 				}
 			}
 			catch(NoResultException expt){
+				//RequestContext.getCurrentInstance().execute("PF('small-dialog').show();");
 				user.setAdmin("ROLE_USER");
 				BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 				user.setPassword(encoder.encode(user.getPassword()));

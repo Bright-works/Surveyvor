@@ -27,11 +27,11 @@ public class Question {
 	private Long Id_Question;
 	
 	@NotNull
-	@Size(min = 15)
+	@Size(min = 5)
 	private String contenu;
 	
 	@NotNull
-	@Size(min = 15)
+	@Size(min = 5)
 	private String description;
 	
 	@Valid
@@ -39,11 +39,9 @@ public class Question {
 	@ManyToOne
 	@JoinColumn(name="Id_Survey", insertable=false, updatable=false)
 	private Survey survey;
-	
 	@NotNull
 	@Min(1)
 	private int minChoice;
-	
 	@NotNull
 	private int maxChoice;
 	
@@ -54,8 +52,8 @@ public class Question {
 	@JoinColumn(name="Id_Question")
 	private List<Choice> choices;
 	
-	@NotNull
 	@Valid
+	@NotNull
 	@Embedded
 	private QuestionParameters parametres;
 	

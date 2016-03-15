@@ -27,7 +27,7 @@ public class Survey {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long Id;
+	private Long id;
 	
 	@NotNull
 	@Size(min = 3)
@@ -43,7 +43,7 @@ public class Survey {
 	
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
-	//@Future // a verifier ok pour la cr√©ation mais voir si ca pose pas de probl√®me sur la duree.
+	//@Future // a verifier ok pour la création mais voir si ca pose pas de probléme sur la duree.
 	private Date endDate;  
 	
 	@ElementCollection
@@ -79,12 +79,12 @@ public class Survey {
 
 
 	public Long getId() {
-		return Id;
+		return id;
 	}
 
 
 	public void setId(Long id) {
-		Id = id;
+		this.id = id;
 	}
 
 

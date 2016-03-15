@@ -18,7 +18,7 @@ public class PersistenceTest {
 	private static EntityManagerFactory fact;
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		fact = Persistence.createEntityManagerFactory("Surveyvor");
+		fact = Persistence.createEntityManagerFactory("myBase");
 		em=fact.createEntityManager();
 	}
 

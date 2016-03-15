@@ -18,7 +18,7 @@
 		
 		<csrf disabled="true"/>
 		
-		<form-login login-page="/index.xhtml" 
+		<form-login login-page="/login.xhtml" 
 		login-processing-url="/j_spring_security_check"
 		username-parameter="j_username"
 		password-parameter="j_password" 

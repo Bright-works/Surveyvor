@@ -34,33 +34,32 @@
                 </div><!-- /.box-header -->
                 <!-- form start -->
                 <h:form id="form9" class="form-horizontal">
-                  <p:messages autoUpdate="true"/>
                   <div class="box-body">
                     <div class="form-group">
                       <label for="date1" class="col-sm-2 control-label">Date début *</label>
                       <div class="col-sm-10">
-                        <p:calendar  styleClass="choix" navigator="true" mindate="date" popupIconOnly="false" showOn="button" id="date1" pattern="dd/MM/yyyy"/>
+                        <p:calendar value="#{userBean.survey.startDate}"  styleClass="choix" navigator="true" mindate="date" popupIconOnly="false" 
+                        	showOn="button" id="date1" pattern="dd/MM/yyyy"/>
                       </div>
                     </div>
                     <div class="form-group">
                       <label for="date2" class="col-sm-2 control-label">Date limite *</label>
                       <div class="col-sm-10">
-                        <p:calendar styleClass="choix" navigator="true" mindate="date1" popupIconOnly="false" showOn="button" id="date2" pattern="dd/MM/yyyy"/>
+                        <p:calendar value="#{userBean.survey.endDate}" styleClass="choix" navigator="true" mindate="" popupIconOnly="false" showOn="button" id="date2" pattern="dd/MM/yyyy"/>
                       </div>
                     </div>
                     <div class="form-group">
                       <label for="addToList" class="col-sm-2 control-label">Ajouter un email à la liste *</label>
                       <div class="col-sm-8">
-                        <p:inputText style="margin-left:12px" type="email" value="#{userBean.email}" id="addToList" placeholder="Email" styleClass="inputs choix" >
-                        	<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$"
-                        	for="addToList"/>
-                        </p:inputText>
-                      </div>
+                        <p:inputText style="margin-left:12px; width:76% !important" type="email" required="false" value="#{userBean.email}" 
+                        	id="addToList" placeholder="Email" styleClass="inputs choix" />
+                        	
                        <p:commandButton icon="ui-icon-plus" action="#{userBean.addEmail}" update="form9" styleClass="btn orange"/>
+                    </div>
                     </div>
                     <div class="form-group">
                       <label for="modifiable" class="col-sm-2 control-label">Liste des emails </label>
-                      <div class="col-sm-10">
+                      <div class="col-sm-8">
                         <p:dataList styleClass="inputs"  id="datalist" emptyMessage="liste est vide" paginator="true" rows="8"
                         paginatorAlwaysVisible="false" value="#{userBean.diffusion}" var="em">
                         	<p:graphicImage  width="20px" library="img" name="delete.png"/>
@@ -73,7 +72,7 @@
                   </div><!-- /.box-body -->
                   <div class="box-footer">
                   	<br/>
-                    <p:commandButton styleClass="btn btn-warning pull-right" value="Enregistrer"/>
+                    <p:commandButton action="#{userBean.addNewSurvey}" styleClass="btn btn-warning pull-right" value="Enregistrer"/>
                   </div><!-- /.box-footer -->
                 </h:form>
               </div><!-- /.box -->

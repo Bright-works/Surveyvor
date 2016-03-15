@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"	
+    >
+<ui:composition template="./layouts/mainLayout.xhtml">
+
+	<ui:define name="titre">Inscription</ui:define>
+	<ui:define name="content">
+		<div class="col-md-4" style=" margin-left:auto; margin-top:0;float:none; margin-right: auto;">
+			<p:graphicImage library="img" width="100%" name="logo1orange.gif"/>
+			<br/>
+			<div class="box box-warning">
+				<div class="box-header with-border" >
+					<h3 style="text-align: center;"><h:outputText value="S'inscrire"/></h3>
+				</div>
+				<div class="box-body">
+					<h:form id="register">
+	    				<p:messages showDetail="false"/>
+	        			<p:inputText  id="prenom" styleClass="inputs" value="#{loginBean.user.lastName}" placeholder="Prènom" requiredMessage="Le prénom est obligatoir" required="true"/>
+	        			<br/>
+	                    <p:inputText styleClass="inputs" id="nom" value="#{loginBean.user.name}" requiredMessage="Le nom est obligatoir" placeholder="Nom" required="true"/>
+						<br/>
+						<p:inputText styleClass="inputs" type="email" id="mail2" value="#{loginBean.user.mail}" placeholder="Adresse E-mail" required="required"/>
+						<br/>
+						<p:password feedback="true" styleClass="inputs" id="password2" value="#{loginBean.user.password}"  placeholder="Mot de passe" 
+							required="required" requiredMessage="Le mot de passe et obligatoir">
+							<f:validateLength minimum="8"  for="password2"/>
+						</p:password>
+	                    <br/>
+	                    <p:password feedback="true"  styleClass="inputs" id="confirmPassword" value="#{loginBean.verifPassword}" 
+	                    	placeholder="Confirmer le mot de passe" required="required" requiredMessage="Confirmer le mot de passe pour s'enregistrer"  >
+							<f:validateLength minimum="8"  for="confirmPassword" />
+	                    </p:password>                    
+						<br/>
+						<p:captcha id="captcha" styleClass="inputs" label="Captcha" />
+						<br/>
+						<p:commandButton validateClient="true"  ajax="false" action="#{loginBean.register}" styleClass="btn orange"  value="Inscription"/>
+	                    <p:separator/>
+	                    <p>Déja membre ?<p:spacer height="0px" width="50%"/>
+	                    <a  href="./login.xhtml">Connexion</a>
+	                    </p>
+     				</h:form>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>
+</html>

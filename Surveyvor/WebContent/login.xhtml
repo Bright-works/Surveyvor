@@ -1,10 +1,40 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8"/>
-<title>Insert title here</title>
-</head>
-<body>
-jhlkhmo,ihohoih,,oiih poh,ih 
-</body>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:c="http://java.sun.com/jsp/jstl/core"	
+    >
+<ui:composition template="./layouts/mainLayout.xhtml">
+
+	<ui:define name="titre">Authentification</ui:define>
+	<ui:define name="content">
+		<div class="col-md-4" style=" margin-left:auto; margin-top:4%;float:none; margin-right: auto;">
+			<p:graphicImage library="img" width="100%" name="logo1orange.gif"/>
+			<br/>
+			<div class="box box-warning">
+				<div class="box-header with-border" >
+					<h3 style="text-align: center;"><h:outputText value="Authentificcation"/></h3>
+				</div>
+				<div class="box-body">
+					<h:form id="login" prependId="false">
+	 	   				<p:messages showDetail="false" autoUpdate="true" escape="false"/>
+						<p:inputText styleClass="inputs"  value="#{loginBean.user.mail}" id="j_username" placeholder="Email" required="required"/>
+						<br/>
+						<p:password styleClass="inputs" value="#{loginBean.user.password}" id="j_password" placeholder="Mot de passe" required="required"/>
+						<br/>
+						<p:commandButton  styleClass="btn orange" ajax="false" action="#{loginBean.connecter}"  value="Connexion"/>
+	                    <p:separator/>
+	                    <p:commandLink style="color:bleu !important;" value="Mot de passe oublié ?"/><br/>
+	                    <p>Vous n'avez pas de compte ?
+	                    	<p:spacer height="0px" width="20%"/>
+	                    	<a style="color:bleu !important;" href="./register.xhtml">Inscription</a>
+	                    </p>
+					</h:form>
+				</div>
+			</div>
+		</div>
+	</ui:define>
+</ui:composition>
 </html>

@@ -19,32 +19,36 @@
 			<section class="content">
 				<div class="box box-default" style="text-align: center;">
 					<div class="box-header with-border" >
-						<p:dataTable rows="15" selectionMode="single" paginatorAlwaysVisible="false" paginator="true"
-						emptyMessage="Il y a aucun sondage crée">
+						<p:dataTable rows="10"  paginatorAlwaysVisible="false" paginator="true"
+						emptyMessage="Il y a aucun sondage crée" value="#{surveyBean.list}" var="survey">
 							<f:facet name="header">
-								Liste des sondages
+								Liste de mes sondages
 							</f:facet>
-							<p:column headerText="Titre" width="50%">
-								<h:outputText />
+							<p:column headerText="Titre" width="40%">
+								<h:outputText value="#{survey.title}" />
 							</p:column>
 							<p:column headerText="Date limite" width="20%">
-								<h:outputText />
+								<h:outputText value="#{survey.endDate}" >
+									<f:convertDateTime pattern="dd/MM/yyy"/>
+								</h:outputText>
 							</p:column>
 							<p:column headerText="Nombre de votes" width="15%">
-								<h:outputText />
+								<c:if test="#{empty survey.answerers}">
+									<h:outputText value="0" />
+								</c:if>
+								<c:if test="#{!empty survey.answerers}">
+									<h:outputText value="#{survey.answerers.size()}" />
+								</c:if>
 							</p:column>
-							<p:column headerText="Actions" width="15%">
-								<p:commandButton>
-									<i class="fa fa-edit"></i>
-									<f:setPropertyActionListener value="" target=""/>
+							<p:column headerText="Actions" width="25%">
+								<p:commandButton action="#{surveyBean.showSurvey}" title="Voir les details du sondage" styleClass="icon blue" icon="ui-icon-clipboard">
+									<f:setPropertyActionListener value="#{survey}" target="#{surveyBean.selected}"/>
 								</p:commandButton>
-								<p:commandButton>
-									<i class="fa fa-search"></i>
-									<f:setPropertyActionListener value="" target=""/>
+								<p:commandButton title="Modifier la date limite du sondage" styleClass="icon orange" icon="ui-icon-gear">
+									<f:setPropertyActionListener value="#{survey}" target="#{surveyBean.selected}"/>
 								</p:commandButton>
-								<p:commandButton>
-									<i class="fa fa-trash"></i>
-									<f:setPropertyActionListener value="" target=""/>
+								<p:commandButton title="Supprimer le sondage" styleClass="icon red" icon="ui-icon-closethick">
+									<f:setPropertyActionListener value="#{survey}" target="#{surveyBean.selected}"/>
 								</p:commandButton>
 							</p:column>
 						</p:dataTable>

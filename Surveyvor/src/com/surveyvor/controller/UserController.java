@@ -3,16 +3,18 @@ package com.surveyvor.controller;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.surveyvor.manager.SurveyManager;
 import com.surveyvor.manager.UserManager;
 import com.surveyvor.model.*;
 
@@ -23,6 +25,9 @@ public class UserController implements Serializable {
 	
 	@Autowired
 	UserManager userManager;
+	
+	@Autowired
+	SurveyManager surveyManager;
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -35,6 +40,7 @@ public class UserController implements Serializable {
 	private SurveyParameters parameters=new SurveyParameters();
 	private List<String> diffusion= new ArrayList<String>();
 	private String email="";
+	private List<Survey> mySurvy=new ArrayList<Survey>();
 	
 	
 
@@ -46,19 +52,33 @@ public class UserController implements Serializable {
 
 	@PostConstruct
 	public void init(){
-		allquestion.add(new Question());
-		choix.add(new Choice());
-		choix.add(new Choice());
+		addNewQuestion();
+		addNewChoice();
+		addNewChoice();
 	}
 	public TypeSurvey[] getTypes() {
         return TypeSurvey.values();
     }
-
 	public void addNewQuestion(){
-		allquestion.add(new Question());
+		Question q=new Question();
+		QuestionParameters param= new QuestionParameters();
+		q.setDescription("Empty description");
+		q.setMaxChoice(1);
+		q.setMinChoice(1);
+		q.setSurvey(survey);
+		q.setChoices(choix);
+		//-----
+		param.setRequested(true);
+		param.setWritable(true);
+		param.setSeveralAnswers(false);
+		q.setParametres(param);
+		allquestion.add(q);
 	}
 	public void addNewChoice(){
-		choix.add(new Choice());
+		Choice choice=new Choice();
+		choice.setLabel("");
+		choice.setDescription("Non description");
+		choix.add(choice);
 	}
 	public void deleteChoice(Choice choice){
 		choix.remove(choice);
@@ -67,8 +87,47 @@ public class UserController implements Serializable {
 		allquestion.remove(question);
 	}
 	public void addEmail(){
-		diffusion.add(email);
-		email="";
+		Pattern pattern= Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
+		Matcher matcher=pattern.matcher(email);
+		if(matcher.matches()){
+			diffusion.add(email);
+			email="";
+			}
+		else{
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+		    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Le format d'adresse mail n'est pas correct !",""));
+		}
+	}
+	public String addNewSurvey(){
+		if(survey.getType()==TypeSurvey.OPINION){
+			parameters.setPrivateSurvey(false);
+		}
+		else{
+			allquestion.get(0).setChoices(choix);
+		}
+		parameters.setAlgo(0);
+		survey.setParametres(parameters);
+		survey.setDiffusion(diffusion);
+		survey.setCreator(user);
+		survey.setQuestions(allquestion);
+		//try{
+			surveyManager.addSurvey(survey);
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+		    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sondage est bien enregistré !",""));
+		    survey=new Survey();
+			choix=new ArrayList<Choice>();
+			question=new Question();
+			allquestion=new ArrayList<Question>();
+			parameters=new SurveyParameters();
+			diffusion= new ArrayList<String>();
+			email="";
+		    
+		/*}
+		catch(Exception exp){
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+		    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, exp.getMessage(),""));
+		} */
+		return "../created.xhtml?faces-redirect=true";
 	}
 	//------------------------getters and setters ----->
 	public User getUser() {
@@ -156,6 +215,22 @@ public class UserController implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public SurveyManager getSurveyManager() {
+		return surveyManager;
+	}
+
+	public void setSurveyManager(SurveyManager surveyManager) {
+		this.surveyManager = surveyManager;
+	}
+
+	public List<Survey> getMySurvy() {
+		return mySurvy;
+	}
+
+	public void setMySurvy(List<Survey> mySurvy) {
+		this.mySurvy = mySurvy;
 	}
 	
 }
