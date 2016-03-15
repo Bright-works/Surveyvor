@@ -27,7 +27,7 @@ public class Survey {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+	private Long Id;
 	
 	@NotNull
 	@Size(min = 3)
@@ -43,7 +43,7 @@ public class Survey {
 	
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
-	//@Future // a verifier ok pour la création mais voir si ca pose pas de probléme sur la duree.
+	//@Future // a verifier ok pour la cr√©ation mais voir si ca pose pas de probl√®me sur la duree.
 	private Date endDate;  
 	
 	@ElementCollection
@@ -58,7 +58,7 @@ public class Survey {
 	private TypeSurvey type;  
 	
 	@Valid
-	@ManyToMany (cascade = CascadeType.ALL)
+	@ManyToMany
 	@JoinTable(name="Surveys_Invited", 
 	joinColumns= @JoinColumn(name="Id_Survey"), inverseJoinColumns= @JoinColumn(name="Id_Invited"))
 	private List<User> answerers;  
@@ -79,12 +79,12 @@ public class Survey {
 
 
 	public Long getId() {
-		return id;
+		return Id;
 	}
 
 
 	public void setId(Long id) {
-		this.id = id;
+		Id = id;
 	}
 
 
@@ -152,6 +152,16 @@ public class Survey {
 	}
 
 
+	/*public SurveyType getType() {
+		return type;
+	}
+
+
+	public void setType(SurveyType type) {
+		this.type = type;
+	}*/
+
+
 	public List<User> getAnswerers() {
 		return answerers;
 	}
@@ -193,15 +203,14 @@ public class Survey {
 		//this.creator = user;
 		this.questions = questions;
 	}
-	
+
+
 	public TypeSurvey getType() {
-		return type;
+		return this.type;
 	}
-
-
+	
 	public void setType(TypeSurvey type) {
 		this.type = type;
 	}
-
-
+	
 }
