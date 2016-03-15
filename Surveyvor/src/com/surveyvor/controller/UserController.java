@@ -3,6 +3,7 @@ package com.surveyvor.controller;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -86,10 +87,15 @@ public class UserController implements Serializable {
 	public void deleteQuestion(Question question){
 		allquestion.remove(question);
 	}
-	public void addEmail(){
+	private boolean verifierEmail(String mail){
 		Pattern pattern= Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
 		Matcher matcher=pattern.matcher(email);
 		if(matcher.matches()){
+			return true;}
+		else return false;
+	}
+	public void addEmail(){
+		if(verifierEmail(email)){
 			diffusion.add(email);
 			email="";
 			}
@@ -129,14 +135,22 @@ public class UserController implements Serializable {
 		} */
 		return "../created.xhtml?faces-redirect=true";
 	}
+	public String forgetPassword(){
+		if(verifierEmail(email)){
+			user=userManager.findByMail(email);
+			if(user.getId()>0){
+				
+			}
+		}
+		else{
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+		    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "VŽrifier le format d'email",""));
+		}
+		return "";
+	}
 	//------------------------getters and setters ----->
 	public User getUser() {
 		return user;
-	}
-	public void test(){
-		System.out.println("dsdsdqsdqsdqsdqsdqsd");
-		FacesContext facesContext = FacesContext.getCurrentInstance();
-	    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Email ou mot de passe invalid !",""));
 	}
 
 	public void setUser(User user) {

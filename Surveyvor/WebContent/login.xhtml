@@ -10,6 +10,7 @@
 
 	<ui:define name="titre">Authentification</ui:define>
 	<ui:define name="content">
+
 		<div class="col-md-4" style=" margin-left:auto; margin-top:4%;float:none; margin-right: auto;">
 			<p:graphicImage library="img" width="100%" name="logo1orange.gif"/>
 			<br/>
@@ -26,11 +27,8 @@
 						<br/>
 						<p:commandButton  styleClass="btn orange" ajax="false" action="#{loginBean.connecter}"  value="Connexion"/>
 	                    <p:separator/>
-	                    <p:commandLink style="color:bleu !important;" value="Mot de passe oublié ?"/><br/>
-	                    <p>Vous n'avez pas de compte ?
-	                    	<p:spacer height="0px" width="20%"/>
-	                    	<a style="color:bleu !important;" href="./register.xhtml">Inscription</a>
-	                    </p>
+	                    <a style="color:blue !important;" href="forgetPassword.xhtml">Mot de passe oublié ?</a><br/>
+	                    <p><a style="color:bleu !important;" href="./register.xhtml">Vous n'avez pas de compte, inscrivez vous !</a></p>
 					</h:form>
 				</div>
 			</div>
