@@ -1,5 +1,6 @@
 package com.surveyvor.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -19,7 +20,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-public class Question {
+public class Question implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
