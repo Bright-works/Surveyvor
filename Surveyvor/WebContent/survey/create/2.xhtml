@@ -89,7 +89,7 @@
 					
                   </div><!-- /.box-body -->
                   <div class="box-footer">
-                  <c:if test="#{userBean.survey.type ne 'RÉPARTITION'}">
+                  <c:if test="#{userBean.survey.type ne 'REPARTITION'}">
                   	<p:commandButton action="#{userBean.addNewQuestion}" update="myform" icon="ui-icon-plus" value="Ajouter une question" styleClass="btn btn-warning pull-left"/>
                   </c:if>	
                   	<p:commandButton styleClass="btn btn-warning pull-right" action="3.xhtml?faces-redirect=true" value="Suivant"/>

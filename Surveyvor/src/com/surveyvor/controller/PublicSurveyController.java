@@ -1,26 +1,109 @@
 package com.surveyvor.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ApplicationScoped;
+import javax.faces.context.FacesContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.surveyvor.manager.SurveyManager;
 import com.surveyvor.model.Survey;
 
 @Component("publicSurveyBean")
-@Scope("request")
-public class PublicSurveyController extends SurveyController {
-		
+@ApplicationScoped
+public class PublicSurveyController {
+	
+	@Autowired
+	private SurveyManager manager;
+	private List<Survey> list;
+	private Survey selected;
+	private String searchString;
+	private List<Survey> matchingSurveys;
+
 	public PublicSurveyController() {
 		
 	}
 	
+	@PostConstruct
+	public void initialisation(){
+		try{
+			list=new ArrayList<Survey>(manager.findPublicSurveys());
+		}catch(Exception e){
+			list = new ArrayList<Survey>();
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Problème d'accès à la base de données", ""));
+		}
+		selected=new Survey();
+		searchString = "";
+		
+		//TODO TEMPORARY, REMOVE THAT PART
+		for(int i=0; i<20; i++){
+			Survey survey = new Survey();
+			survey.setTitle("Survey #"+i);
+			survey.setEndDate(new Date());
+			list.add(survey);
+		}
+	}
 
+	public List<Survey> getAll() {
+		return new ArrayList<Survey>(manager.findPublicSurveys());
+	}
+	
+	public String search(){
+		matchingSurveys = new ArrayList<Survey>();
+		for(Survey current : list){
+			if(current.getTitle().contains(searchString)){
+				matchingSurveys.add(current);
+			}
+		}
+		return "/survey/searchCV.xhtml";
+	}
+
+	public List<Survey> getMatchingSurveys() {
+		return matchingSurveys;
+	}
+
+	public void setMatchingSurveys(List<Survey> matchingSurveys) {
+		this.matchingSurveys = matchingSurveys;
+	}
+
+	public String getSearchString() {
+		return searchString;
+	}
+
+	public void setSearchString(String searchString) {
+		this.searchString = searchString;
+	}
+	
+	public SurveyManager getManager() {
+		return manager;
+	}
+
+	public void setManager(SurveyManager manager) {
+		this.manager = manager;
+	}
+
+	public List<Survey> getList() {
+		return list;
+	}
+
+	public void setList(List<Survey> list) {
+		this.list = list;
+	}
+
+	public Survey getSelected() {
+		return selected;
+	}
+
+	public void setSelected(Survey selected) {
+		this.selected = selected;
+	}
 
 }
