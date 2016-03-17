@@ -95,7 +95,7 @@ function hideURLbar(){ window.scrollTo(0,1); }
 						numVisible="6" responsive="true">
 						<f:facet name="header" width="90%">
 							<p:panelGrid id="carouselHeader" columns="2">
-								<h:outputText value="Sondage publics en cours" />
+								<h:outputText value="Sondages publics en cours" />
 								<h:form>
 									<p:panelGrid id="carouselSearchForm" columns="2">
 										<p:inputText styleClass="inputs"
@@ -114,7 +114,7 @@ function hideURLbar(){ window.scrollTo(0,1); }
 								<h5>Il n'y a aucun sondage public en cours</h5>
 							</c:when>
 							<c:otherwise>
-								<h:commandLink>
+								<h:commandLink action="#{publicSurveyBean.show(survey)}">
 									<h5>
 										<h:outputText value="#{survey.title}" />
 									</h5>
@@ -129,10 +129,6 @@ function hideURLbar(){ window.scrollTo(0,1); }
 										</h:outputText>
 									</p>
 								</h:commandLink>
-								<f:facet name="footer">
-									<h:commandLink class="btn orange"
-										value="Voir tous les sondages publics" />
-								</f:facet>
 							</c:otherwise>
 						</c:choose>
 					</p:carousel>

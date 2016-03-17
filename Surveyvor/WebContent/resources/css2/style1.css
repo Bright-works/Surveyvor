@@ -509,20 +509,6 @@ ui-state-hover {
 	font-size: 15px;
 }
 
-.ui-carousel-footer {
-	background-color: #fff;
-	border: none;
-}
-
-.ui-carousel-footer .btn {
-	box-shadow: none;
-	font-color: #fff;
-	background-color: #ff7f00;
-}
-
-.ui-carousel-footer .orange {
-	background-color: #ff7f00;
-}
 
 .ui-carousel-item {
 	border: 3px solid !important;

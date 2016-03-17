@@ -18,35 +18,36 @@ import com.surveyvor.model.Survey;
 @Component("publicSurveyBean")
 @ApplicationScoped
 public class PublicSurveyController {
-	
+
 	@Autowired
 	private SurveyManager manager;
+
 	private List<Survey> list;
 	private Survey selected;
 	private String searchString;
 	private List<Survey> matchingSurveys;
 
 	public PublicSurveyController() {
-		
+
 	}
-	
+
 	@PostConstruct
-	public void initialisation(){
-		try{
-			list=new ArrayList<Survey>(manager.findPublicSurveys());
-		}catch(Exception e){
+	public void initialisation() {
+		try {
+			list = new ArrayList<Survey>(manager.findPublicSurveys());
+		} catch (Exception e) {
 			list = new ArrayList<Survey>();
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			facesContext.addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Problème d'accès à la base de données", ""));
 		}
-		selected=new Survey();
+		selected = new Survey();
 		searchString = "";
-		
-		//TODO TEMPORARY, REMOVE THAT PART
-		for(int i=0; i<20; i++){
+
+		// TODO TEMPORARY, REMOVE THAT PART
+		for (int i = 0; i < 20; i++) {
 			Survey survey = new Survey();
-			survey.setTitle("Survey #"+i);
+			survey.setTitle("Survey #" + i);
 			survey.setEndDate(new Date());
 			list.add(survey);
 		}
@@ -55,15 +56,24 @@ public class PublicSurveyController {
 	public List<Survey> getAll() {
 		return new ArrayList<Survey>(manager.findPublicSurveys());
 	}
-	
-	public String search(){
+
+	public String search() {
 		matchingSurveys = new ArrayList<Survey>();
-		for(Survey current : list){
-			if(current.getTitle().contains(searchString)){
+		for (Survey current : list) {
+			if (current.getTitle().contains(searchString)) {
 				matchingSurveys.add(current);
 			}
 		}
-		return "/survey/searchCV.xhtml";
+		return "/survey/searchSurvey.xhtml";
+	}
+
+	public String show(Survey survey) {
+		System.out.println("TEST");
+		FacesContext context = FacesContext.getCurrentInstance();
+		SurveyController sv = context.getApplication().evaluateExpressionGet(context, "#{surveyBean}",
+				SurveyController.class);
+		sv.setSelected(survey);
+		return "/survey/details.xhtml?faces-redirect=true";
 	}
 
 	public List<Survey> getMatchingSurveys() {
@@ -81,7 +91,7 @@ public class PublicSurveyController {
 	public void setSearchString(String searchString) {
 		this.searchString = searchString;
 	}
-	
+
 	public SurveyManager getManager() {
 		return manager;
 	}

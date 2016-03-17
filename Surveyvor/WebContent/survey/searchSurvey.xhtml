@@ -14,9 +14,15 @@
 		
 		
 		
+		
+		
+		
 	addEventListener("load", function() {
 		setTimeout(hideURLbar, 0); }, false);
 	function hideURLbar(){ window.scrollTo(0,1); } 
+	
+	
+	
 	
 	
 	
@@ -79,27 +85,30 @@
 
 			</div>
 		</div>
-	<!--/header-->
+		<!--/header-->
+		<h:form>
+			<p:dataTable var="current"
+				value="#{publicSurveyBean.matchingSurveys}" rows="10"
+				paginator="true"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 
-	<p:dataTable var="current" value="#{publicSurveyBean.matchingSurveys}"
-		rows="10" paginator="true"
-		paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
-
-		<p:column headerText="Titre du sondage" sortBy="#{current.title}"
-			filterBy="#{current[0]}" filterMatchMode="contains">
-			<h:outputText styleClass="uppercase" value="#{current.title}" />
-		</p:column>
-		<p:column headerText="Date de fin" sortBy="#{current.endDate}">
-			<h:outputText styleClass="capitalized" value="#{current.endDate}" >
-				<f:convertDateTime pattern="dd-MM-yyyy à HH:mm" />
-			</h:outputText>
-		</p:column>
-		<p:column headerText="Consulter" width="10%"
-			style="text-align:center;">
-			<p:commandButton icon="ui-icon-search" title="View"
-				action="#{publicSurveyBean.show(current.id)}" />
-		</p:column>
-	</p:dataTable>
+				<p:column headerText="Titre du sondage" sortBy="#{current.title}"
+					filterBy="#{current[0]}" filterMatchMode="contains">
+					<h:outputText value="#{current.title}" />
+				</p:column>
+				<p:column headerText="Date de fin" sortBy="#{current.endDate}">
+					<h:outputText value="#{current.endDate}">
+						<f:convertDateTime pattern="dd-MM-yyyy à HH:mm" />
+					</h:outputText>
+				</p:column>
+				<p:column headerText="Consulter" width="10%"
+					style="text-align:center;">
+					<h:commandButton icon="ui-icon-search" title="View"
+						action="#{publicSurveyBean.show(current)}" type="submit"
+						style="box-shadow: none"/>
+				</p:column>
+			</p:dataTable>
+		</h:form>
 	</div>
 	<!--footer-->
 	<div class="footer">

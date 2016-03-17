@@ -4,21 +4,20 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapsId;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+
+import com.surveyvor.model.annotation.SizeChoice;
 
 @Entity
 @Table(name="Answers",uniqueConstraints = {
@@ -42,14 +41,11 @@ public class Answer {
 	
 	@Valid
 	@ManyToMany
-	//@Size (min= question.getMinChoice(), max = question.getMaxChoice())// a remplir selon la question voir comment faire)
+//@Size (min= question.getMinChoice(), max = question.getMaxChoice())// a remplir selon la question voir comment faire)
 	private List<Choice> choices;
 	
 	@NotNull
 	@ElementCollection
-   /* @MapKeyColumn(name="name")
-    @Column(name="value")
-    @CollectionTable(name="example_attributes", joinColumns=@JoinColumn(name="example_id"))*/
 	private Map<Long,String> valeurs;
 	
 	
@@ -132,9 +128,5 @@ public class Answer {
 		this.valeurs = valeurs;
 		this.date = date;
 	}
-	
-	
-
-	
 	
 }
