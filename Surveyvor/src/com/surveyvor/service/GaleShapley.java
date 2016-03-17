@@ -35,7 +35,14 @@ public class GaleShapley implements IResultGeneratorStrategy<List<User>> {
 
 		if (choices == null || choices.isEmpty() )
 			throw new GaleShapleyException();
-
+		
+		int sum=0;
+		for(int j=0; j<choices.size(); j++)
+			sum = choices.get(j).getQuotat()+sum;
+		if (sum < answers.size())
+			throw new GaleShapleyException();
+			
+		
 		Map<User, List<Choice>> userPreferChoice = buidPreferUser(answers);
 		Map<Choice, List<User>> choicePreferUser = buildPreferGroup2(choices, answers);
 
@@ -68,6 +75,11 @@ public class GaleShapley implements IResultGeneratorStrategy<List<User>> {
 		Map<Choice, List<User>> groupFormed = new HashMap<>();
 		Map<User, List<Choice>> userProposed = new HashMap<>();
 		List<User> userSingle = new ArrayList<>();
+		
+		for(Entry<Choice, List<User>> entry : choicePreferUser.entrySet()) {
+			  Choice cle = entry.getKey();
+			  groupFormed.put(cle, new ArrayList<User>());
+		}
 		
 		for(int i = 0; i < answers.size(); i++)
 		{
