@@ -17,7 +17,7 @@ import javax.persistence.UniqueConstraint;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
-import com.surveyvor.model.annotation.SizeChoice;
+//import com.surveyvor.model.annotation.SizeChoice;
 
 @Entity
 @Table(name="Answers",uniqueConstraints = {
