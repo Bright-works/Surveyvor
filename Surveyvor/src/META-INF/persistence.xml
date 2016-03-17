@@ -16,11 +16,11 @@
          <property name="hibernate.connection.driver_class"
             value="com.mysql.jdbc.Driver" />
          <property name="hibernate.connection.url"
-            value="jdbc:mysql://localhost/Surveyvor_dev" />
+            value="jdbc:mysql://localhost:3306/Surveyvor_dev" />
          <property name="hibernate.connection.username"
             value="root" />
          <property name="hibernate.connection.password"
-            value="root" />
+            value="djokernole" />
 		 <property name="hibernate.flushMode"    
 			value="FLUSH_AUTO"/>
          <property name="hibernate.dialect"
