@@ -1,6 +1,7 @@
 package com.surveyvor.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,8 +9,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -38,7 +41,11 @@ public class Choice implements Serializable{
 	@JoinColumn(name="Id_Question", insertable=false, updatable=false)
 	private Question question;
 	
+	@Min(1)
 	private Integer quotat;
+	
+	 @ManyToMany
+	 private List<User> usersAttribued;
 	
 	public Choice() {
 	}
@@ -91,6 +98,20 @@ public class Choice implements Serializable{
 	{
 		this.quotat = quotat;
 	}
+
+	public List<User> getUsersAttribued() {
+		return usersAttribued;
+	}
+
+	public void setUsersAttribued(List<User> usersAttribued) {
+		this.usersAttribued = usersAttribued;
+	}
+
+	public void setQuotat(Integer quotat) {
+		this.quotat = quotat;
+	}
+	
+	
 
 
 }

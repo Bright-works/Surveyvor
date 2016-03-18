@@ -2,6 +2,7 @@ package com.surveyvor.model;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -13,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -21,44 +23,43 @@ import javax.validation.constraints.Size;
 
 @Entity
 public class Question implements Serializable {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name ="Id_Question")
 	private Long Id_Question;
-	
+
 	@NotNull
 	@Size(min = 15)
 	private String contenu;
-	
+
 	@NotNull
 	@Size(min = 15)
 	private String description;
-	
+
 	@Valid
 	@ManyToOne
 	@JoinColumn(name="Id_Survey", insertable=false, updatable=false)
 	private Survey survey;
-	
+
 	@Min(1)
 	private int minChoice;
-	
+
 	@NotNull
 	private int maxChoice;
-	
+
 	@Valid
 	@NotNull
 	@Size(min = 2)
 	@OneToMany (orphanRemoval = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name="Id_Question")
 	private List<Choice> choices;
-	
+
 	@NotNull
 	@Valid
 	@Embedded
 	private QuestionParameters parametres;
-	
-	
+
 	public Question() {
 	}
 
@@ -151,8 +152,9 @@ public class Question implements Serializable {
 	public void setMaxChoice(int maxChoice) {
 		this.maxChoice = maxChoice;
 	}
+
 	
-	
+
 	public Question ( String contenu, String description, int minChoice, int maxChoice, List<Choice> choices, QuestionParameters parametres) {
 		this.contenu = contenu;
 		this.description = description;
@@ -163,6 +165,6 @@ public class Question implements Serializable {
 		this.parametres = parametres;
 
 	}
-	
+
 
 }
