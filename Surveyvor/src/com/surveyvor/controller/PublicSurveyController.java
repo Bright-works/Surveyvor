@@ -39,18 +39,12 @@ public class PublicSurveyController {
 			list = new ArrayList<Survey>();
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			facesContext.addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Problème d'accès à la base de données", ""));
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, "ProblŽme d'accŽs ˆ la base de donnŽes", ""));
 		}
 		selected = new Survey();
 		searchString = "";
 
-		// TODO TEMPORARY, REMOVE THAT PART
-		for (int i = 0; i < 20; i++) {
-			Survey survey = new Survey();
-			survey.setTitle("Survey #" + i);
-			survey.setEndDate(new Date());
-			list.add(survey);
-		}
+		
 	}
 
 	public List<Survey> getAll() {

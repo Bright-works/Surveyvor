@@ -43,7 +43,6 @@ public class Survey {
 	
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
-	//@Future // a verifier ok pour la création mais voir si ca pose pas de problème sur la duree.
 	private Date endDate;  
 	
 	@ElementCollection

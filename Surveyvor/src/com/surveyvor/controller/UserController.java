@@ -116,7 +116,9 @@ public class UserController implements Serializable {
 		survey.setCreator(user);
 		survey.setQuestions(allquestion);
 		//try{
-			surveyManager.addSurvey(survey);
+			//surveyManager.addSurvey(survey);
+			user.getOwnedSurveys().add(survey);
+			userManager.update(user);
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 		    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sondage est bien enregistré !",""));
 		    survey=new Survey();

@@ -15,7 +15,6 @@ public class SurveyParameters {
 	@NotNull
 	private Boolean privateSurvey;
 	
-	@NotNull
 	private Integer algo;
 	
 	public SurveyParameters() {

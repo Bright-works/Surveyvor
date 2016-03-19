@@ -6,7 +6,6 @@
    
    <persistence-unit name="myBase" transaction-type="RESOURCE_LOCAL">
    <provider>org.hibernate.ejb.HibernatePersistence</provider>
-		<class>com.surveyvor.model.User</class>
 		<properties>
          <!-- pour voir les requetes SQL -->
          <property name="hibernate.show_sql" value="true" />
@@ -16,7 +15,7 @@
          <property name="hibernate.connection.driver_class"
             value="com.mysql.jdbc.Driver" />
          <property name="hibernate.connection.url"
-            value="jdbc:mysql://localhost/Surveyvor_dev" />
+            value="jdbc:mysql://localhost/projetSondage" />
          <property name="hibernate.connection.username"
             value="root" />
          <property name="hibernate.connection.password"

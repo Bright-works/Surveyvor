@@ -38,5 +38,4 @@ public class PersistenceTest {
 	public void test() {
 		em.getTransaction().begin();
 	}
-
 }

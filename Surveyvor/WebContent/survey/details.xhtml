@@ -19,12 +19,9 @@
             Détails du sondage 
             <small>Surveyvor</small>
           </h4>
-          <hr/>
-          <ol class="breadcrumb">
-            <p:commandButton styleClass="btn btn-warning" value="Consulter les résultats" />
-          </ol>
      </section>
 	<section class="content">
+		<h:form id="form2">
 		<div class="box box-default" style="text-align: center;">
 				<div class="box-header with-border" >
 					<h3><h:outputText value="#{surveyBean.selected.title}"/></h3>
@@ -40,14 +37,13 @@
 				</div>
 				<c:forEach var="quest" items="#{surveyBean.selected.questions}">
 					<div class="box-body chart-responsive">
-						<p:outputLabel value="#{quest.contenu}"/>
+						<h:outputLabel value="#{quest.contenu}"/>
 						<br/>
 						<c:if test="#{userBean.survey.type ne 'OPINION'}">
-							<c:forEach items="#{quest.choices}" var="choice" >
+							<c:forEach items="#{quest.choices}" var="ch" >
 								<br/>
-								<p:spacer width="5%" height="0"/>
-								<h:outputLabel style="color: #3B0B0B; " value="  #{choice.label}"/>
-								 
+								<p:spacer height="0" width="10%"/>
+								<h:outputText style="color: #3B0B0B;display:initial" value="#{ch.label}"/>
 							</c:forEach>
 						</c:if>	
 						<!-- <p:chart type="bar" model="" style="height:270px"/>  -->
@@ -62,18 +58,21 @@
 				</div>
 				<div class="box-body">
 					<div class="direct-chat-messages">
-						<c:forEach begin="1" end="6" var="msg" step="1">
+						<c:forEach items="#{surveyBean.alls}" var="com">
 							<div class="direct-chat-msg left">
-								<p:graphicImage styleClass="direct-chat-img" alt="message user image" library="img" name="user1-128x128.jpg"/>
+								<p:graphicImage styleClass="direct-chat-img" alt="message user image" library="img" 
+									name="user.png"/>
 								<div class="direct-chat-text">
-									<h:outputText value="Commentaire #{msg}"/>
+									<h:outputText value="#{com.comment}"/>
 								</div>
 								<div class="direct-chat-info clearfix">
 									<span class="direct-chat-name pull-left">
-										<h:outputText value="utilisateur #{msg}"/>
+										<h:outputText value=""/>
 									</span>
 									<span class="direct-chat-timestamp pull-right">
-										<h:outputText value="12/03/2016"/>
+										<h:outputText value="#{com.dateComment}">
+											<f:convertDateTime pattern="dd/MM/yyyy"/>
+										</h:outputText>
 									</span>
 								</div>
 							</div>
@@ -82,16 +81,15 @@
 				</div>
 				<div class="box-footer">
 					<div class="input-group">
-						<p:inputText styleClass="inputs" placeholder=" Repondre aux commentaires ..." id="message"/>
+						<p:inputText styleClass="inputs" value="#{surveyBean.myComment.comment}" placeholder=" Ajoutez un commentaires ..." id="message"/>
 						<span class="input-group-btn">
-							<p:commandButton styleClass="btn btn-warning btn-flat" value="Envoyer"/>
+							<p:commandButton update="form2" actionListener="#{surveyBean.addComment}" styleClass="btn btn-warning btn-flat" value="Envoyer"/>
 						</span>
 					</div>
 				</div>
 			</div>
 		</div>
-	
-		
+		</h:form>
 	</section>
 	</ui:define>
 </ui:composition>

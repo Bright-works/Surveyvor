@@ -19,7 +19,7 @@
 			<section class="content">
 				<div class="box box-default" style="text-align: center;">
 					<div class="box-header with-border" >
-						<p:dataTable rows="10"  paginatorAlwaysVisible="false" paginator="true"
+						<p:dataTable id="table" rows="10"  paginatorAlwaysVisible="false" paginator="true"
 						emptyMessage="Il y a aucun sondage crée" value="#{surveyBean.list}" var="survey">
 							<f:facet name="header">
 								Liste de mes sondages
@@ -47,7 +47,7 @@
 								<p:commandButton title="Modifier la date limite du sondage" styleClass="icon orange" icon="ui-icon-gear">
 									<f:setPropertyActionListener value="#{survey}" target="#{surveyBean.selected}"/>
 								</p:commandButton>
-								<p:commandButton title="Supprimer le sondage" styleClass="icon red" icon="ui-icon-closethick">
+								<p:commandButton update="table" action="#{surveyBean.deleteSurvey}" title="Supprimer le sondage" styleClass="icon red" icon="ui-icon-closethick">
 									<f:setPropertyActionListener value="#{survey}" target="#{surveyBean.selected}"/>
 								</p:commandButton>
 							</p:column>

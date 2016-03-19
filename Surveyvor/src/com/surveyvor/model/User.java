@@ -34,7 +34,8 @@ public class User {
 	@NotNull
 	@Size(min=2, max=15)
 	private String lastName;
-
+	
+	@NotNull
 	@Email
 	@Column(unique = true)
 	private String mail;
