@@ -330,7 +330,7 @@ ui-state-hover {
 	font-size: 14px !important;
 	margin-bottom: 10px !important;
 	padding-left: 10px !important;
-	width: 100% !important;
+	width: 90% !important;
 	height: 40px;
 	border-style: 1px solid !important;
 	border-color: #555 !important;
@@ -525,4 +525,17 @@ ui-state-hover {
 	color: #cc3366 !important;
 	text-decoration: none !important;
 	font-weight: 500;
+}
+
+.ui-spinner-button {
+	height: 40% !important;
+	margin-right: 0 !important;
+}
+
+.ui-spinner-down {
+	bottom: 10px !important;
+}
+
+.ui-spinner-input {
+	width: 90% !important;
 }

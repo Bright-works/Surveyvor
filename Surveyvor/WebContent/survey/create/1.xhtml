@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:p="http://primefaces.org/ui"
-    xmlns:c="http://java.sun.com/jsp/jstl/core"	
-    >
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 <ui:composition template="../../layouts/layout.xhtml">
 
 	<ui:define name="titre">
@@ -13,79 +12,101 @@
 	</ui:define>
 	<ui:define name="content">
 		<section class="content-header">
-          <h1>
-            Création d'un Sondage
-            <small>Etape 1</small>
-          </h1>
-        </section>
-        <br/>
-        <div class="wizard">
-        	<p:steps activeIndex="0" styleClass="custom" readonly="false">
-    			<p:menuitem value="Paramétrage" url="#"/>
-    			<p:menuitem value="Création" url="2.xhtml"/>
-    			<p:menuitem value="Partage" url="3.xhtml"/>
+			<h1>
+				Création d'un Sondage <small>Etape 1</small>
+			</h1>
+		</section>
+		<br />
+		<div class="wizard">
+			<p:steps activeIndex="0" styleClass="custom" readonly="false">
+				<p:menuitem value="Paramétrage" url="#" />
+				<p:menuitem value="Création" url="2.xhtml" />
+				<p:menuitem value="Partage" url="3.xhtml" />
 			</p:steps>
 		</div>
-		<br/><br/>
-        <section>
-        	<div class="box box-warning">
-                <div class="box-header with-border">
-                  <h3 class="box-title">Paramétrage du sondage</h3>
-                </div><!-- /.box-header -->
-                <!-- form start -->
-                <h:form id="paramForm" class="form-horizontal">
-                <p:messages autoUpdate="true"/>
-                  <div id="formBody" class="box-body">
-                   
-                    <div class="form-group">
-                      <label for="inputs" class="col-sm-2 control-label">Type *</label>
-                      <div class="col-sm-10">
-                        <h:selectOneMenu value="#{userBean.survey.type}" required="true" styleClass="form-control"  id="type" >
-                        	<f:selectItems value="#{userBean.types}"/>
-                        	 <f:ajax event="change" render="paramForm"/>
-                        </h:selectOneMenu>
-                      </div>
-                    </div>
-                    <c:if test="#{userBean.survey.type ne 'OPINION'}">
-	                    <div class="form-group">
-	                      <label for="mode"  class="col-sm-2 control-label">Confidentialité *</label>
-	                      <div class="col-sm-10">
-	                        <p:selectOneRadio value="#{userBean.parameters.privateSurvey}" styleClass="minimal-red"  required="true" requiredMessage="Selectionnez le mode d'accés !"
-	                         id="mode" >
-	                        	<f:selectItem itemValue="false" itemLabel="Public"/>
-	                        	<f:selectItem itemValue="true" itemLabel="Privé"/>
-	                        </p:selectOneRadio>
-	                      </div>
-	                    </div>
-	                </c:if>
-                    <div class="form-group">
-                      <label for="visibility"  class="col-sm-2 control-label">Visibilité  *</label>
-                      <div class="col-sm-10">
-                        <p:selectOneRadio value="#{userBean.parameters.visibility}" required="true" requiredMessage="Selectionnez le mode de visibilité par les autres utilisateurs!"
-                         id="visibility" >
-                        	<f:selectItem itemValue="true" itemLabel="Oui"/>
-                        	<f:selectItem itemValue="false" itemLabel="Non"/>
-                        </p:selectOneRadio>
-                      </div>
-                    </div>
-                    <div class="form-group">
-                      <label for="modifiable" class="col-sm-2 control-label">Modifiable ? *</label>
-                      <div class="col-sm-10">
-                        <p:selectOneRadio value="#{userBean.parameters.questionModify}" required="true" requiredMessage="Selectionnez l'option de modification !"  id="modifiable" >
-                        	<f:selectItem itemValue="false" itemLabel="Oui"/>
-                        	<f:selectItem itemValue="true" itemLabel="Non"/>
-                        </p:selectOneRadio>
-                      </div>
-                    </div>
-                    					<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                    
-                  </div><!-- /.box-body -->
-                  <div class="box-footer">
-                    <p:commandButton styleClass="btn btn-warning pull-right" action="2.xhtml?faces-redirect=true" value="Suivant"/>
-                  </div><!-- /.box-footer -->
-                </h:form>
-              </div><!-- /.box -->
-        </section>
+		<br />
+		<br />
+		<section>
+			<div class="box box-warning">
+				<div class="box-header with-border">
+					<h3 class="box-title">Paramétrage du sondage</h3>
+				</div>
+				<!-- /.box-header -->
+				<!-- form start -->
+				<h:form id="paramForm" class="form-horizontal">
+					<p:messages autoUpdate="true" />
+					<div id="formBody" class="box-body">
+
+						<div class="form-group">
+							<label for="inputs" class="col-sm-2 control-label">Type *</label>
+							<div class="col-sm-10">
+								<h:selectOneMenu value="#{userBean.survey.type}" required="true"
+									styleClass="form-control" id="type">
+									<f:selectItems value="#{userBean.types}" />
+									<f:ajax event="change" render="paramForm" />
+								</h:selectOneMenu>
+							</div>
+						</div>
+						<c:choose>
+						<c:when test="#{userBean.survey.type eq 'OPINION'}">
+							<div class="form-group">
+								<label for="mode" class="col-sm-2 control-label">Confidentialité
+									*</label>
+								<div class="col-sm-10">
+									<p:selectOneRadio value="#{userBean.parameters.privateSurvey}"
+										styleClass="minimal-red" required="true"
+										requiredMessage="Selectionnez le mode d'accès !" id="mode">
+										<f:selectItem itemValue="false" itemLabel="Public" />
+										<f:selectItem itemValue="true" itemLabel="Privé" />
+									</p:selectOneRadio>
+								</div>
+							</div>
+						</c:when>
+						<c:otherwise>
+							<input type="hidden" name="#{userBean.parameters.privateSurvey}"
+									value="true" />
+						</c:otherwise>
+						</c:choose>
+						<div class="form-group">
+							<label for="visibility" class="col-sm-2 control-label">Visibilité
+								des réponses des autres utilisateurs *</label>
+							<div class="col-sm-10">
+								<p:selectOneRadio value="#{userBean.parameters.visibility}"
+									required="true"
+									requiredMessage="Sélectionnez le mode de visibilité par les autres utilisateurs!"
+									id="visibility">
+									<f:selectItem itemValue="true" itemLabel="Oui" />
+									<f:selectItem itemValue="false" itemLabel="Non" />
+								</p:selectOneRadio>
+							</div>
+						</div>
+						<div class="form-group">
+							<label for="modifiable" class="col-sm-2 control-label">Les
+								utilisateurs peuvent-ils modifier leurs réponses ? *</label>
+							<div class="col-sm-10">
+								<p:selectOneRadio value="#{userBean.parameters.questionModify}"
+									required="true"
+									requiredMessage="Selectionnez l'option de modification !"
+									id="modifiable">
+									<f:selectItem itemValue="false" itemLabel="Oui" />
+									<f:selectItem itemValue="true" itemLabel="Non" />
+								</p:selectOneRadio>
+							</div>
+						</div>
+						<input type="hidden" name="${_csrf.parameterName}"
+							value="${_csrf.token}" />
+
+					</div>
+					<!-- /.box-body -->
+					<div class="box-footer">
+						<p:commandButton styleClass="btn btn-warning pull-right"
+							action="2.xhtml?faces-redirect=true" value="Suivant" />
+					</div>
+					<!-- /.box-footer -->
+				</h:form>
+			</div>
+			<!-- /.box -->
+		</section>
 	</ui:define>
 </ui:composition>
 </html>

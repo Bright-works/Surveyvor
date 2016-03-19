@@ -40,7 +40,7 @@ public class SurveyController {
 	public String showSurvey(){
 		return "./details.xhtml?faces-redirect=true";
 	}
-	//----------gtters and setters--------
+	//----------getters and setters--------
 	public SurveyManager getManager() {
 		return manager;
 	}
