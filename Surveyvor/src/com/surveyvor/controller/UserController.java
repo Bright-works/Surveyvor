@@ -3,7 +3,6 @@ package com.surveyvor.controller;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -32,7 +31,7 @@ public class UserController implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	
+	private boolean conneted;
 	private User user=new User();
 	private Survey survey=new Survey();
 	private List<Choice> choix=new ArrayList<Choice>();
@@ -87,9 +86,9 @@ public class UserController implements Serializable {
 	public void deleteQuestion(Question question){
 		allquestion.remove(question);
 	}
-	private boolean verifierEmail(String mail){
+	public boolean verifierEmail(String mail){
 		Pattern pattern= Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
-		Matcher matcher=pattern.matcher(email);
+		Matcher matcher=pattern.matcher(mail);
 		if(matcher.matches()){
 			return true;}
 		else return false;
@@ -135,19 +134,7 @@ public class UserController implements Serializable {
 		} */
 		return "../created.xhtml?faces-redirect=true";
 	}
-	public String forgetPassword(){
-		if(verifierEmail(email)){
-			user=userManager.findByMail(email);
-			if(user.getId()>0){
-				
-			}
-		}
-		else{
-			FacesContext facesContext = FacesContext.getCurrentInstance();
-		    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "VŽrifier le format d'email",""));
-		}
-		return "";
-	}
+	
 	//------------------------getters and setters ----->
 	public User getUser() {
 		return user;
@@ -245,6 +232,13 @@ public class UserController implements Serializable {
 
 	public void setMySurvy(List<Survey> mySurvy) {
 		this.mySurvy = mySurvy;
+	}
+	public boolean isConneted() {
+		return conneted;
+	}
+
+	public void setConneted(boolean conneted) {
+		this.conneted = conneted;
 	}
 	
 }

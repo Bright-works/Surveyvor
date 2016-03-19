@@ -4,13 +4,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
-
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -39,7 +41,6 @@ public class Answer {
 	private Question question;
 	
 	@Valid
-	@NotNull
 	@ManyToMany
 	//@Size (min= question.getMinChoice(), max = question.getMaxChoice())// a remplir selon la question voir comment faire)
 	private List<Choice> choices;
@@ -117,6 +118,18 @@ public class Answer {
 
 
 	public void setDate(Date date) {
+		this.date = date;
+	}
+
+
+	public Answer(Long id_Answer, User answerer, Question question, List<Choice> choices, Map<Long, String> valeurs,
+			Date date) {
+		super();
+		Id_Answer = id_Answer;
+		this.answerer = answerer;
+		this.question = question;
+		this.choices = choices;
+		this.valeurs = valeurs;
 		this.date = date;
 	}
 	

@@ -20,7 +20,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-public class Question implements Serializable{
+public class Question implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,21 +28,21 @@ public class Question implements Serializable{
 	private Long Id_Question;
 	
 	@NotNull
-	@Size(min = 5)
+	@Size(min = 15)
 	private String contenu;
 	
 	@NotNull
-	@Size(min = 5)
+	@Size(min = 15)
 	private String description;
 	
 	@Valid
-	//@NotNull
 	@ManyToOne
 	@JoinColumn(name="Id_Survey", insertable=false, updatable=false)
 	private Survey survey;
-	@NotNull
+	
 	@Min(1)
 	private int minChoice;
+	
 	@NotNull
 	private int maxChoice;
 	
@@ -53,8 +53,8 @@ public class Question implements Serializable{
 	@JoinColumn(name="Id_Question")
 	private List<Choice> choices;
 	
-	@Valid
 	@NotNull
+	@Valid
 	@Embedded
 	private QuestionParameters parametres;
 	

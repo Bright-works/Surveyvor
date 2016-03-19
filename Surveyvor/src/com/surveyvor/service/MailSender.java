@@ -18,6 +18,8 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import org.springframework.stereotype.Service;
+
 import com.surveyvor.model.Survey;
 import com.surveyvor.model.User;
 
@@ -25,6 +27,7 @@ import com.surveyvor.model.User;
  * @author LÈonore des PLAS
  *
  */
+@Service
 public class MailSender {
 	Session session;
 
@@ -72,6 +75,33 @@ public class MailSender {
 			msg.setContent(mm);
 			Transport.send(msg);
 		}
+	}
+	
+	public void sendResetPassword(String email, String url) throws MessagingException{		
+		
+			Message msg = new MimeMessage(session);
+			msg.setFrom(new InternetAddress("no.reply.myapp@gmail.com"));
+			msg.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
+			msg.setSubject("Surveyvor reset password");
+			
+			MimeMultipart mm = new MimeMultipart("alternative");
+			
+			MimeBodyPart html = new MimeBodyPart();
+			html.setContent("<h1>Bonjour,</h1></br>"
+					+ "<p>Votre mot de passe est oublié, pour résoudre ce problème, vous trouverez ci-dessous un lien"
+					+ " pour définir votre nouveau mot de passe.</p>"
+					+ "<p><a href='"+url+"'>"+url+"</a></p>", "text/html");
+			
+			MimeBodyPart txt = new MimeBodyPart();
+			txt.setText("Bonjour,\n"
+					+ "Votre mot de passe est oublié, pour résoudre ce problème, vous trouverez ci-dessous un lien.\n"
+					+ "pour définir votre nouveau mot de passe:\n"
+					+ url);
+			
+			mm.addBodyPart(txt);
+			mm.addBodyPart(html);
+			msg.setContent(mm);
+			Transport.send(msg);
 	}
 	
 	public void notifySurveyEnded(Survey survey) throws MessagingException{

@@ -1,30 +1,33 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:p="http://primefaces.org/ui"
-    xmlns:c="http://java.sun.com/jsp/jstl/core"	
-    >
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 <h:head>
-<title>Surveyvor</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" charset="utf-8"/>
+	<title>Surveyvor</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1"
+		charset="utf-8" />
 
-<script type="application/x-javascript">
+	<script type="application/x-javascript">
+		
 addEventListener("load", function() {
 	setTimeout(hideURLbar, 0); }, false);
 function hideURLbar(){ window.scrollTo(0,1); } 
-</script>
 
-<meta name="keywords" content="Bootstrap Responsive Templates, Iphone Compatible Templates, Smartphone Compatible Templates, Ipad Compatible Templates, Flat Responsive Templates"/>
+	</script>
 
-<h:outputStylesheet library="css2" name="style.css" />
-<h:outputStylesheet library="css2" name="style1.css" />
-<h:outputStylesheet library="css2" name="bootstrap.css" />
+	<meta name="keywords"
+		content="Bootstrap Responsive Templates, Iphone Compatible Templates, Smartphone Compatible Templates, Ipad Compatible Templates, Flat Responsive Templates" />
+
+	<h:outputStylesheet library="css2" name="style.css" />
+	<h:outputStylesheet library="css2" name="style1.css" />
+	<h:outputStylesheet library="css2" name="bootstrap.css" />
 
 
 </h:head>
 <h:body>
-<!--header-->
+	<!--header-->
 	<div class="header">
 		<div class="container">
 			<div class="header-info">
@@ -35,18 +38,18 @@ function hideURLbar(){ window.scrollTo(0,1); }
 						<h:graphicImage with="50px" library="img" name="logo1orange.gif" styleClass="img-responsive"/>
 					</a>
 				</div>
-				<c:if test="#{loginBean.user.id eq 0}">
+				<c:if test="#{userBean.conneted eq false}">
 					<div class="header-right">
 						<div class="menu">
 							<span class="menu">MENU</span>
 								<ul class="navigatoin">
-                              		<li><p:commandLink styleClass="signup play-icon popup-with-zoom-anim"  action="/login.xhtml?faces-redirect=true">Connexion</p:commandLink></li>
-                              		<li><p:commandLink styleClass="signup play-icon popup-with-zoom-anim"  action="/register.xhtml?faces-redirect=true">Inscription</p:commandLink></li>
+                              		<li><p:commandLink styleClass="signup play-icon popup-with-zoom-anim" action="/login.xhtml?faces-redirect=true" >Connexion</p:commandLink></li>
+                              		<li><p:commandLink styleClass="signup play-icon popup-with-zoom-anim" action="/login.xhtml?faces-redirect=true">Inscription</p:commandLink></li>
 								</ul>
 						</div>		
 					</div>
 				</c:if>
-				<c:if test="#{loginBean.user.id ne 0}">
+				<c:if test="#{userBean.conneted eq true}">
 					<div class="header-right">
 						<div class="menu">
 							<span class="menu">MENU</span>
@@ -59,50 +62,85 @@ function hideURLbar(){ window.scrollTo(0,1); }
 				</c:if>
 			 </h:form>
 			</div>
-			
+
 		</div>
 		<div id="Home" class="header-bottom">
-        <div class="container">
-			<div class="h-right">
-				<h2>Créer et partager des sondages, puis obtener les résultats facilement </h2>
-				<div class="buttons">
-                    <div class="contact-info" style="">
-		                <h:form action="recherche.html">
-		                	<p:growl/>
-		                    <p:commandButton styleClass="btn white"  value="Créer un Sondage"/>
-		                    <p:spacer width="30px"/>
-		                    <p:commandButton actionListener="#{userBean.test}"  styleClass="btn white"  value="Participer à des Sondages"/>
-                        </h:form>
-                    </div>
+			<div class="container">
+				<div class="h-right">
+					<h2>Créer et partager des sondages, puis obtener les résultats
+						facilement</h2>
+					<div class="buttons">
+						<div class="contact-info" style="">
+							<h:form action="recherche.html">
+								<p:growl />
+								<p:commandButton styleClass="btn white" value="Créer un Sondage" />
+								<p:spacer width="30px" />
+								<p:commandButton
+									styleClass="btn white" value="Participer à des Sondages" />
+							</h:form>
+						</div>
+					</div>
 				</div>
-			</div>
-			<div class="ui-grid ui-grid-responsive">
-				<h:form >
-      					<c:forEach begin="1" end="9" step="1" var="index">
-      						<div class="ui-grid-col-4">
-      							<h5><h:commandLink value="Titre Sondage #{index}"/></h5>
-      							<p>Description du sondage #{index} </p>
-      						</div>
-      					</c:forEach>
-    			</h:form>
+				<h:form>
+					<p:carousel value="#{publicSurveyBean.list}" var="survey"
+						numVisible="3" responsive="true">
+						<f:facet name="header" width="100%">
+								<h:outputText value="Sondages publics en cours" />
+								<p:spacer width="5%" height="0"/>
+								<h:form>
+										<p:inputText style="width:60% !important"
+											value="#{publicSurveyBean.searchString}" id="searchCV"
+											placeholder="Chercher un CV" required="required" />
+										<p:commandButton type="submit" styleClass="btn orange btn-flat"
+											action="#{publicSurveyBean.search}" id="searchCVButton"
+											icon="ui-icon-search" title="Search Button"
+											style="box-shadow: none" />
+								</h:form>
+						</f:facet>
+						<c:choose>
+							<c:when test="#{empty publicSurveyBean.list}">
+								<p>Il n'y a aucun sondage public en cours</p>
+							</c:when>
+							<c:otherwise>
+								<h:commandLink action="#{publicSurveyBean.show(survey)}">
+									<h4><h:outputText value="#{survey.title}" /></h4>
+									<br/>
+									<h5><h:outputText value="#{survey.description}" /></h5>
+									<br/>
+									<p>Se termine le
+										<h:outputText value="#{survey.endDate}">
+											<f:convertDateTime pattern="dd-MM-yyyy" />
+										</h:outputText>
+										à
+										<h:outputText value="#{survey.endDate}">
+											<f:convertDateTime pattern="HH:mm" />
+										</h:outputText>
+									</p>
+								</h:commandLink>
+							</c:otherwise>
+						</c:choose>
+					</p:carousel>
+				</h:form>
 			</div>
 		</div>
 	</div>
-</div>
-    
 
-<!--/header-->
 
-<!--footer-->
-<div class="footer">
-	<div class="container">
-		<div class="copy-rights">
-			<p>  Created by<a> Brightworks - 2016.</a></p>
+	<!--/header-->
+
+	<!--footer-->
+	<div class="footer">
+		<div class="container">
+			<div class="copy-rights">
+				<p>
+					Created by<a> Brightworks - 2016.</a>
+				</p>
+			</div>
+			<a href="#" id="toTop" style="display: block;"> <span
+				id="toTopHover" style="opacity: 1;"> </span></a>
 		</div>
-		<a href="#" id="toTop" style="display: block;"> <span id="toTopHover" style="opacity: 1;"> </span></a>
 	</div>
-</div>
-<!--/footer-->
+	<!--/footer-->
 
 </h:body>
 </html>

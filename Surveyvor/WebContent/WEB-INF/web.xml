@@ -1,70 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" 
-xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" 
-id="WebApp_ID" version="3.0">
-  <display-name>Surveyvor</display-name>
-  <welcome-file-list>
-    <welcome-file>index.xhtml</welcome-file>
-    <welcome-file>index.html</welcome-file>
-    <welcome-file>index.htm</welcome-file>
-    <welcome-file>index.jsp</welcome-file>
-    <welcome-file>default.html</welcome-file>
-    <welcome-file>default.htm</welcome-file>
-    <welcome-file>default.jsp</welcome-file>
-  </welcome-file-list>
-  
-     <context-param>
-        <param-name>javax.faces.PROJECT_STAGE</param-name>
-        <param-value>Development</param-value>
-    </context-param>
-    
-     <!-- JSF Configuration  -->
-  <servlet>
-    <servlet-name>Faces Servlet</servlet-name>
-    	<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
-   		<load-on-startup>1</load-on-startup>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>Faces Servlet</servlet-name>
-    <url-pattern>*.xhtml</url-pattern>    
-  </servlet-mapping>
-  
-  
-   <!-- Spring  + security Configuration  -->
-   <listener>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	id="WebApp_ID" version="3.0">
+	<display-name>Surveyvor</display-name>
+	<welcome-file-list>
+		<welcome-file>index.xhtml</welcome-file>
+		<welcome-file>index.html</welcome-file>
+		<welcome-file>index.htm</welcome-file>
+		<welcome-file>index.jsp</welcome-file>
+		<welcome-file>default.html</welcome-file>
+		<welcome-file>default.htm</welcome-file>
+		<welcome-file>default.jsp</welcome-file>
+	</welcome-file-list>
+
+	<context-param>
+		<param-name>javax.faces.PROJECT_STAGE</param-name>
+		<param-value>Development</param-value>
+	</context-param>
+
+	<!-- JSF Configuration -->
+	<servlet>
+		<servlet-name>Faces Servlet</servlet-name>
+		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Faces Servlet</servlet-name>
+		<url-pattern>*.xhtml</url-pattern>
+	</servlet-mapping>
+
+
+	<!-- Spring + security Configuration -->
+	<servlet>
+        <servlet-name>Surveyvor</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Surveyvor</servlet-name>
+        <url-pattern>/url/*</url-pattern>
+    </servlet-mapping>
+	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-   </listener>
-   <listener>
-   		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
-   </listener>
-   <context-param>
-   		<param-name>contextConfigLocation</param-name>
-   		<param-value>/WEB-INF/spring-security.xml,
+	</listener>
+	<listener>
+		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+	</listener>
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/spring-security.xml,
    		/WEB-INF/application-context.xml</param-value>
-   </context-param>
-   <filter>
-   		<filter-name>springSecurityFilterChain</filter-name>
-   		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
-   </filter>
-   <filter-mapping>
-   		<filter-name>springSecurityFilterChain</filter-name>
-   		<url-pattern>/*</url-pattern>
-   		<dispatcher>FORWARD</dispatcher>
-        <dispatcher>REQUEST</dispatcher>
-   </filter-mapping>
-  
-  	<!-- Primefaces Captcha Configuration  -->
-  <context-param>
-    <param-name>primefaces.PUBLIC_CAPTCHA_KEY</param-name>
-    <param-value>6Lc70RkTAAAAADpDE2XNv4Y9losv-dbwsrur3-WE</param-value>
-  </context-param>
-  <context-param>
-    <param-name>primefaces.PRIVATE_CAPTCHA_KEY</param-name>
-    <param-value>6Lc70RkTAAAAAPqAYoOQ5SlmG0wLmwrpjB7iAW9u</param-value>
-  </context-param>
-  
-  <!-- Autres Configuration  -->
-  <session-config>
-  	<session-timeout>20</session-timeout>
-  </session-config>
+	</context-param>
+	<filter>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>springSecurityFilterChain</filter-name>
+		<url-pattern>/*</url-pattern>
+		<dispatcher>FORWARD</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
+
+	<!-- Primefaces Captcha Configuration -->
+	<context-param>
+		<param-name>primefaces.PUBLIC_CAPTCHA_KEY</param-name>
+		<param-value>6Lc70RkTAAAAADpDE2XNv4Y9losv-dbwsrur3-WE</param-value>
+	</context-param>
+	<context-param>
+		<param-name>primefaces.PRIVATE_CAPTCHA_KEY</param-name>
+		<param-value>6Lc70RkTAAAAAPqAYoOQ5SlmG0wLmwrpjB7iAW9u</param-value>
+	</context-param>
+
+	<!-- Autres Configuration -->
+	<session-config>
+		<session-timeout>20</session-timeout>
+	</session-config>
 </web-app>

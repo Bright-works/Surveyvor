@@ -2,10 +2,11 @@ package com.surveyvor.controller;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.bean.RequestScoped; 
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.persistence.NoResultException;
@@ -14,22 +15,31 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
-import org.primefaces.context.RequestContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.codec.Hex;
+import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.surveyvor.manager.PermissionManager;
 import com.surveyvor.manager.UserManager;
 import com.surveyvor.model.User;
+import com.surveyvor.service.MailSender;
 
+@Controller
 @Component("loginBean")
 @Scope("request")
+@RequestMapping(value="/reset")
 public class LoginController implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -44,7 +54,10 @@ public class LoginController implements Serializable {
 	@Autowired 
 	private PermissionManager permissionManager;
 	
+	@Autowired
+	private MailSender mailSender;
 	private String verifPassword="";
+	private String email="";
 	
 	public LoginController() {
 	}
@@ -53,21 +66,26 @@ public class LoginController implements Serializable {
 	
 	public String connecter() throws ServletException, IOException{
 		try{
-			user=userManager.findByMail(user.getMail());
-		login.setUser(user);
-		ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-	    RequestDispatcher dispatcher = ((ServletRequest) context.getRequest())
-	                .getRequestDispatcher("/j_spring_security_check");
-	    dispatcher.forward((ServletRequest) context.getRequest(),
-	                (ServletResponse) context.getResponse());
-	    FacesContext.getCurrentInstance().responseComplete(); 
-		
-	    return null;
+			User authen=userManager.findByMail(user.getMail());
+			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+			if(encoder.matches(user.getPassword(), authen.getPassword())){
+				login.setUser(authen);
+				login.setConneted(true);
+				ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+			    RequestDispatcher dispatcher = ((ServletRequest) context.getRequest())
+			                .getRequestDispatcher("/j_spring_security_check");
+			    dispatcher.forward((ServletRequest) context.getRequest(),
+			                (ServletResponse) context.getResponse());
+			    FacesContext.getCurrentInstance().responseComplete(); 
+			}
+			else{
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+			    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Email ou mot de passe invalid !",""));
+			}
 		}
 		catch(NoResultException exp){
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 		    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Email ou mot de passe invalid !",""));
-		
 		}
 		return null;
 		
@@ -95,7 +113,6 @@ public class LoginController implements Serializable {
 				}
 			}
 			catch(NoResultException expt){
-				//RequestContext.getCurrentInstance().execute("PF('small-dialog').show();");
 				user.setAdmin("ROLE_USER");
 				BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 				user.setPassword(encoder.encode(user.getPassword()));
@@ -106,6 +123,7 @@ public class LoginController implements Serializable {
 			        UserDetails userDetails = permissionManager.loadUserByUsername(user.getMail());
 			        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, verifPassword, userDetails.getAuthorities());
 			        SecurityContextHolder.getContext().setAuthentication(auth);
+			        login.setConneted(true);
 			        return "/user/acceuil.xhtml";
 			        
 			      } catch (Exception e) {
@@ -115,6 +133,62 @@ public class LoginController implements Serializable {
 			}
 		}
 		return null;
+	}
+	
+	public String forgetPassword() throws UnknownHostException{
+		if(login.verifierEmail(email)){
+			User finded=userManager.findByMail(email);
+			if(finded.getId()>0){
+				email = String.copyValueOf(Hex.encode(email.getBytes()));
+				String url;
+				try {
+					url = "http://"+Inet4Address.getLocalHost().getHostAddress()+":8080/Surveyvor/url/reset/password/"+email;
+					System.out.println(url);
+					mailSender.sendResetPassword(finded.getMail(), url);
+					email="";
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+		}
+		else{
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+		    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "VŽrifier le format d'email",""));
+		}
+		return "/login.xhtml?faces-redirect=true";
+	}
+	
+	@RequestMapping(path = "/password/{param}", method = RequestMethod.GET)
+	public ModelAndView reset(@PathVariable("param") String param){
+		this.email=new String(Hex.decode(param),StandardCharsets.UTF_8);
+		try{
+			login.setUser(userManager.findByMail(email));
+		}catch(Exception exception)
+		{
+			return new ModelAndView("index");
+		}
+			return new ModelAndView("resetPassword");
+	} 
+	
+	public String resetPassword(){
+		if(user.getPassword().equals(verifPassword)){
+			try{
+				BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+				login.getUser().setPassword(encoder.encode(user.getPassword()));
+				userManager.update(login.getUser());
+				}
+			catch(Exception exp){
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+			    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Erreur pendant la communication avec la BD!",""));	
+			}
+		}
+		else{
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+		    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Les deux mots de passe ne sont indentiques!",""));
+		}
+		return "index.xhtml?faces-redirect=true";
 	}
 	
 	//--------------------- getter and setters -------------//
@@ -142,5 +216,39 @@ public class LoginController implements Serializable {
 	public void setVerifPassword(String verifPassword) {
 		this.verifPassword = verifPassword;
 	}
+
+	public UserController getLogin() {
+		return login;
+	}
+
+	public void setLogin(UserController login) {
+		this.login = login;
+	}
+
+	public PermissionManager getPermissionManager() {
+		return permissionManager;
+	}
+
+	public void setPermissionManager(PermissionManager permissionManager) {
+		this.permissionManager = permissionManager;
+	}
+
+	public MailSender getMailSender() {
+		return mailSender;
+	}
+
+	public void setMailSender(MailSender mailSender) {
+		this.mailSender = mailSender;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
 
 }

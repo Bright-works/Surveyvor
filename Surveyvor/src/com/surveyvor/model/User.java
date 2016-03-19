@@ -40,7 +40,7 @@ public class User {
 	private String mail;
 
 	@NotNull
-	@Size(min=8)
+	@Size(min=4)
 	private String password;
 
 	@NotNull

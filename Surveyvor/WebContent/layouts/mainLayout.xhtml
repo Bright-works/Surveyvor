@@ -33,11 +33,11 @@ function hideURLbar(){ window.scrollTo(0,1); }
 			<h:form>
 				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                 <div class="logo">
-					<a href="index.xhtml">
+					<a href="/Surveyvor/index.xhtml">
 						<h:graphicImage with="50px" library="img" name="logo1orange.gif" styleClass="img-responsive"/>
 					</a>
 				</div>
-				<c:if test="#{loginBean.user.id eq 0}">
+				<c:if test="#{userBean.conneted eq false}">
 					<div class="header-right">
 						<div class="menu">
 							<span class="menu">MENU</span>
@@ -48,7 +48,7 @@ function hideURLbar(){ window.scrollTo(0,1); }
 						</div>		
 					</div>
 				</c:if>
-				<c:if test="#{loginBean.user.id ne 0}">
+				<c:if test="#{userBean.conneted eq true}">
 					<div class="header-right">
 						<div class="menu">
 							<span class="menu">MENU</span>

@@ -40,7 +40,7 @@ public class Comment {
 	private String comment;
 	
 	@NotNull
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	private Date dateComment;
 	
 	

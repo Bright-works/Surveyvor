@@ -18,7 +18,7 @@ public class Choice {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "Id_Choice")
 	private Long Id_Choice;
-
+	
 	@NotNull
 	private String label;
 	
@@ -27,17 +27,14 @@ public class Choice {
 	private String description;
 	
 	@Valid
-	//@NotNull
 	@ManyToOne
 	@JoinColumn(name="Id_Question", insertable=false, updatable=false)
 	private Question question;
 	
 	private Integer quotat;
 	
-	
 	public Choice() {
 	}
-
 
 	public Long getId() {
 		return Id_Choice;
@@ -78,23 +75,15 @@ public class Choice {
 		this.quotat = quotat;
 	}
 	
-	public Long getId_Choice() {
-		return Id_Choice;
-	}
-
-	public void setId_Choice(Long id_Choice) {
-		Id_Choice = id_Choice;
-	}
-
-	public Integer getQuotat() {
+	public int getQuotat()
+	{
 		return quotat;
 	}
-
-	public void setQuotat(Integer quotat) {
+	
+	public void setQuotat(int quotat)
+	{
 		this.quotat = quotat;
 	}
-	
-	
-	
+
 
 }

@@ -33,7 +33,7 @@ public class PermissionManager implements UserDetailsService{
 		try { 
 			myuser = manager.findByMail(login); 
 			} 
-		catch (Exception ex) { throw new UsernameNotFoundException("User " + login+ " not exists", ex); 
+		catch (Exception ex) { throw new UsernameNotFoundException("Email ou mot de passe invalid!", ex); 
 			}
 		String role= myuser.getAdmin();
 		arrayAuths.add(new SimpleGrantedAuthority(role));

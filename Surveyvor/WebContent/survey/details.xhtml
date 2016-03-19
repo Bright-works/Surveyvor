@@ -6,7 +6,12 @@
     xmlns:p="http://primefaces.org/ui"
     xmlns:c="http://java.sun.com/jsp/jstl/core"	
     >
-<ui:composition template="../layouts/layout.xhtml">
+<ui:composition template="../layouts/mainLayout.xhtml">
+
+	<ui:define name="css">
+		<h:outputStylesheet library="css" name="AdminLTE.css" />
+		<h:outputStylesheet library="css" name="_all-skins.min.css" />
+	</ui:define>
 	<ui:define name="titre">Details du sondage	</ui:define>
 	<ui:define name="content">
 		<section class="content-header">
@@ -14,6 +19,7 @@
             Détails du sondage 
             <small>Surveyvor</small>
           </h4>
+          <hr/>
           <ol class="breadcrumb">
             <p:commandButton styleClass="btn btn-warning" value="Consulter les résultats" />
           </ol>
@@ -26,6 +32,28 @@
 				<div class="box-body">
 					<p:outputLabel value="#{surveyBean.selected.description}"/>
 				</div>
+		</div>
+		<div class="col-md-6">
+			<div class="box box-danger">
+				<div class="box-header with-border">
+					<h5>Questions :</h5>
+				</div>
+				<c:forEach var="quest" items="#{surveyBean.selected.questions}">
+					<div class="box-body chart-responsive">
+						<p:outputLabel value="#{quest.contenu}"/>
+						<br/>
+						<c:if test="#{userBean.survey.type ne 'OPINION'}">
+							<c:forEach items="#{quest.choices}" var="choice" >
+								<br/>
+								<p:spacer width="5%" height="0"/>
+								<h:outputLabel style="color: #3B0B0B; " value="  #{choice.label}"/>
+								 
+							</c:forEach>
+						</c:if>	
+						<!-- <p:chart type="bar" model="" style="height:270px"/>  -->
+					</div>
+				</c:forEach>			
+			</div>
 		</div>
 		<div class="col-md-6">
 			<div class="box box-warning direct-chat direct-chat-warning">
@@ -62,18 +90,8 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-6">
-			<div class="box box-danger">
-				<div class="box-header with-border">
-					<h5>Question 1</h5>
-				</div>
-				
-				<div class="box-body chart-responsive">
-					<p:outputLabel value=" Quelle formation péréférez-vous ?"/>
-					<!-- <p:chart type="bar" model="" style="height:270px"/>  -->
-				</div>			
-			</div>
-		</div>
+	
+		
 	</section>
 	</ui:define>
 </ui:composition>
