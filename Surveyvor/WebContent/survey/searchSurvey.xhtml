@@ -89,8 +89,11 @@
 		<h:form>
 			<p:dataTable var="current"
 				value="#{publicSurveyBean.matchingSurveys}" rows="10"
-				paginator="true"
-				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+				paginator="true" styleClass="searchDataTable"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+				headerStyleClass="searchHeader"
+				rowStyleClass="searchRow"
+				footerStyleClass="searchHeader">
 
 				<p:column headerText="Titre du sondage" sortBy="#{current.title}"
 					filterBy="#{current[0]}" filterMatchMode="contains">

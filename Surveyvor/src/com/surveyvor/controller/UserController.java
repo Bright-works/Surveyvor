@@ -9,7 +9,6 @@ import java.util.regex.Pattern;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.event.AjaxBehaviorEvent;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -39,14 +38,13 @@ public class UserController implements Serializable {
 
 	private User user = new User();
 	private Survey survey = new Survey();
-	private List<Choice> choix = new ArrayList<Choice>();
 	private Question question = new Question();
 	private List<Question> allquestion = new ArrayList<Question>();
 	private SurveyParameters parameters = new SurveyParameters();
 	private List<String> diffusion = new ArrayList<String>();
 	private String email = "";
 	private List<Survey> mySurvy = new ArrayList<Survey>();
-	private String selectedQuestionType = "0";
+	private List<String> selectedQuestionType = new ArrayList<String>();
 
 	public UserController() {
 		// TODO Auto-generated constructor stub
@@ -57,8 +55,9 @@ public class UserController implements Serializable {
 	@PostConstruct
 	public void init() {
 		addNewQuestion();
-		addNewChoice();
-		addNewChoice();
+		addNewChoice(allquestion.get(0));
+		addNewChoice(allquestion.get(0));
+		selectedQuestionType.add("0");
 	}
 
 	public TypeSurvey[] getTypes() {
@@ -72,27 +71,30 @@ public class UserController implements Serializable {
 		q.setMaxChoice(1);
 		q.setMinChoice(1);
 		q.setSurvey(survey);
-		q.setChoices(choix);
+		q.setChoices(new ArrayList<Choice>());
 		// -----
 		param.setRequested(true);
-		param.setWritable(true);
+		param.setWritable(false);
 		param.setSeveralAnswers(false);
 		q.setParametres(param);
+		selectedQuestionType.add("0");
 		allquestion.add(q);
 	}
 
-	public void addNewChoice() {
+	public void addNewChoice(Question q) {
 		Choice choice = new Choice();
 		choice.setLabel("");
 		choice.setDescription("Non description");
-		choix.add(choice);
+		q.addChoice(choice);
 	}
 
-	public void deleteChoice(Choice choice) {
-		choix.remove(choice);
+	public void deleteChoice(Question q, Choice choice) {
+		q.removeChoice(choice);
 	}
 
 	public void deleteQuestion(Question question) {
+		int i = allquestion.lastIndexOf(question);
+		selectedQuestionType.remove(i);
 		allquestion.remove(question);
 	}
 
@@ -111,26 +113,77 @@ public class UserController implements Serializable {
 	}
 
 	public String validateMinMaxChoices() {
-		int minChoice = allquestion.get(0).getMinChoice();
-		int maxChoice = allquestion.get(0).getMaxChoice();
-		System.out.println("MIN/MAX: " + minChoice + "/" + maxChoice);
-		if (minChoice > maxChoice || maxChoice > choix.size()) {
-			FacesContext facesContext = FacesContext.getCurrentInstance();
-			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Veuillez rentrer des valeurs minimales et maximales correctes", "minWish"));
-			return "2.xhtml";
-		}else{			
-			return "3.xhtml?faces-redirect=true";
+		if (survey.getType() == TypeSurvey.REPARTITION) {
+			int minChoice = allquestion.get(0).getMinChoice();
+			int maxChoice = allquestion.get(0).getMaxChoice();
+			System.out.println("MIN/MAX: " + minChoice + "/" + maxChoice);
+			
+			if (minChoice > maxChoice || maxChoice > allquestion.get(0).getChoices().size()) {
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+						"Veuillez rentrer des valeurs minimales et maximales correctes", "minWish"));
+				return "2.xhtml";
+			} else {
+				
+				//If maxchoice > 1 -> severalChoice = true
+				if(maxChoice>1){
+					allquestion.get(0).getParametres().setSeveralAnswers(true);
+				}
+				
+				return "3.xhtml?faces-redirect=true";
+			}
+		} else {
+			int i=0;
+			boolean error=false;
+			while(i<allquestion.size() && !error){
+				int minChoice = allquestion.get(i).getMinChoice();
+				int maxChoice = allquestion.get(i).getMaxChoice();
+				System.out.println("MIN/MAX: " + minChoice + "/" + maxChoice);
+				System.out.println("SELECTED TYPE: "+ selectedQuestionType.get(i));
+				
+				switch(selectedQuestionType.get(i)){
+				case "0": {
+					allquestion.get(i).getParametres().setWritable(false);
+					allquestion.get(i).getParametres().setSeveralAnswers(true);
+					
+					if (minChoice > maxChoice || maxChoice > allquestion.get(i).getChoices().size()) {
+						error=true;
+					} 
+				}
+					break;
+				case "1": {
+					allquestion.get(i).getParametres().setWritable(false);
+					allquestion.get(i).getParametres().setSeveralAnswers(false);
+				}
+					break;
+				case "2": {
+					allquestion.get(i).getParametres().setWritable(true);
+					allquestion.get(i).getParametres().setSeveralAnswers(false);
+					allquestion.get(i).setChoices(new ArrayList<Choice>());
+				}
+					break;
+				}
+				
+				i++;
+
+			}
+			if (error) {
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+						"Veuillez rentrer des valeurs minimales et maximales correctes", "minChoice"+i));
+				return "2.xhtml";
+			} else {
+				return "3.xhtml?faces-redirect=true";
+			}
 		}
 	}
 
 	public String addNewSurvey() {
-		
+
 		if (survey.getType() == TypeSurvey.REPARTITION) {
 			parameters.setPrivateSurvey(true);
 		}
 		
-		allquestion.get(0).setChoices(choix);
 		parameters.setAlgo(-1);
 		survey.setParametres(parameters);
 		survey.setDiffusion(diffusion);
@@ -142,7 +195,6 @@ public class UserController implements Serializable {
 		facesContext.addMessage(null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, "Le sondage a bien été enregistré !", ""));
 		survey = new Survey();
-		choix = new ArrayList<Choice>();
 		question = new Question();
 		allquestion = new ArrayList<Question>();
 		parameters = new SurveyParameters();
@@ -152,17 +204,16 @@ public class UserController implements Serializable {
 	}
 
 	// ------------------------getters and setters ----->
-	
-	
+
 	public User getUser() {
 		return user;
 	}
 
-	public String getSelectedQuestionType() {
+	public List<String> getSelectedQuestionType() {
 		return selectedQuestionType;
 	}
 
-	public void setSelectedQuestionType(String selectedQuestionType) {
+	public void setSelectedQuestionType(List<String> selectedQuestionType) {
 		this.selectedQuestionType = selectedQuestionType;
 	}
 
@@ -199,14 +250,6 @@ public class UserController implements Serializable {
 
 	public void setSurvey(Survey survey) {
 		this.survey = survey;
-	}
-
-	public List<Choice> getChoix() {
-		return choix;
-	}
-
-	public void setChoix(List<Choice> choix) {
-		this.choix = choix;
 	}
 
 	public Question getQuestion() {

@@ -1,8 +1,8 @@
 package com.surveyvor.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -14,7 +14,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
@@ -50,7 +49,6 @@ public class Question implements Serializable {
 
 	@Valid
 	@NotNull
-	@Size(min = 2)
 	@OneToMany (orphanRemoval = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name="Id_Question")
 	private List<Choice> choices;
@@ -62,7 +60,17 @@ public class Question implements Serializable {
 
 	public Question() {
 	}
+	
+	public void addChoice(Choice choice){
+		if(choices==null){
+			choices = new ArrayList<Choice>();
+		}
+		choices.add(choice);
+	}
 
+	public void removeChoice(Choice choice){
+		choices.remove(choice);
+	}
 
 	public Long getId() {
 		return Id_Question;
