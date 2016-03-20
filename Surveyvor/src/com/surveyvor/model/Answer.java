@@ -44,7 +44,6 @@ public class Answer {
 	
 	@Valid
 	@ManyToMany
-	//@Size (min= question.getMinChoice(), max = question.getMaxChoice())// a remplir selon la question voir comment faire)
 	private List<Choice> choices;
 	
 	@ElementCollection

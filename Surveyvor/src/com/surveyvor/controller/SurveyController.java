@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.surveyvor.manager.SurveyManager;
+import com.surveyvor.manager.UserManager;
 import com.surveyvor.model.Answer;
 import com.surveyvor.model.Comment;
 import com.surveyvor.model.Choice;
@@ -100,13 +101,16 @@ public class SurveyController {
 			myComment.setSurvey(selected);
 			myComment.setDateComment(new Date());
 			manager.commentSurvey(myComment);
+			System.out.println(myComment.getComment());
 			}
 		
 		myComment= new Comment();
 	}
 	public void deleteSurvey(){
-		manager.removeSurvey(selected.getId());
-		getAll();
+		userController.getUser().getOwnedSurveys().remove(selected);
+		userController.userManager.update(userController.getUser());
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+	    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, selected.getTitle() +" est bien supprimé!",""));
 	}
 	public void onChoiceDrop(DragDropEvent ddEvent) {
 		Choice choice = ((Choice) ddEvent.getData());
