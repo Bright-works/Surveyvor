@@ -55,13 +55,14 @@
                 <ul class="dropdown-menu">
                   <!-- Menu Footer-->
                   <li class="user-footer">
-                  				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                    <div class="pull-left">
-                      <a href="/Surveyvor/user/edit.xhtml" class="btn btn-warning btn-flat">Profile</a>
+                    <div class=" col-md-12 ">
+                      <h:commandButton action="/user/edit.xhtml?faces-redirect=true" class="btn orange btn-flat" value="Profile"/>
                     </div>
-                    <div class="pull-right">
-                      <h:commandButton action="#{loginBean.logout}" styleClass="btn btn-warning btn-flat" value="Déconnexion"/>
+                    <div class=" col-md-12">
+                      <h:commandButton action="#{loginBean.logout}" styleClass="btn orange btn-flat" value="Déconnexion"/>
                     </div>
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                    
                   </li>
                 </ul>
               </li>

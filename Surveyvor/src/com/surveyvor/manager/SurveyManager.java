@@ -7,6 +7,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -78,6 +79,12 @@ public class SurveyManager {
 		return em.createQuery("Select c from Comment c where c.survey.Id=:id_S",Comment.class)
 				.setParameter("id_S",id_survey).getResultList();
 	}
+
+	public Collection<Answer> allAnswers(Survey survey) {
+		TypedQuery<Answer> a = em.createQuery("SELECT DISTINCT a FROM Answer a WHERE a.question.survey.Id = :id",Answer.class);
+		return a.setParameter("id", survey.getId()).getResultList();
+	}
+
 	public Survey findSurvey(long id) {
 		return em.find(Survey.class, id);
 	}

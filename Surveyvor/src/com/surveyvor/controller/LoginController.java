@@ -53,6 +53,8 @@ public class LoginController implements Serializable {
 	@Autowired
 	private MailSender mailSender;
 	private String verifPassword="";
+	private String oldPassword="";
+	private String newPassword="";
 	private String email="";
 	
 	public LoginController() {
@@ -167,7 +169,10 @@ public class LoginController implements Serializable {
 		}
 			return new ModelAndView("resetPassword");
 	} 
-	
+	/**
+	 * Dans le cas d'un mot de passe oublié 
+	 * @return
+	 */
 	public String resetPassword(){
 		if(user.getPassword().equals(verifPassword)){
 			try{
@@ -186,7 +191,30 @@ public class LoginController implements Serializable {
 		}
 		return "index.xhtml?faces-redirect=true";
 	}
-	
+	/**
+	 * 
+	 * 
+	 * */
+	public String resetMypassword(){
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		if(encoder.matches(oldPassword, login.getUser().getPassword())){
+			if(newPassword.equals(verifPassword)){
+				login.getUser().setPassword(encoder.encode(newPassword));
+				userManager.update(login.getUser());
+			}
+			else{
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+			    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Les deux nouveaux mots de passe ne sont indentiques!",""));
+			
+			}
+		}
+		else{
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+		    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "L'ancien mot de passe est incorrect",""));
+		
+		}
+		return "./edit.xhml?faces-redirect=true";
+	}
 	//--------------------- getter and setters -------------//
 	
 	public User getUser() {
@@ -243,6 +271,22 @@ public class LoginController implements Serializable {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getOldPassword() {
+		return oldPassword;
+	}
+
+	public void setOldPassword(String oldPassword) {
+		this.oldPassword = oldPassword;
+	}
+
+	public String getNewPassword() {
+		return newPassword;
+	}
+
+	public void setNewPassword(String newPassword) {
+		this.newPassword = newPassword;
 	}
 
 

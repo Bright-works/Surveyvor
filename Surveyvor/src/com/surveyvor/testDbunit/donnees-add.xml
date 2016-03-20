@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+	<User ID_User="1" name="creator" lastName="Phillip" mail="mail5@mail.com"
+		password="password" admin="ROLE_USER" />
+	<User ID_User="2" name="answerer" lastName="Fred" mail="mail6@mail.com"
+		password="password" admin="ROLE_USER" />
+	<Survey Id="3" description="description du sondage" endDate="2020-02-16 00:00:00"
+		algo="1" privateSurvey="0" questionModify="1" visibility="1"
+		startDate="2020-02-16 00:00:00" title="Titre du sondage" type="1"
+		Id_Creator="1" />
+	<surveys_invited Id_Survey="3" Id_Invited="2" />
+	<survey_diffusion Survey_Id="3" diffusion="lol@lol.fr" />
+	<Question Id_Question="4" contenu="Question numero 1"
+		description="description de la question" maxChoice="3" minChoice="1"
+		requested="1" severalAnswers="1" writable="1" Id_Survey="3" />
+	<Choice Id_Choice="5" description="description du choix 1"
+		label="label" quotat="2" Id_Question="4" />
+	<Choice Id_Choice="6" description="description du choix 2"
+		label="labe2" quotat="4" Id_Question="4" />
+
+
+</dataset>
