@@ -131,27 +131,9 @@
 		</dependency>
 		<!-- SpringDBUnit -->
 		<dependency>
-			<groupId>com.github.springtestdbunit</groupId>
-			<artifactId>spring-test-dbunit</artifactId>
-			<version>1.1.0</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.dbunit</groupId>
-			<artifactId>dbunit</artifactId>
-			<version>2.5.0</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.7</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.7.7</version>
+			<groupId>com.excilys.ebi.spring-dbunit</groupId>
+			<artifactId>spring-dbunit-test</artifactId>
+			<version>1.4.0</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -159,6 +141,11 @@
 			<artifactId>h2</artifactId>
 			<version>1.4.190</version>
 		</dependency>
-
 	</dependencies>
+	<repositories>
+		<repository>
+			<id>excilys-release</id>
+			<url>http://repository.excilys.com/content/repositories/releases</url>
+		</repository>
+	</repositories>
 </project>
