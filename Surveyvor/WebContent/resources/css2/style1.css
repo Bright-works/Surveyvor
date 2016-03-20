@@ -330,7 +330,7 @@ ui-state-hover {
 	font-size: 14px !important;
 	margin-bottom: 10px !important;
 	padding-left: 10px !important;
-	width: 100% !important;
+	width: 90% !important;
 	height: 40px;
 	border-style: 1px solid !important;
 	border-color: #555 !important;
@@ -545,4 +545,40 @@ ui-state-hover {
 }
 .ui-carousel .ui-carousel-header .ui-widget-header .ui-corner-all{
 		display:inline !important;
+	font-weight: 500;
+}
+
+.ui-spinner-button {
+	height: 40% !important;
+	margin-right: 0 !important;
+}
+
+.ui-spinner-down {
+	bottom: 10px !important;
+}
+
+.ui-spinner-input {
+	width: 90% !important;
+}
+.ui-orderlist .ui-orderlist-caption {
+    text-align: center;
+    padding: 4px 0px;
+    border-bottom: 0px none;
+}
+ui-orderlist.ui-grid-responsive .ui-orderlist-list, .ui-orderlist.ui-grid-responsive .ui-orderlist-caption {
+    width: 100% !important;
+    background: #663300!important;
+    font-size: 14px;
+    color: #fff;
+}
+.ui-orderlist.ui-grid-responsive .ui-orderlist-controls .ui-button {
+    width: 50% !important;
+    background: #FFAA00 !important;
+    margin-left: 10px;
+}
+ui-orderlist-caption ui-widget-header ui-corner-top{
+	font-size: 14px !important;
+}
+ui-widget-content ui-orderlist-list ui-corner-bottom{
+	background: #777 !important;
 }

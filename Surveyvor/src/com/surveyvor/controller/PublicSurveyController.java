@@ -1,7 +1,6 @@
 package com.surveyvor.controller;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -62,12 +61,13 @@ public class PublicSurveyController {
 	}
 
 	public String show(Survey survey) {
-		System.out.println("TEST");
+		//System.out.println("TEST");
 		FacesContext context = FacesContext.getCurrentInstance();
 		SurveyController sv = context.getApplication().evaluateExpressionGet(context, "#{surveyBean}",
 				SurveyController.class);
 		sv.setSelected(survey);
-		return "/survey/details.xhtml?faces-redirect=true";
+		//return "http://localhost:8080/Surveyvor/reponse/Sondage/"+survey.getId();
+		return "./survey/reponse.xhtml?faces-redirect=true";
 	}
 
 	public List<Survey> getMatchingSurveys() {

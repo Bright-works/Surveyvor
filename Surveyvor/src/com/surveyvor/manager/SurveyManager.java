@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.surveyvor.model.Answer;
 import com.surveyvor.model.Comment;
 import com.surveyvor.model.Survey;
 
@@ -72,9 +73,7 @@ public class SurveyManager {
 		em.persist(comment);
 	}
 	
-	public void addComment(Comment comment){
-		em.persist(comment);
-	}
+	
 	public List<Comment> getallCommentBySurvey(long id_survey){
 		return em.createQuery("Select c from Comment c where c.survey.Id=:id_S",Comment.class)
 				.setParameter("id_S",id_survey).getResultList();
@@ -86,6 +85,10 @@ public class SurveyManager {
 	public void removeSurvey(long id) {
 		Survey survey = em.find(Survey.class, id);
 		em.remove(survey);
+	}
+	
+	public void repondreSondage(Answer answer){
+		em.persist(answer);
 	}
 
 }

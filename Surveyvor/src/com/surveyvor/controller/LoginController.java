@@ -17,13 +17,9 @@ import javax.servlet.ServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.codec.Hex;
-import org.springframework.security.web.WebAttributes;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -119,7 +115,7 @@ public class LoginController implements Serializable {
 				userManager.add(this.user);
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 			    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Vous êtes bien inscrit!",""));	
-			    try {
+			    /*try {
 			        UserDetails userDetails = permissionManager.loadUserByUsername(user.getMail());
 			        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, verifPassword, userDetails.getAuthorities());
 			        SecurityContextHolder.getContext().setAuthentication(auth);
@@ -129,10 +125,10 @@ public class LoginController implements Serializable {
 			      } catch (Exception e) {
 					  facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL,e.getMessage(),""));	
 					   
-			      }
+			      }*/
 			}
 		}
-		return null;
+		return "login.xhtml?faces-redirect=true";
 	}
 	
 	public String forgetPassword() throws UnknownHostException{

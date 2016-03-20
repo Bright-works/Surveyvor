@@ -41,13 +41,16 @@
 								</c:if>
 							</p:column>
 							<p:column headerText="Actions" width="25%">
-								<p:commandButton action="#{surveyBean.showSurvey}" title="Voir les details du sondage" styleClass="icon blue" icon="ui-icon-clipboard">
+								<p:commandButton action="#{surveyBean.showSurvey}" title="Voir les details du sondage" styleClass="icon blue" icon="ui-icon-info">
 									<f:setPropertyActionListener value="#{survey}" target="#{surveyBean.selected}"/>
 								</p:commandButton>
 								<p:commandButton title="Modifier la date limite du sondage" styleClass="icon orange" icon="ui-icon-gear">
 									<f:setPropertyActionListener value="#{survey}" target="#{surveyBean.selected}"/>
 								</p:commandButton>
 								<p:commandButton update="table" action="#{surveyBean.deleteSurvey}" title="Supprimer le sondage" styleClass="icon red" icon="ui-icon-closethick">
+									<f:setPropertyActionListener value="#{survey}" target="#{surveyBean.selected}"/>
+								</p:commandButton>
+								<p:commandButton action="result.xhtml?faces-redirect=true" title="Voir les résultats" styleClass="icon" icon=" ui-icon-clipboard">
 									<f:setPropertyActionListener value="#{survey}" target="#{surveyBean.selected}"/>
 								</p:commandButton>
 							</p:column>

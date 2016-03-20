@@ -16,76 +16,85 @@ import org.springframework.stereotype.Component;
 
 import com.surveyvor.manager.SurveyManager;
 import com.surveyvor.manager.UserManager;
-import com.surveyvor.model.*;
-
+import com.surveyvor.model.Choice;
+import com.surveyvor.model.Question;
+import com.surveyvor.model.QuestionParameters;
+import com.surveyvor.model.Survey;
+import com.surveyvor.model.SurveyParameters;
+import com.surveyvor.model.TypeSurvey;
+import com.surveyvor.model.User;
 
 @Component("userBean")
 @Scope("session")
 public class UserController implements Serializable {
-	
+
 	@Autowired
 	UserManager userManager;
-	
+
 	@Autowired
 	SurveyManager surveyManager;
-	
+
 	private static final long serialVersionUID = 1L;
-	
 	private boolean conneted;
-	private User user=new User();
-	private Survey survey=new Survey();
-	private List<Choice> choix=new ArrayList<Choice>();
-	private Question question=new Question();
-	private List<Question> allquestion=new ArrayList<Question>();
-	private SurveyParameters parameters=new SurveyParameters();
-	private List<String> diffusion= new ArrayList<String>();
-	private String email="";
-	private List<Survey> mySurvy=new ArrayList<Survey>();
-	
-	
+	private User user = new User();
+	private Survey survey = new Survey();
+	private List<Choice> choix = new ArrayList<Choice>();
+	private Question question = new Question();
+	private List<Question> allquestion = new ArrayList<Question>();
+	private SurveyParameters parameters = new SurveyParameters();
+	private List<String> diffusion = new ArrayList<String>();
+	private String email = "";
+	private List<Survey> mySurvy = new ArrayList<Survey>();
+	private String selectedQuestionType = "0";
 
 	public UserController() {
 		// TODO Auto-generated constructor stub
 	}
 
-	//------------------------methodes et fonctions ----->
+	// ------------------------methodes et fonctions ----->
 
 	@PostConstruct
-	public void init(){
+	public void init() {
 		addNewQuestion();
 		addNewChoice();
 		addNewChoice();
 	}
+
 	public TypeSurvey[] getTypes() {
-        return TypeSurvey.values();
-    }
-	public void addNewQuestion(){
-		Question q=new Question();
-		QuestionParameters param= new QuestionParameters();
+		return TypeSurvey.values();
+	}
+
+	public void addNewQuestion() {
+		Question q = new Question();
+		QuestionParameters param = new QuestionParameters();
 		q.setDescription("Empty description");
 		q.setMaxChoice(1);
 		q.setMinChoice(1);
 		q.setSurvey(survey);
 		q.setChoices(choix);
-		//-----
+		// -----
 		param.setRequested(true);
 		param.setWritable(true);
 		param.setSeveralAnswers(false);
 		q.setParametres(param);
 		allquestion.add(q);
 	}
-	public void addNewChoice(){
-		Choice choice=new Choice();
+
+	public void addNewChoice() {
+		Choice choice = new Choice();
 		choice.setLabel("");
 		choice.setDescription("Non description");
 		choix.add(choice);
 	}
-	public void deleteChoice(Choice choice){
+
+	public void deleteChoice(Choice choice) {
 		choix.remove(choice);
 	}
-	public void deleteQuestion(Question question){
+
+	public void deleteQuestion(Question question) {
 		allquestion.remove(question);
 	}
+	
 	public boolean verifierEmail(String mail){
 		Pattern pattern= Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
 		Matcher matcher=pattern.matcher(mail);
@@ -96,31 +105,44 @@ public class UserController implements Serializable {
 	public void addEmail(){
 		if(verifierEmail(email)){
 			diffusion.add(email);
-			email="";
-			}
-		else{
+			email = "";
+		} else {
 			FacesContext facesContext = FacesContext.getCurrentInstance();
-		    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Le format d'adresse mail n'est pas correct !",""));
+			facesContext.addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Le format d'adresse mail n'est pas correct !", ""));
 		}
 	}
-	public String addNewSurvey(){
-		if(survey.getType()==TypeSurvey.OPINION){
-			parameters.setPrivateSurvey(false);
+
+	public String validateMinMaxChoices() {
+		int minChoice = allquestion.get(0).getMinChoice();
+		int maxChoice = allquestion.get(0).getMaxChoice();
+		System.out.println("MIN/MAX: " + minChoice + "/" + maxChoice);
+		if (minChoice > maxChoice || maxChoice > choix.size()) {
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"Veuillez rentrer des valeurs minimales et maximales correctes", "minWish"));
+			return "2.xhtml";
+		}else{			
+			return "3.xhtml?faces-redirect=true";
 		}
-		else{
-			allquestion.get(0).setChoices(choix);
+	}
+
+public String addNewSurvey() {
+		
+		if (survey.getType() == TypeSurvey.REPARTITION) {
+			parameters.setPrivateSurvey(true);
 		}
-		parameters.setAlgo(0);
+		
+		allquestion.get(0).setChoices(choix);
+		parameters.setAlgo(-1);
 		survey.setParametres(parameters);
 		survey.setDiffusion(diffusion);
 		survey.setCreator(user);
 		survey.setQuestions(allquestion);
-		//try{
-			//surveyManager.addSurvey(survey);
 			user.getOwnedSurveys().add(survey);
 			userManager.update(user);
 			FacesContext facesContext = FacesContext.getCurrentInstance();
-		    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sondage est bien enregistré !",""));
+		    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Sondage a bien été enregistré !",""));
 		    survey=new Survey();
 			choix=new ArrayList<Choice>();
 			question=new Question();
@@ -129,28 +151,38 @@ public class UserController implements Serializable {
 			diffusion= new ArrayList<String>();
 			email="";
 		    
-		/*}
-		catch(Exception exp){
-			FacesContext facesContext = FacesContext.getCurrentInstance();
-		    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, exp.getMessage(),""));
-		} */
 		return "../created.xhtml?faces-redirect=true";
 	}
+
+	// ------------------------getters and setters ----->
 	
-	//------------------------getters and setters ----->
+	
 	public User getUser() {
 		return user;
+	}
+
+	public String getSelectedQuestionType() {
+		return selectedQuestionType;
+	}
+
+	public void setSelectedQuestionType(String selectedQuestionType) {
+		this.selectedQuestionType = selectedQuestionType;
+	}
+
+	public void test() {
+		System.out.println("dsdsdqsdqsdqsdqsdqsd");
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		facesContext.addMessage(null,
+				new FacesMessage(FacesMessage.SEVERITY_FATAL, "Email ou mot de passe invalid !", ""));
 	}
 
 	public void setUser(User user) {
 		this.user = user;
 	}
 
-
 	public UserManager getUsermanager() {
 		return userManager;
 	}
-
 
 	public void setUsermanager(UserManager usermanager) {
 		this.userManager = usermanager;
@@ -187,7 +219,7 @@ public class UserController implements Serializable {
 	public void setQuestion(Question question) {
 		this.question = question;
 	}
-	
+
 	public SurveyParameters getParameters() {
 		return parameters;
 	}

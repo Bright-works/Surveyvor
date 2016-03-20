@@ -119,4 +119,12 @@ public class User {
 
 
 
+
+	public User clone()
+	{
+		User user = new User(name,lastName,mail,password,admin);
+		user.setId(Id_User);
+		return user;
+	}
+
 }

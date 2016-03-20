@@ -1,85 +1,167 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:ui="http://java.sun.com/jsf/facelets"
-    xmlns:p="http://primefaces.org/ui"
-    xmlns:c="http://java.sun.com/jsp/jstl/core"	
-    >
-<ui:composition template="../layouts/layout.xhtml">
-	<ui:define name="titre">Details du sondage	</ui:define>
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<ui:composition template="../layouts/mainLayout.xhtml">
+	<ui:define name="css">
+		<h:outputStylesheet library="css" name="AdminLTE.css" />
+		<h:outputStylesheet library="css" name="_all-skins.min.css" />
+	</ui:define>
+	<ui:define name="titre">Repondre à un sondage	</ui:define>
 	<ui:define name="content">
 		<section class="content-header">
-          <h4>
-            Répondre au sondage 
-            <small>Surveyvor</small>
-          </h4>
-     </section>
-     <h:form>
-		<section class="content">
-			<div class="box box-default" style="text-align: center;">
-					<div class="box-header with-border" >
-						<h3><h:outputText value="Réorientation vers Master1 pour les étudiants de Licence3"/></h3>
-						<p:outputLabel value="Date limite: 02/05/2016" styleClass="pull-right"/>
+			<h4>
+				Répondre au sondage <small>Surveyvor</small>
+			</h4>
+		</section>
+
+		<script type="text/javascript">
+			function handleDrop(event, ui) {
+				var droppedCar = ui.draggable;
+				droppedCar.fadeOut('fast');
+			}
+		</script>
+
+		 <h:form id="form2">
+		 <p:growl autoUpdate="true" showDetail="false" />
+			<section class="content">
+				<div class="box box-default" style="text-align: center;">
+					<div class="box-header with-border">
+						<h3>
+							<h:outputText value="#{surveyBean.selected.title}" />
+						</h3>
+							<p:outputLabel value="#{surveyBean.selected.endDate}"
+								styleClass="pull-right" >
+								<f:convertDateTime pattern="dd/MM/yyyy"/>
+							</p:outputLabel>
+							<p:outputLabel styleClass="pull-right" value="Date limite :"/>
+							
 					</div>
 					<div class="box-body">
-						<p:outputLabel value="Le sondage à pour but de voir les préférences des étudiants pour les masters de notre faculté des sciences, ce qui nous permet de choisir le nombre des étudiant externes qui peuvent s'inscrire dans la prochaine année universitére."/>
+						<p:outputLabel value="#{surveyBean.selected.description}" />
 					</div>
 					<div class="box box-warning">
-						<div class="box-body" style="text-align: left;">
-							<h4>Question 1 : Quelle formation choisissez vous ?</h4>
-							<ul class="todo-list ui-sortable">	
-								<c:forEach begin="1" end="4" step="1" var="option">
-									<li class="choix" style="">
-										<span class="handle ui-sortable-handle">
-											<i class="fa fa-ellipsis-v"></i>
-											<i class="fa fa-ellipsis-v"></i>
-										</span>
-										<span class="text"><h:outputText value="Option #{option}"/></span>
-										<div class="tools"></div>
-									</li>
-								</c:forEach>
-							</ul>
-						</div>
+					<c:forEach var="question" items="#{surveyBean.selected.questions}">
+			<!-- Cas d'un sondage de répatition  -->			
+						<c:if test="#{surveyBean.selected.type eq 'REPARTITION'}">
+							<div class="box-body" style="text-align: left;">
+								<h4>#{question.contenu}</h4>
+							    <p:orderList value="#{question.choices}" 
+							    itemLabel="#{choice.label}" itemValue="#{choice}"
+							     var="choice" controlsLocation="right" responsive="true">
+							 
+							        <f:facet name="caption">Choisir par priorité les options par (drag and drop) ou par les fléches</f:facet>
+							 
+							        <p:column style="width:5%">
+							            <p:graphicImage library="img" width="20px" name="drag-drop.png" />
+							        </p:column>
+							 
+							         <p:column>
+							            <h:outputText  value="#{choice.label}" />
+							        </p:column>
+							    </p:orderList>
+							</div>
+						</c:if>
+						<!-- Cas d'un sondage d'opinion  -->		
+						<c:if test="#{surveyBean.selected.type eq 'OPINION'}">
+							<div class="box-body" style="text-align: left;">
+								<h4>#{question.contenu}</h4>
+								
+							    <c:if test="#{question.parametres.writable}">
+							    	<p:inputTextarea styleClass="inputs" value="" required="#{!question.parametres.requested}" 
+							    	placeholder="#{!question.parametres.requested? 'Réponse obligatoire': 'Réponse non obligatoire'}" 
+							    	requiredMessage="Il faut remplir les reponses requies "/>
+							    </c:if>
+							</div>
+						</c:if>
+						</c:forEach>
+						
 						<div class="box-footer">
-							<p:commandButton styleClass="btn btn-warning btn-flat pull-right" value="Enregistrer"/>
+							<p:commandButton styleClass="btn btn-warning btn-flat pull-right"
+								action="#{surveyBean.repondre}" value="Enregistrer" />
 						</div>
 					</div>
 					<div class="box box-warning direct-chat direct-chat-warning">
-							<div class="box-header with-border">
-								<h4>Les commentaires</h4>
-							</div>
-							<div class="box-body">
-								<div class="direct-chat-contacts">
-									<ul class="contacts-list">
-										<c:forEach begin="1" end="8" step="1" var="msg">
-											<li>
-												<p:graphicImage styleClass="contacts-list-img" library="img" name="user1-128x128.jpg"/>
-												<div class="contacts-list-info">
-													<span class="contacts-list-name">
-														User #{msg}
-														<small class="contacts-list-date pull-right">2/28/2015</small>
-													</span>
-													<span class="contacts-list-msg">Im User #{msg}</span>
-												</div>
-											</li>
-										</c:forEach>
-									</ul>
-								</div>
-							</div>
-							<div class="box-footer">
-								<div class="input-group">
-									<p:inputText styleClass="inputs" placeholder="Ajoutez un commentaire..."/>
-									<div class="input-group-btn">
-										<p:commandButton icon="ui-icon-plus" styleClass="btn btn-warning btn-flat pull-right"/>
+						<div class="box-header with-border">
+							<h4>Les commentaires</h4>
+						</div>
+						<div class="box-body">
+							<div class="direct-chat-messages">
+								<c:forEach items="#{surveyBean.alls}" var="com">
+									<div class="direct-chat-msg left">
+										<p:graphicImage styleClass="direct-chat-img" alt="message user image" library="img" 
+											name="user.png"/>
+										<div class="direct-chat-text">
+											<h:outputText value="#{com.comment}"/>
+										</div>
+										<div class="direct-chat-info clearfix">
+											<span class="direct-chat-name pull-left">
+												<h:outputText value=""/>
+											</span>
+											<span class="direct-chat-timestamp pull-right">
+												<h:outputText value="#{com.dateComment}">
+													<f:convertDateTime pattern="dd/MM/yyyy"/>
+												</h:outputText>
+											</span>
+										</div>
 									</div>
-								</div>
+								</c:forEach>
 							</div>
 						</div>
-				
-			</div>
-		</section>
-	</h:form>
+						<div class="box-footer">
+							<div class="input-group">
+								<p:inputText styleClass="inputs" value="#{surveyBean.myComment.comment}" placeholder=" Ajoutez un commentaires ..." id="message"/>
+								<span class="input-group-btn">
+									<p:commandButton update="form2" actionListener="#{surveyBean.addComment}" icon="ui-icon-plus"
+										styleClass="btn btn-warning btn-flat pull-right" />
+								</span>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</section>
+		</h:form>
 	</ui:define>
 </ui:composition>
 </html>
+<!-- 
+<c:forEach var="question" items="#{surveyBean.selected.questions}">
+								<c:if test="#{surveyBean.selected.type eq 'REPARTITION'}">
+									<p:fieldset id="repartitionQuestionsField" legend="#{question.contenu}">
+										<p:dataGrid id="availableChoices" var="choice" value="#{question.choices}" columns="1">
+											<p:panel id="pnl" header="#{choice.label}" style="text-align:center" />
+											<p:draggable for="pnl" revert="true" handle=".ui-panel-titlebar" stack=".ui-panel" />
+										</p:dataGrid>
+									</p:fieldset>
+									<p:droppable for="selectedChoices" tolerance="touch"
+										activeStyleClass="ui-state-highlight"
+										datasource="availableChoices" onDrop="handleDrop">
+										<p:ajax listener="#{surveyBean.onChoiceDrop}" update="dropArea availableChoices" />
+									</p:droppable>
+									<p:fieldset id="selectedChoices" legend="Vos choix">
+										<p:outputPanel id="dropArea">
+											<h:outputText value="Deposez vos choix ici"
+												rendered="#{empty surveyBean.droppedChoices}"
+												style="font-size:24px;" />
+											<p:dataGrid id="selectedChoicesGrid" var="c"
+												value="#{surveyBean.droppedChoices}"
+												rendered="#{not empty surveyBean.droppedChoices}"
+												columns="1">
+												<p:panel id="dropPnl" header="#{c.label}" style="text-align:center" />
+											</p:dataGrid>
+										</p:outputPanel>
+									</p:fieldset>
+
+								</c:if>
+								<c:if test="#{surveyBean.selected.type eq 'OPINION'}">
+									<p:fieldset id="opinionQuestionsField"
+										legend="#{question.contenu}">
+										<p:inputText id="answer" value="" />
+									</p:fieldset>
+								</c:if>
+							</c:forEach>
+ -->
