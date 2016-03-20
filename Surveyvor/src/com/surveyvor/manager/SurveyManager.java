@@ -6,12 +6,14 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.surveyvor.model.Answer;
 import com.surveyvor.model.Survey;
 
 @Service
@@ -65,6 +67,11 @@ public class SurveyManager {
 	public Collection<Survey> findPublicSurveys() {
 		return em.createQuery("Select s From Survey s where s.parametres.privateSurvey = false", Survey.class)
 				.getResultList();
+	}
+
+	public Collection<Answer> allAnswers(Survey survey) {
+		TypedQuery<Answer> a = em.createQuery("SELECT DISTINCT a FROM Answer a WHERE a.question.survey.Id = :id",Answer.class);
+		return a.setParameter("id", survey.getId()).getResultList();
 	}
 
 	public Survey findSurvey(long id) {

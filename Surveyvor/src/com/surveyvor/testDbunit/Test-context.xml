@@ -16,23 +16,17 @@
 
 	<context:annotation-config />
 	<mvc:annotation-driven />
-	<!-- Utiliser les annotations liÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â©es au module MVC de Spring -->
+	<!-- Utiliser les annotations liÃƒÆ’Ã‚Â©es au module MVC de Spring -->
 	<mvc:annotation-driven enable-matrix-variables="true" />
 	<context:component-scan base-package="com.surveyor.model" />
 	<context:component-scan base-package="com.surveyor.test" />
 	<context:component-scan base-package="com.surveyor.manager" />
 	<context:component-scan base-package="com.surveyor.service" />
+	<context:component-scan base-package="com.surveyor.testDbunit" />
 
-	<bean id="myBase"
-		class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
-		<property name="persistenceUnitName" value="myBaseTest" />
-	</bean>
 
-	<!-- Usine ÃƒÂ  fabriquer les EntityManager -->
-	<bean id="myEntityManagerFactory"
-		class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
-		<property name="persistenceUnitName" value="myBaseTest" />
-	</bean>
+	<!-- Usine Ã  fabriquer les EntityManager -->
+	
 
 	<bean id="UserManager" class="com.surveyvor.manager.UserManager">
 	</bean>
@@ -40,7 +34,18 @@
 	<bean id="SurveyManager" class="com.surveyvor.manager.SurveyManager">
 	</bean>
 
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="org.h2.Driver" />
+		<property name="url" value="jdbc:h2:mem:test" />
+		<property name="username" value="sa" />
+		<property name="password" value="" />
+	</bean>
 
+	<bean id="myBase"
+		class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
+		<property name="persistenceUnitName" value="myBaseTest" />
+	</bean>
 
 
 	<!-- Mon gestionnaire de transactions -->

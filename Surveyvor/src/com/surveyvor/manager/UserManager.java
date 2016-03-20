@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.surveyvor.model.Comment;
+import com.surveyvor.model.Survey;
 import com.surveyvor.model.User;
 
 @Service
@@ -48,11 +50,11 @@ public class UserManager// implements IUser{
 		System.out.println("CLOSE UserManager = " + this);
 
 	}
-    
+
 	public void add(User user) {
 		em.persist(user);
 	}
-	
+
 	public void update(User user) {
 		em.merge(user);
 	}
@@ -65,16 +67,46 @@ public class UserManager// implements IUser{
 		return em.find(User.class, id);
 	}
 
-	public void removeUser(long id)
-    {
+	public void removeUser(long id) {
 		User u = em.find(User.class, id);
 		em.remove(u);
-    }
-	
+	}
+
 	public User findByMail(String mail) {
-			TypedQuery<User> p = em.createQuery("SELECT u FROM User u WHERE u.mail = '" + mail + "'", User.class);
-			return p.getSingleResult();
-		
+		TypedQuery<User> p = em.createQuery("SELECT u FROM User u WHERE u.mail = :mail", User.class);
+		return p.setParameter("mail", mail).getSingleResult();
+
+	}
+
+	public Collection<Survey> allSurveysCreated(long id) {
+
+		TypedQuery<Survey> p = em.createQuery("SELECT s FROM Survey s WHERE s.creator.Id_User = :id", Survey.class);
+		return p.setParameter("id", id).getResultList();
+	}
+
+	/*
+	 * public Collection<Survey> allSurveysAnswered(User user) {
+	 * 
+	 * TypedQuery<Survey> p = em.createQuery(
+	 * "SELECT s FROM Survey s WHERE :user MEMBER OF s.answerers",
+	 * Survey.class); return p.setParameter("user", user).getResultList(); }
+	 */
+
+	public Collection<Survey> allSurveysAnswered(User user) {
+
+		TypedQuery<Survey> p = em
+				.createQuery("SELECT DISTINCT a.question.survey FROM Answer a WHERE a.answerer.id = :id", Survey.class);
+		return p.setParameter("id", user.getId()).getResultList();
+	}
+
+	public Collection<Survey> allSurveysInvited(User user) {
+
+		TypedQuery<Survey> p = em.createQuery("SELECT s FROM Survey s WHERE :mail MEMBER OF s.diffusion", Survey.class);
+		return p.setParameter("mail", user.getMail()).getResultList();
+	}
+	
+	public void addComment(Comment comment) {
+		em.persist(comment);
 	}
 
 }

@@ -1,33 +1,60 @@
 <persistence xmlns="http://java.sun.com/xml/ns/persistence"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
-      http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
-   version="1.0">
-   
-   <persistence-unit name="myBase" transaction-type="RESOURCE_LOCAL">
-   <provider>org.hibernate.ejb.HibernatePersistence</provider>
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
+	version="1.0">
+
+	<persistence-unit name="myBase" transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<class>com.surveyvor.model.User</class>
 		<properties>
-         <!-- pour voir les requetes SQL -->
-         <property name="hibernate.show_sql" value="true" />
-         <property name="hibernate.format_sql" value="true" />
+			<!-- pour voir les requetes SQL -->
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.format_sql" value="true" />
 
-         <!-- parametres de connection JDBC -->
-         <property name="hibernate.connection.driver_class"
-            value="com.mysql.jdbc.Driver" />
-         <property name="hibernate.connection.url"
-            value="jdbc:mysql://localhost:3306/Surveyvor_dev" />
-         <property name="hibernate.connection.username"
-            value="root" />
-         <property name="hibernate.connection.password"
-            value="djokernole" />
-		 <property name="hibernate.flushMode"    
-			value="FLUSH_AUTO"/>
-         <property name="hibernate.dialect"
-            value="org.hibernate.dialect.MySQL5InnoDBDialect" />
-         <property name="hibernate.hbm2ddl.auto"
-            value="update" />
-      </properties>
-      
+			<!-- parametres de connection JDBC -->
+			<property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver" />
+			<property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/Surveyvor_dev" />
+			<property name="hibernate.connection.username" value="root" />
+			<property name="hibernate.connection.password" value="" />
+			<property name="hibernate.flushMode" value="FLUSH_AUTO" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
+			<property name="hibernate.hbm2ddl.auto" value="update" />
+		</properties>
+	</persistence-unit>
+
+
+	<persistence-unit name="myBaseTest" transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<class>com.github.springtestdbunit.sample.entity.Person</class>
+		<properties>
+			<!-- parametres de connection JDBC -->
+			<property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />
+			<property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:test;DB_CLOSE_ON_EXIT=FALSE" />
+			<property name="javax.persistence.jdbc.user" value="sa" />
+			<property name="javax.persistence.jdbc.password" value="" />
+			<property name="hibernate.flushMode" value="FLUSH_AUTO" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect" />
+			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
+			<property name="hibernate.format_sql" value="true" />
+		</properties>
+	</persistence-unit>
+	
+	<persistence-unit name="myBaseSqlTest" transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<class>com.surveyvor.model.User</class>
+		<properties>
+			<!-- pour voir les requetes SQL -->
+			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.format_sql" value="true" />
+
+			<!-- parametres de connection JDBC -->
+			<property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver" />
+			<property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/Surveyvor_devTest" />
+			<property name="hibernate.connection.username" value="root" />
+			<property name="hibernate.connection.password" value="" />
+			<property name="hibernate.flushMode" value="FLUSH_AUTO" />
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5InnoDBDialect" />
+			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
+		</properties>
 	</persistence-unit>
 </persistence>
