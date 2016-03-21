@@ -330,7 +330,7 @@ ui-state-hover {
 	font-size: 14px !important;
 	margin-bottom: 10px !important;
 	padding-left: 10px !important;
-	width: 90% !important;
+	width: 100% !important;
 	height: 40px;
 	border-style: 1px solid !important;
 	border-color: #555 !important;
@@ -462,7 +462,6 @@ ui-state-hover {
 
 .ui-inputfield, .ui-calendar, .ui-datalist {
 	width: 60%;
-	padding: 6px 12px !important;
 }
 
 .ui-datepicker-header {
@@ -581,4 +580,39 @@ ui-orderlist-caption ui-widget-header ui-corner-top{
 }
 ui-widget-content ui-orderlist-list ui-corner-bottom{
 	background: #777 !important;
+	width: 90% !important;
+}
+
+/* SEARCH SURVEY DATATABLE */
+
+.searchDataTable .ui-widget-header {
+	border: 1px solid #663300 !important;
+}
+
+.searchDataTable thead th  {
+	border: none !important;
+	background-color: #ff6600 !important;
+}
+
+.searchDataTable .ui-datatable-even {
+	border: 3px solid !important;
+	border-color: #ff6600 !important;
+	text-align: center;
+	border-radius: 8px;
+	width: 100%;
+}
+
+.searchDataTable .ui-paginator {
+	background-color: #663300 !important;
+	color: #fff;
+}
+
+.ui-selectonemenu .ui-inputfield {
+	margin-bottom : 0 !important;
+	width: 100%! important;
+}
+
+.ui-selectonemenu .ui-selectonemenu-trigger {
+	width:12% !important;
+	border: none;
 }

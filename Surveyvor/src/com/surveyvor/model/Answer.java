@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -42,13 +43,20 @@ public class Answer {
 	@JoinColumn(name = "Id_Question")
 	private Question question;
 	
+	@Transient
+	private Choice choix=new Choice();
+	
+	@Transient
+	private Choice[] selectedChoices;
+	
 	@Valid
 	@ManyToMany
 	private List<Choice> choices;
-	
+	//
 	@ElementCollection
 	private Map<Long,String> valeurs;
 	
+	private String opinionText;
 	
 	@Temporal(TemporalType.DATE)
 	@NotNull
@@ -116,6 +124,48 @@ public class Answer {
 		this.date = date;
 	}
 
+
+	public String getOpinionText() {
+		return opinionText;
+	}
+
+	public void setOpinionText(String opinionText) {
+		this.opinionText = opinionText;
+	}
+	
+
+	public Map<Long, String> getValeurs() {
+		return valeurs;
+	}
+
+	public void setValeurs(Map<Long, String> valeurs) {
+		this.valeurs = valeurs;
+	}
+
+	
+	public long getId_Answer() {
+		return Id_Answer;
+	}
+
+	public void setId_Answer(long id_Answer) {
+		Id_Answer = id_Answer;
+	}
+
+	public Choice getChoix() {
+		return choix;
+	}
+
+	public void setChoix(Choice choix) {
+		this.choix = choix;
+	}
+
+	public Choice[] getSelectedChoices() {
+		return selectedChoices;
+	}
+
+	public void setSelectedChoices(Choice[] selectedChoices) {
+		this.selectedChoices = selectedChoices;
+	}
 
 	public Answer(Long id_Answer, User answerer, Question question, List<Choice> choices, Map<Long, String> valeurs,
 			Date date) {

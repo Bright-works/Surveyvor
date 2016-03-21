@@ -23,7 +23,9 @@ import com.surveyvor.manager.UserManager;
 import com.surveyvor.model.Answer;
 import com.surveyvor.model.Comment;
 import com.surveyvor.model.Choice;
+import com.surveyvor.model.Question;
 import com.surveyvor.model.Survey;
+import com.surveyvor.model.TypeSurvey;
 
 @Controller
 @Component("surveyBean")
@@ -47,6 +49,7 @@ public class SurveyController {
 	private List<Survey> invitations= new ArrayList<Survey>();
 	private Answer answer=new Answer();
 	
+	
 	public SurveyController() {
 	}
 	
@@ -54,17 +57,42 @@ public class SurveyController {
 	public void init(){
 	}
 	//------------ Methodes--------
-	
-	public String repondre(){
-		if(selected.getParametres().getPrivateSurvey()){
-			answer.setAnswerer(userController.getUser());
-		}
-			answer.setDate(new Date());
-			answer.setQuestion(selected.getQuestions().get(0));
-			answer.setChoices(selected.getQuestions().get(0).getChoices());
-			manager.repondreSondage(answer);
-		return "index.xhtml?faces-redirect=true";
+	public void prepareAnswers(){
+		
+			int size=selected.getQuestions().size();
+			for(int i=0;i<size;i++){
+				List<Choice> listchoix = new ArrayList<Choice>();
+				Answer ans=new Answer();
+				ans.setChoices(listchoix);
+				ans.setChoix(new Choice());
+				selected.getQuestions().get(i).setAnswer(ans);
+			}
 	}
+	
+	public String addAnswers(){
+		if(selected.getType().equals(TypeSurvey.REPARTITION)){
+			// code à faire pour répartition 
+		}
+		else{
+			for(int i=0;i<selected.getQuestions().size();i++)
+			{
+				Answer ans = selected.getQuestions().get(i).getAnswer();
+				ans.setDate(new Date());
+				Question q=selected.getQuestions().get(i);
+				ans.setQuestion(q);
+				if(q.getParametres().getSeveralAnswers()==false && q.getParametres().getWritable()==false){
+					ans.getChoices().add(ans.getChoix());
+				}
+				manager.repondreSondage(ans);
+			}
+		}
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+	    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," Merci pour votre participation !",""));
+	
+		return "/index.xhtml?faces-redirect=true";
+		
+	}
+	
 	public void allComments(){
 		alls= manager.getallCommentBySurvey(selected.getId());
 	}
@@ -90,28 +118,40 @@ public class SurveyController {
 			}
 		return new ModelAndView("./survey/reponse");
 	}
+	
 	public String showSurvey(){
 		return "./details.xhtml?faces-redirect=true";
 	}
+	
 	public void addComment(){
 		if(selected.getParametres().getPrivateSurvey()){
 			myComment.setUser(userController.getUser());
 		}
-		else{
 			myComment.setSurvey(selected);
 			myComment.setDateComment(new Date());
 			manager.commentSurvey(myComment);
-			System.out.println(myComment.getComment());
-			}
+			//System.out.println(myComment.getComment());
+		
 		
 		myComment= new Comment();
 	}
-	public void deleteSurvey(){
-		userController.getUser().getOwnedSurveys().remove(selected);
+	
+	public void deleteSurvey(Survey s){
+		int index=-1;
+		for(int i=0;i<userController.getUser().getOwnedSurveys().size();i++){
+			if(userController.getUser().getOwnedSurveys().get(i).getId()==s.getId()){
+				index=i; 
+				break;
+			}
+		}
+		manager.removeCommentAllOfSurvey(s);
+		manager.removeSurvey(s.getId());
+		userController.getUser().getOwnedSurveys().remove(index);
 		userController.userManager.update(userController.getUser());
 		FacesContext facesContext = FacesContext.getCurrentInstance();
-	    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, selected.getTitle() +" est bien supprimé!",""));
+	    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, s.getTitle() +" est bien supprimé!",""));
 	}
+	
 	public void onChoiceDrop(DragDropEvent ddEvent) {
 		Choice choice = ((Choice) ddEvent.getData());
 		if (! droppedChoices.contains(choice)) {
@@ -144,6 +184,7 @@ public class SurveyController {
 
 	public void setSelected(Survey selected) {
 		this.selected = selected;
+		prepareAnswers();
 	}
 
 	public UserController getUserController() {
@@ -162,6 +203,7 @@ public class SurveyController {
 	public void setAlls(List<Comment> alls) {
 		this.alls = alls;
 	}
+	
 	public Comment getMyComment() {
 		return myComment;
 	}
@@ -169,7 +211,6 @@ public class SurveyController {
 	public void setMyComment(Comment myComment) {
 		this.myComment = myComment;
 	}
-	
 	
 	public List<Choice> getDroppedChoices() {
 		return droppedChoices;
@@ -194,5 +235,7 @@ public class SurveyController {
 	public void setAnswer(Answer answer) {
 		this.answer = answer;
 	}
+
+	
 	
 }

@@ -62,6 +62,7 @@ public class PublicSurveyController {
 
 	public String show(Survey survey) {
 		//System.out.println("TEST");
+	
 		FacesContext context = FacesContext.getCurrentInstance();
 		SurveyController sv = context.getApplication().evaluateExpressionGet(context, "#{surveyBean}",
 				SurveyController.class);

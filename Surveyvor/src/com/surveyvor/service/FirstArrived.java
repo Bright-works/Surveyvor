@@ -13,12 +13,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
 import com.surveyvor.exception.FirstArrivedException;
 import com.surveyvor.model.Answer;
 import com.surveyvor.model.Choice;
 import com.surveyvor.model.Survey;
 import com.surveyvor.model.User;
 
+@Service
 public class FirstArrived implements IResultGeneratorStrategy<List<User>> {
 	// Comparator
 	public class AnswerComparator implements Comparator<Answer> {

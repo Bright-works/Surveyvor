@@ -193,8 +193,7 @@ public class UserController implements Serializable {
 		survey.setDiffusion(diffusion);
 		survey.setCreator(user);
 		survey.setQuestions(allquestion);
-		user.getOwnedSurveys().add(survey);
-		userManager.update(user);
+		surveyManager.addSurvey(survey);
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		facesContext.addMessage(null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, "Le sondage a bien été enregistré !", ""));
@@ -225,7 +224,7 @@ public class UserController implements Serializable {
 		System.out.println("dsdsdqsdqsdqsdqsdqsd");
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		facesContext.addMessage(null,
-				new FacesMessage(FacesMessage.SEVERITY_FATAL, "Email ou mot de passe invalid !", ""));
+				new FacesMessage(FacesMessage.SEVERITY_FATAL, "Email ou mot de passe invalide !", ""));
 	}
 
 	public void setUser(User user) {

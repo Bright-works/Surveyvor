@@ -27,7 +27,7 @@ public class Choice implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "Id_Choice")
-	private long Id_Choice;
+	private Long Id_Choice;
 	
 	@NotNull
 	private String label;
@@ -44,17 +44,17 @@ public class Choice implements Serializable{
 	@Min(1)
 	private Integer quotat;
 	
-	 @ManyToMany
-	 private List<User> usersAttribued;
+	@ManyToMany
+	private List<User> usersAttribued;
 	
 	public Choice() {
 	}
 
-	public long getId() {
+	public Long getId() {
 		return Id_Choice;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.Id_Choice = id;
 	}
 

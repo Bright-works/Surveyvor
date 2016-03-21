@@ -43,7 +43,7 @@
 					</div>
 					
 					<h:form id="form1">
-					<p:growl autoUpdate="true" showDetail="false" />
+					<p:growl autoUpdate="true" showDetail="true" />
 					<div class="box box-warning">
 					<c:forEach var="question" items="#{surveyBean.selected.questions}">
 					<!-- Cas d'un sondage de répatition  -->			
@@ -72,26 +72,37 @@
 								<h4 style="color: #7C420B;">#{question.contenu}</h4>
 								
 							    <c:if test="#{question.parametres.writable}">
-							    	<p:inputTextarea styleClass="inputs" value="" required="#{!question.parametres.requested}" 
+							    	<p:inputTextarea styleClass="inputs" value="#{question.answer.opinionText}" required="#{!question.parametres.requested}" 
 							    	placeholder="#{!question.parametres.requested ? 'Réponse obligatoire' : 'Réponse non obligatoire'}" />
 							    </c:if>
-							    	<c:if test="#{!question.parametres.severalAnswers}">
-							    		<h:panelGrid columns="2" border="0">
-							    			<p:spacer height="0" width="5%"/>
-							    			<p:selectOneRadio style="margin-left:10%" layout="grid" columns="1">
-							    				<f:selectItems value="#{question.choices}" var="choice" itemLabel="#{choice.label}"
-							    				 itemValue="#{choice}" />
-							    			</p:selectOneRadio>
-							    		</h:panelGrid>
+							    	<c:if test="#{!question.parametres.severalAnswers and !question.parametres.writable}">
+							    			<p:dataTable value="#{question.choices}" selection="#{question.answer.choix}" rowKey="#{choice.label}"  var="choice"  styleClass="" 
+							    			 emptyMessage="Liste est vide">
+							    				<f:facet name="header">
+										            RadioButton
+										        </f:facet>
+										        <p:column style="width:30px;text-align:center" selectionMode="single">
+										        </p:column>
+										        <p:column headerText="Options">
+										            <h:outputText value="#{choice.label}" />
+										        </p:column>
+								    		</p:dataTable>
+								    		<br/>
 							    	</c:if>
-							    	<c:if test="#{question.parametres.severalAnswers}">
-							    		<h:panelGrid columns="2" border="0">
-							    			<p:spacer height="0" width="5%"/>
-							    			<p:selectManyCheckbox style="margin-left:10%" layout="grid" columns="1">
-							    				<f:selectItems value="#{question.choices}" var="choice" itemLabel="#{choice.label}"
-							    				 itemValue="#{choice}" />
-							    			</p:selectManyCheckbox>
-							    		</h:panelGrid>
+							    	<c:if test="#{question.parametres.severalAnswers and !question.parametres.writable}">
+							    		
+							    		<p:dataTable value="#{question.choices}" rowKey="#{choice.label}"  selection="#{question.answer.choices}" var="choice"  styleClass="" 
+							    			 emptyMessage="Liste est vide">
+							    				<f:facet name="header">
+										            Chekbox
+										        </f:facet>
+										        <p:column style="width:30px;text-align:center" selectionMode="multiple">
+										        </p:column>
+										        <p:column headerText="Options">
+										            <h:outputText value="#{choice.label}" />
+										        </p:column>
+								    		</p:dataTable>
+								    	
 							    	</c:if>
 							</div>
 						</c:if>
@@ -99,12 +110,11 @@
 						
 						<div class="box-footer">
 							<p:commandButton styleClass="btn btn-warning btn-flat pull-right"
-								action="#{surveyBean.repondre}" value="Enregistrer" />
+								action="#{surveyBean.addAnswers}" value="Enregistrer" />
 						</div>
 					</div>
 					</h:form>
 					<h:form id="form2">
-					<p:growl autoUpdate="true" showDetail="false" />
 					<div class="box box-warning direct-chat direct-chat-warning">
 						<div class="box-header with-border">
 							<h4>Les commentaires</h4>

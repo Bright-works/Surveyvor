@@ -40,14 +40,14 @@ public class LoginController implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private User user = new User();
-	
+
 	@Autowired
 	private UserController login;
-	
+
 	@Autowired
 	UserManager userManager;
-	
-	@Autowired 
+
+	@Autowired
 	private PermissionManager permissionManager;
 	
 	@Autowired
@@ -86,28 +86,29 @@ public class LoginController implements Serializable {
 		    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Email ou mot de passe invalid !",""));
 		}
 		return null;
-		
+
 	}
-	
-	public String logout(){
-		user=new User();
+
+	public String logout() {
+		user = new User();
 		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-        SecurityContextHolder.clearContext();
-        return "/index.xhtml?faces-redirect=true";
-    }
-	
-	public String register() throws ServletException, IOException{
-		if(!this.verifPassword.equals(user.getPassword())){
+		SecurityContextHolder.clearContext();
+		return "/index.xhtml?faces-redirect=true";
+	}
+
+	public String register() throws ServletException, IOException {
+		if (!this.verifPassword.equals(user.getPassword())) {
 			FacesContext facesContext = FacesContext.getCurrentInstance();
-		    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Les mots de passe ne sont pas identiques !",""));
-		}
-		else{
-			try{
-			User existed=userManager.findByMail(user.getMail());
-			if(existed.getId()>0){
-				user=new User();
-				FacesContext facesContext = FacesContext.getCurrentInstance();
-			    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "L'adresse email est dŽja utilisŽ !",""));	
+			facesContext.addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Les mots de passe ne sont pas identiques !", ""));
+		} else {
+			try {
+				User existed = userManager.findByMail(user.getMail());
+				if (existed.getId() > 0) {
+					user = new User();
+					FacesContext facesContext = FacesContext.getCurrentInstance();
+					facesContext.addMessage(null,
+							new FacesMessage(FacesMessage.SEVERITY_FATAL, "L'adresse email est déjà utilisée !", ""));
 				}
 			}
 			catch(NoResultException expt){
@@ -216,7 +217,6 @@ public class LoginController implements Serializable {
 		return "./edit.xhml?faces-redirect=true";
 	}
 	//--------------------- getter and setters -------------//
-	
 	public User getUser() {
 		return user;
 	}

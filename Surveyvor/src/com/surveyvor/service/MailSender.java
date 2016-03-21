@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.faces.bean.ApplicationScoped;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -28,6 +29,7 @@ import com.surveyvor.model.User;
  *
  */
 @Service
+@ApplicationScoped
 public class MailSender {
 	Session session;
 
@@ -108,6 +110,8 @@ public class MailSender {
 		//TODO Mettre le vrai lien vers la visualisation des réponses du sondage
 		String url = "";
 		User creator = survey.getCreator();
+		
+		System.out.println("sending to "+creator.getMail());
 		
 		Message msg = new MimeMessage(session);
 		msg.setFrom(new InternetAddress("no.reply.myapp@gmail.com"));

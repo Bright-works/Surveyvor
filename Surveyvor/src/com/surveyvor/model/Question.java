@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -50,15 +51,14 @@ public class Question implements Serializable {
 	@OneToMany (orphanRemoval = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name="Id_Question")
 	private List<Choice> choices;
+	
+	@Transient
+	private Answer answer=new Answer();
 
 	@NotNull
 	@Valid
 	@Embedded
 	private QuestionParameters parametres;
-	
-	@OneToMany(fetch=FetchType.EAGER,cascade=CascadeType.ALL)
-	@JoinColumn(name="Id_Question")
-	private List<Answer> answers;
 
 	public Question() {
 	}
@@ -158,19 +158,16 @@ public class Question implements Serializable {
 		return maxChoice;
 	}
 
-
 	public void setMaxChoice(int maxChoice) {
 		this.maxChoice = maxChoice;
 	}
 
-	
-
-	public List<Answer> getAnswers() {
-		return answers;
+	public Answer getAnswer() {
+		return answer;
 	}
 
-	public void setAnswers(List<Answer> answers) {
-		this.answers = answers;
+	public void setAnswer(Answer answer) {
+		this.answer = answer;
 	}
 
 	public Question ( String contenu, String description, int minChoice, int maxChoice, List<Choice> choices, QuestionParameters parametres) {

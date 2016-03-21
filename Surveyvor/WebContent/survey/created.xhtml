@@ -41,7 +41,7 @@
 								<c:if test="#{empty survey.answerers}">
 									<h:outputText value="0" />
 								</c:if>
-								<c:if test="#{!empty survey.answerers}">
+								<c:if test="#{not empty survey.answerers}">
 									<h:outputText value="#{survey.answerers.size()}" />
 								</c:if>
 							</p:column>
