@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
 
+import org.springframework.stereotype.Service;
+
 import com.surveyvor.exception.GaleShapleyException;
 import com.surveyvor.model.Answer;
 import com.surveyvor.model.Choice;
@@ -19,6 +21,7 @@ import com.surveyvor.model.User;
  * Algorithme de répartion Gale-Shapley
  *
  */
+@Service
 public class GaleShapley implements IResultGeneratorStrategy<List<User>> {
 
 	/**

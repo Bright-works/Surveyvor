@@ -30,91 +30,91 @@ public class LoginController implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private User user = new User();
-	
+
 	@Autowired
 	private UserController login;
-	
+
 	@Autowired
 	UserManager userManager;
-	
-	@Autowired 
+
+	@Autowired
 	private PermissionManager permissionManager;
-	
-	private String verifPassword="";
-	
+
+	private String verifPassword = "";
+
 	public LoginController() {
 	}
-	
-	//-------------------- Action et methodes -------------//
-	
-	public String connecter() throws ServletException, IOException{
-		try{
-			user=userManager.findByMail(user.getMail());
-		login.setUser(user);
-		ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-	    RequestDispatcher dispatcher = ((ServletRequest) context.getRequest())
-	                .getRequestDispatcher("/j_spring_security_check");
-	    dispatcher.forward((ServletRequest) context.getRequest(),
-	                (ServletResponse) context.getResponse());
-	    FacesContext.getCurrentInstance().responseComplete(); 
-		
-	    return null;
-		}
-		catch(NoResultException exp){
+
+	// -------------------- Action et methodes -------------//
+
+	public String connecter() throws ServletException, IOException {
+		try {
+			user = userManager.findByMail(user.getMail());
+			login.setUser(user);
+			ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+			RequestDispatcher dispatcher = ((ServletRequest) context.getRequest())
+					.getRequestDispatcher("/j_spring_security_check");
+			dispatcher.forward((ServletRequest) context.getRequest(), (ServletResponse) context.getResponse());
+			FacesContext.getCurrentInstance().responseComplete();
+
+			return null;
+		} catch (NoResultException exp) {
 			FacesContext facesContext = FacesContext.getCurrentInstance();
-		    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Email ou mot de passe invalid !",""));
-		
+			facesContext.addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Email ou mot de passe invalide !", ""));
+
 		}
 		return null;
-		
+
 	}
-	
-	public String logout(){
-		user=new User();
+
+	public String logout() {
+		user = new User();
 		FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-        SecurityContextHolder.clearContext();
-        return "/index.xhtml?faces-redirect=true";
-    }
-	
-	public String register() throws ServletException, IOException{
-		if(!this.verifPassword.equals(user.getPassword())){
+		SecurityContextHolder.clearContext();
+		return "/index.xhtml?faces-redirect=true";
+	}
+
+	public String register() throws ServletException, IOException {
+		if (!this.verifPassword.equals(user.getPassword())) {
 			FacesContext facesContext = FacesContext.getCurrentInstance();
-		    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "Les mots de passe ne sont pas identiques !",""));
-		}
-		else{
-			try{
-			User existed=userManager.findByMail(user.getMail());
-			if(existed.getId()>0){
-				user=new User();
-				FacesContext facesContext = FacesContext.getCurrentInstance();
-			    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, "L'adresse email est déja utilisé !",""));	
+			facesContext.addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Les mots de passe ne sont pas identiques !", ""));
+		} else {
+			try {
+				User existed = userManager.findByMail(user.getMail());
+				if (existed.getId() > 0) {
+					user = new User();
+					FacesContext facesContext = FacesContext.getCurrentInstance();
+					facesContext.addMessage(null,
+							new FacesMessage(FacesMessage.SEVERITY_FATAL, "L'adresse email est dÈj‡ utilisÈe !", ""));
 				}
-			}
-			catch(NoResultException expt){
-				//RequestContext.getCurrentInstance().execute("PF('small-dialog').show();");
+			} catch (NoResultException expt) {
+				// RequestContext.getCurrentInstance().execute("PF('small-dialog').show();");
 				user.setAdmin("ROLE_USER");
 				BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 				user.setPassword(encoder.encode(user.getPassword()));
 				userManager.add(this.user);
 				FacesContext facesContext = FacesContext.getCurrentInstance();
-			    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Vous êtes bien inscrit!",""));	
-			    try {
-			        UserDetails userDetails = permissionManager.loadUserByUsername(user.getMail());
-			        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, verifPassword, userDetails.getAuthorities());
-			        SecurityContextHolder.getContext().setAuthentication(auth);
-			        return "/user/acceuil.xhtml";
-			        
-			      } catch (Exception e) {
-					  facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL,e.getMessage(),""));	
-					   
-			      }
+				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Inscription terminÈe", ""));
+				try {
+					UserDetails userDetails = permissionManager.loadUserByUsername(user.getMail());
+					UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails,
+							verifPassword, userDetails.getAuthorities());
+					SecurityContextHolder.getContext().setAuthentication(auth);
+					return "/user/acceuil.xhtml";
+
+				} catch (Exception e) {
+					facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_FATAL, e.getMessage(), ""));
+
+				}
 			}
 		}
 		return null;
 	}
-	
-	//--------------------- getter and setters -------------//
-	
+
+	// --------------------- getter and setters -------------//
+
 	public User getUser() {
 		return user;
 	}

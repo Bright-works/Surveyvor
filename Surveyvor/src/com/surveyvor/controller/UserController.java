@@ -221,7 +221,7 @@ public class UserController implements Serializable {
 		System.out.println("dsdsdqsdqsdqsdqsdqsd");
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		facesContext.addMessage(null,
-				new FacesMessage(FacesMessage.SEVERITY_FATAL, "Email ou mot de passe invalid !", ""));
+				new FacesMessage(FacesMessage.SEVERITY_FATAL, "Email ou mot de passe invalide !", ""));
 	}
 
 	public void setUser(User user) {

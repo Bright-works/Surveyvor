@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.faces.bean.ApplicationScoped;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -18,6 +19,8 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import org.springframework.stereotype.Service;
+
 import com.surveyvor.model.Survey;
 import com.surveyvor.model.User;
 
@@ -25,6 +28,8 @@ import com.surveyvor.model.User;
  * @author Léonore des PLAS
  *
  */
+@Service
+@ApplicationScoped
 public class MailSender {
 	Session session;
 
@@ -78,6 +83,8 @@ public class MailSender {
 		//TODO Mettre le vrai lien vers la visualisation des réponses du sondage
 		String url = "";
 		User creator = survey.getCreator();
+		
+		System.out.println("sending to "+creator.getMail());
 		
 		Message msg = new MimeMessage(session);
 		msg.setFrom(new InternetAddress("no.reply.myapp@gmail.com"));

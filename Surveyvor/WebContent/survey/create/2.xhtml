@@ -69,21 +69,25 @@
 										<ul style="list-style-type: none">
 											<c:choose>
 												<c:when test="#{userBean.survey.type eq 'REPARTITION'}">
-													<li><div class="col-sm-12">
-															<label id="numberWishes" class="col-sm-5 control-label">
-																Nombre de voeux qu'une personne peut rentrer : </label>
-															<p:message for="minWish" />
+													<li><div class="col-sm-5">
+															<label class="col-sm-12 control-label"
+																style="text-align: left"> Nombre de voeux qu'une
+																personne peut rentrer : </label>
+															<p:message for="minChoice" />
 														</div> <p:spacer width="10" height="10" />
-														<div class="col-sm-12">
-															<label for="minWish" class="col-sm-2 control-label">Minimum</label>
-															<p:spinner id="minWish" value="#{question.minChoice}"
-																min="1" />
-														</div>
-														<div class="col-sm-12">
-															<label for="maxWish" class="col-sm-2 control-label">Maximum</label>
-															<p:spinner id="maxWish" value="#{question.maxChoice}"
-																min="1" />
-														</div> <p:spacer width="10" height="30" /></li>
+														<div class="col-sm-5">
+															<div class="col-sm-12">
+																<label for="minChoice" class="col-sm-4 control-label">Minimum</label>
+																<p:spinner id="minChoice" style="width:20%"
+																	value="#{question.minChoice}" min="1" />
+															</div>
+															<div class="col-sm-12">
+																<label for="maxChoice" class="col-sm-4 control-label">Maximum</label>
+																<p:spinner id="maxChoice" style="width:20%"
+																	value="#{question.maxChoice}" min="1" />
+															</div>
+															<p:spacer width="10" height="30" />
+														</div></li>
 												</c:when>
 												<c:otherwise>
 													<li><label for="requested"
@@ -145,15 +149,15 @@
 											</c:choose>
 										</ul>
 									</div>
-									<label for="question" class="col-sm-2 control-label">
+									<label for="question#{questionNumber.index}" class="col-sm-2 control-label">
 										Question * </label>
 									<div class="col-sm-10">
 										<p:inputText value="#{question.contenu}" type="text"
 											required="true" requiredMessage="Question est obligatoire"
 											styleClass="inputs form-control choix"
-											style="width: 80% !important" id="question"
+											style="width: 80% !important" id="question#{questionNumber.index}"
 											placeholder="Entrez votre question" />
-										<p:message for="question" />
+										<p:message for="question#{questionNumber.index}" />
 										<c:if test="#{userBean.allquestion.size() gt 1}">
 											<p:commandButton
 												action="#{userBean.deleteQuestion(question)}"
@@ -178,7 +182,8 @@
 														requiredMessage="L'option #{question.choices.indexOf(choice)+1} est obligatoire"
 														required="true" value="#{choice.label}" />
 													<c:if test="#{question.choices.size() gt 2}">
-														<p:commandButton action="#{userBean.deleteChoice(question,choice)}"
+														<p:commandButton
+															action="#{userBean.deleteChoice(question,choice)}"
 															update="myform" icon="ui-icon-trash"
 															styleClass="form-control orange" />
 													</c:if>
