@@ -62,27 +62,15 @@ public class SurveyController {
 	}
 	//------------ Methodes--------
 	
-	private int numberOfChoice(List<Answer> list,Choice choix){
-		int res=0;
-	
-		for(int i=0;i<list.size();i++){
-			for(int j=0;j<list.get(i).getChoices().size();j++){
-				if(choix.getId()==list.get(i).getChoices().get(j).getId()){
-					res++;
-				}
-			}
-		}
-		return res;
-	}
-	public void inialisationGraphic(){
-		for(int k=0;k<selected.getQuestions().size();k++){
-			BarChartModel barModel = selected.getQuestions().get(k).getBarModel();
-			barModel = new BarChartModel();
+	public BarChartModel inialisationGraphic(Question q){
+			BarChartModel barModel = new BarChartModel();
 			ChartSeries boys = new ChartSeries();
-				for(int i=0;i<selected.getQuestions().get(k).getChoices().size();i++){
-					int taille= numberOfChoice(selected.getQuestions().get(k).getListAnswers(),
-								selected.getQuestions().get(k).getChoices().get(i));
-					boys.set(selected.getQuestions().get(k).getChoices().get(i).getLabel(), taille);	
+			int max=0;
+				for(int i=0;i<q.getChoices().size();i++){
+					int taille=(manager.numberOfAnswersForChoice(q, q.getChoices().get(i))).size();
+					if(taille>max){max=taille;}
+					System.err.println(taille);
+					boys.set(q.getChoices().get(i).getLabel(), taille);	
 				}
 			
 			barModel.addSeries(boys);
@@ -92,8 +80,8 @@ public class SurveyController {
 	        Axis yAxis = barModel.getAxis(AxisType.Y);
 	        yAxis.setLabel("Nombre de vote");
 	        yAxis.setMin(0);
-	        yAxis.setMax(200);
-			}
+	        yAxis.setMax(max);
+	        return barModel;
 		}
 	
 	public void onSelectedMultichoix(Question question){

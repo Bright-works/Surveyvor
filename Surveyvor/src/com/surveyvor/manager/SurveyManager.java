@@ -18,7 +18,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.surveyvor.model.Answer;
+import com.surveyvor.model.Choice;
 import com.surveyvor.model.Comment;
+import com.surveyvor.model.Question;
 import com.surveyvor.model.Survey;
 import com.surveyvor.model.User;
 
@@ -140,6 +142,11 @@ public class SurveyManager {
 		catch(Exception exp){
 			throw new NoResultException();
 		}
+	}
+	
+	public List<Answer> numberOfAnswersForChoice(Question q, Choice c){
+		return em.createQuery("SELECT a from Answer a join a.choices c where c.Id_Choice=:choice_id",Answer.class)
+				.setParameter("choice_id",c.getId()).getResultList();
 	}
 
 }

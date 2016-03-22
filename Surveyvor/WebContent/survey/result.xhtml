@@ -73,8 +73,8 @@
 											</p:column>
 										</p:dataTable>
 									</c:if>
-									<c:if test="#{!question.parametres.severalAnswers and !question.parametres.writable}">
-										<p:chart type="bar" style="height:300px" model="#{question.barModel}"/>
+									<c:if test="#{!question.parametres.writable}">
+										<p:chart type="bar" style="height:300px" model="#{surveyBean.inialisationGraphic(question)}"/>
 									</c:if>
 								</div>
 							</div>
