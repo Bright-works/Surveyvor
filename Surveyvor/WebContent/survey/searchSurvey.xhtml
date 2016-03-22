@@ -2,131 +2,46 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-<h:head>
-	<title>Surveyvor</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1"
-		charset="utf-8" />
-
-	<script type="application/x-javascript">
-		
-		
-		
-		
-		
-		
-		
-	addEventListener("load", function() {
-		setTimeout(hideURLbar, 0); }, false);
-	function hideURLbar(){ window.scrollTo(0,1); } 
-	
-	
-	
-	
-	
-	
-	
-	</script>
-
-	<meta name="keywords"
-		content="Bootstrap Responsive Templates, Iphone Compatible Templates, Smartphone Compatible Templates, Ipad Compatible Templates, Flat Responsive Templates" />
-
-	<h:outputStylesheet library="css2" name="style.css" />
-	<h:outputStylesheet library="css2" name="style1.css" />
-	<h:outputStylesheet library="css2" name="bootstrap.css" />
-
-
-</h:head>
-<body>
-	<!--header-->
-	<div class="header">
-		<div class="container">
-			<div class="header-info">
-				<h:form>
-					<input type="hidden" name="${_csrf.parameterName}"
-						value="${_csrf.token}" />
-					<div class="logo">
-						<a href="index.xhtml"> <h:graphicImage with="50px"
-								library="img" name="logo1orange.gif" styleClass="img-responsive" />
-						</a>
-					</div>
-					<c:if test="#{loginBean.user.id eq 0}">
-						<div class="header-right">
-							<div class="menu">
-								<span class="menu">MENU</span>
-								<ul class="navigatoin">
-									<li><p:commandLink
-											styleClass="signup play-icon popup-with-zoom-anim"
-											onclick="PF('small-dialog2').show();">Connexion</p:commandLink></li>
-									<li><p:commandLink
-											styleClass="signup play-icon popup-with-zoom-anim"
-											onclick="PF('small-dialog').show();">Inscription</p:commandLink></li>
-								</ul>
-							</div>
-						</div>
-					</c:if>
-					<c:if test="#{loginBean.user.id ne 0}">
-						<div class="header-right">
-							<div class="menu">
-								<span class="menu">MENU</span>
-								<ul class="navigatoin">
-									<li><h:commandLink
-											styleClass="signup play-icon popup-with-zoom-anim"
-											action="/user/acceuil.xhtml?faces-redirect=true">Mes informations</h:commandLink></li>
-									<li><h:commandLink
-											styleClass="signup play-icon popup-with-zoom-anim"
-											action="#{loginBean.logout}">Déconnexion</h:commandLink></li>
-								</ul>
-							</div>
-						</div>
-					</c:if>
-				</h:form>
-
-			</div>
-		</div>
-		<!--/header-->
+<ui:composition template="../layouts/mainLayout.xhtml">
+	<ui:define name="css">
+		<h:outputStylesheet library="css" name="AdminLTE.css" />
+		<h:outputStylesheet library="css" name="_all-skins.min.css" />
+	</ui:define>
+<ui:define name="titre">Chercher un sondage	</ui:define>
+	<ui:define name="content">
+		<section class="content-header">
 		<h:form>
-			<p:dataTable var="current"
+		 <p:growl showDetail="true"/>
+			<p:dataTable var="current" widgetVar="surveys" 
 				value="#{publicSurveyBean.matchingSurveys}" rows="10"
-				paginator="true" styleClass="searchDataTable"
+				paginator="true" paginatorAlwaysVisible="false" emptyMessage="Aucun sondage ne correspond à votre recherche"
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
-				headerStyleClass="searchHeader"
-				rowStyleClass="searchRow"
-				footerStyleClass="searchHeader">
-
-				<p:column headerText="Titre du sondage" sortBy="#{current.title}"
-					filterBy="#{current[0]}" filterMatchMode="contains">
+				>
+				<f:facet name="header">
+						<p:inputText style="width:70% !important; height:40px !important;" value="#{publicSurveyBean.filter}"  placeholder="Filtre pour la recherche d'un sondage public"/>
+						<p:commandButton ajax="false" action="#{publicSurveyBean.recherche}" icon="ui-icon-search" style="background:#FF9900; color:#FFF !important" styleClass="btn btn-flat" value="Chercher"/>
+				</f:facet>
+				<p:column headerText="Titre du sondage" filterable="true" sortBy="#{current.title}" filterMatchMode="contains">
 					<h:outputText value="#{current.title}" />
 				</p:column>
-				<p:column headerText="Date de fin" sortBy="#{current.endDate}">
+				<p:column headerText="Date de fin" filterable="true" sortBy="#{current.endDate}" width="20%" 
+				filterMatchMode="contains">
 					<h:outputText value="#{current.endDate}">
 						<f:convertDateTime pattern="dd-MM-yyyy à HH:mm" />
 					</h:outputText>
 				</p:column>
-				<p:column headerText="Consulter" width="10%"
+				<p:column headerText="Consulter" width="10%" filterMatchMode="contains"
 					style="text-align:center;">
-					<h:commandButton icon="ui-icon-search" title="View"
+					<p:commandButton icon="ui-icon-search" title="Consulter le sondage"
 						action="#{publicSurveyBean.show(current)}" type="submit"
-						style="box-shadow: none"/>
+						styleClass="icon orange"/>
 				</p:column>
 			</p:dataTable>
 		</h:form>
-	</div>
-	<!--footer-->
-	<div class="footer">
-		<div class="container">
-			<div class="copy-rights">
-				<p>
-					Created by<a> Brightworks - 2016.</a>
-				</p>
-			</div>
-
-			<a href="#" id="toTop" style="display: block;"> <span
-				id="toTopHover" style="opacity: 1;"> </span></a>
-
-		</div>
-	</div>
-	<!--/footer-->
-</body>
+			</section>
+	</ui:define>
+</ui:composition>
 </html>

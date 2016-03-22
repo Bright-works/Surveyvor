@@ -8,6 +8,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
@@ -129,6 +130,16 @@ public class SurveyManager {
 	
 	public void repondreSondage(Answer answer){
 		em.persist(answer);
+	}
+	
+	public List<Survey> findByTitle(String filter){
+		try{
+		return em.createQuery("SELECT s FROM Survey s where lower(s.title) like lower(:filte) ", Survey.class)
+				.setParameter("filte","%"+filter+"%").getResultList();
+		}
+		catch(Exception exp){
+			throw new NoResultException();
+		}
 	}
 
 }

@@ -67,15 +67,15 @@ function hideURLbar(){ window.scrollTo(0,1); }
 		<div id="Home" class="header-bottom">
 			<div class="container">
 				<div class="h-right">
-					<h2>Créer et partager des sondages, puis obtener les résultats
+					<h2>Créez et partagez des sondages, puis obtenez les résultats
 						facilement</h2>
 					<div class="buttons">
 						<div class="contact-info" style="">
 							<h:form action="recherche.html">
 								<p:growl />
-								<p:commandButton styleClass="btn white" value="Créer un Sondage" />
+								<p:commandButton ajax="false" action="register.xhtml?faces-redirect=true" styleClass="btn white" value="Créer un Sondage" />
 								<p:spacer width="30px" />
-								<p:commandButton
+								<p:commandButton ajax="false" action="./survey/searchSurvey.xhtml?faces-redirect=true"
 									styleClass="btn white" value="Participer à des Sondages" />
 							</h:form>
 						</div>
@@ -90,7 +90,7 @@ function hideURLbar(){ window.scrollTo(0,1); }
 								<h:form>
 										<p:inputText style="width:60% !important"
 											value="#{publicSurveyBean.searchString}" id="searchCV"
-											placeholder="Chercher un CV" required="required" />
+											placeholder="Chercher un sondage" required="required" />
 										<p:commandButton type="submit" styleClass="btn orange btn-flat"
 											action="#{publicSurveyBean.search}" id="searchCVButton"
 											icon="ui-icon-search" title="Search Button"

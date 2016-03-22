@@ -46,8 +46,6 @@ public class Answer {
 	@Transient
 	private Choice choix=new Choice();
 	
-	@Transient
-	private Choice[] selectedChoices;
 	
 	@Valid
 	@ManyToMany
@@ -159,13 +157,6 @@ public class Answer {
 		this.choix = choix;
 	}
 
-	public Choice[] getSelectedChoices() {
-		return selectedChoices;
-	}
-
-	public void setSelectedChoices(Choice[] selectedChoices) {
-		this.selectedChoices = selectedChoices;
-	}
 
 	public Answer(Long id_Answer, User answerer, Question question, List<Choice> choices, Map<Long, String> valeurs,
 			Date date) {

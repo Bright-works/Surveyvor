@@ -29,6 +29,8 @@
 				<!-- data table -->
 				<div class="box box-default" style="text-align: center;">
 					<div class="box-header with-border" >
+					
+					<c:if test="#{surveyBean.selected.type eq 'REPARTITION'}">
 						<p:dataTable rows="15" selectionMode="single" paginatorAlwaysVisible="false" paginator="true"
 						emptyMessage="Aucun résultat généré" editable="true" >
 							<f:facet name="header">
@@ -55,6 +57,29 @@
 								<h:outputText />
 							</p:column>
 						</p:dataTable>
+					</c:if>
+					<c:if test="#{surveyBean.selected.type eq 'OPINION'}">
+						<c:forEach var="question" items="#{surveyBean.selected.questions}">
+							<div class="col-md-6">
+								<div class="box box-danger">
+									<div class="box-header with-border">
+										<h5>#{question.contenu}</h5>
+									</div>
+									<c:if test="#{question.parametres.writable}">
+										<p:dataTable style="text-align:left !important; display: inline-block" styleClass="inputs" 
+											value="#{question.listAnswers}" var="answer" paginator="true" rows="5">
+											<p:column>
+												<h:outputText value="#{answer.opinionText}"/>
+											</p:column>
+										</p:dataTable>
+									</c:if>
+									<c:if test="#{!question.parametres.severalAnswers and !question.parametres.writable}">
+										<p:chart type="bar" style="height:300px" model="#{question.barModel}"/>
+									</c:if>
+								</div>
+							</div>
+						</c:forEach>
+					</c:if>
 					</div>
 				</div>
 				

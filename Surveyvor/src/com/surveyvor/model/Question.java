@@ -21,6 +21,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.primefaces.model.chart.BarChartModel;
+
 @Entity
 public class Question implements Serializable {
 	
@@ -54,6 +56,14 @@ public class Question implements Serializable {
 	
 	@Transient
 	private Answer answer=new Answer();
+	
+	@Transient
+	private BarChartModel barModel;
+	
+	@Valid
+	@OneToMany (orphanRemoval = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name="Id_Question")
+	private List<Answer>listAnswers;
 
 	@NotNull
 	@Valid
@@ -168,6 +178,24 @@ public class Question implements Serializable {
 
 	public void setAnswer(Answer answer) {
 		this.answer = answer;
+	}
+
+	
+	public List<Answer> getListAnswers() {
+		return listAnswers;
+	}
+
+	public void setListAnswers(List<Answer> listAnswers) {
+		this.listAnswers = listAnswers;
+	}
+	
+
+	public BarChartModel getBarModel() {        
+		return barModel;
+	}
+
+	public void setBarModel(BarChartModel barModel) {
+		this.barModel = barModel;
 	}
 
 	public Question ( String contenu, String description, int minChoice, int maxChoice, List<Choice> choices, QuestionParameters parametres) {

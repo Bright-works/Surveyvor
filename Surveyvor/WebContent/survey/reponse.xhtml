@@ -70,7 +70,7 @@
 						<c:if test="#{surveyBean.selected.type eq 'OPINION'}">
 							<div class="box-body" style="text-align: left;">
 								<h4 style="color: #7C420B;">#{question.contenu}</h4>
-								
+								<hr style="border: 1px #999 solid;"/>
 							    <c:if test="#{question.parametres.writable}">
 							    	<p:inputTextarea styleClass="inputs" value="#{question.answer.opinionText}" required="#{!question.parametres.requested}" 
 							    	placeholder="#{!question.parametres.requested ? 'Réponse obligatoire' : 'Réponse non obligatoire'}" />
@@ -79,7 +79,7 @@
 							    			<p:dataTable value="#{question.choices}" selection="#{question.answer.choix}" rowKey="#{choice.label}"  var="choice"  styleClass="" 
 							    			 emptyMessage="Liste est vide">
 							    				<f:facet name="header">
-										            RadioButton
+										            Une seule option à choisir 
 										        </f:facet>
 										        <p:column style="width:30px;text-align:center" selectionMode="single">
 										        </p:column>
@@ -91,10 +91,12 @@
 							    	</c:if>
 							    	<c:if test="#{question.parametres.severalAnswers and !question.parametres.writable}">
 							    		
-							    		<p:dataTable value="#{question.choices}" rowKey="#{choice.label}"  selection="#{question.answer.choices}" var="choice"  styleClass="" 
-							    			 emptyMessage="Liste est vide">
+							    		<p:dataTable value="#{question.choices}" rowKey="#{choice.label}"  selection="#{question.answer.choices}" var="choice" 
+							    		 styleClass=""  emptyMessage="Liste est vide" >
+							    				<p:ajax event="rowSelectCheckbox" listener="#{surveyBean.onSelectedMultichoix(question)}"  async="true"/>
+							    				<p:ajax event="rowUnselectCheckbox" listener="#{surveyBean.onSelectedMultichoix(question)}"  async="true"/>
 							    				<f:facet name="header">
-										            Chekbox
+										            Minimum #{question.minChoice} et maximum #{question.maxChoice} à choisir
 										        </f:facet>
 										        <p:column style="width:30px;text-align:center" selectionMode="multiple">
 										        </p:column>
@@ -102,7 +104,6 @@
 										            <h:outputText value="#{choice.label}" />
 										        </p:column>
 								    		</p:dataTable>
-								    	
 							    	</c:if>
 							</div>
 						</c:if>

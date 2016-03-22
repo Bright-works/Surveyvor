@@ -7,6 +7,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.context.FacesContext;
+import javax.persistence.NoResultException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,7 +26,7 @@ public class PublicSurveyController {
 	private Survey selected;
 	private String searchString;
 	private List<Survey> matchingSurveys;
-
+	private String filter;
 	public PublicSurveyController() {
 
 	}
@@ -57,9 +58,22 @@ public class PublicSurveyController {
 				matchingSurveys.add(current);
 			}
 		}
-		return "/survey/searchSurvey.xhtml";
+		return "/survey/searchSurvey.xhtml?faces-redirect=true";
 	}
 
+	public void recherche(){
+		try{
+			matchingSurveys=manager.findByTitle(filter);
+		}
+		catch(NoResultException exp){
+			matchingSurveys= new ArrayList<Survey>();
+
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Probléme d'accés à la base de données", ""));
+		}
+		
+	}
 	public String show(Survey survey) {
 		//System.out.println("TEST");
 	
@@ -110,5 +124,14 @@ public class PublicSurveyController {
 	public void setSelected(Survey selected) {
 		this.selected = selected;
 	}
+
+	public String getFilter() {
+		return filter;
+	}
+
+	public void setFilter(String filter) {
+		this.filter = filter;
+	}
+	
 
 }

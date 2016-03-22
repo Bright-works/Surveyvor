@@ -3,12 +3,17 @@ package com.surveyvor.controller;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
 import org.primefaces.event.DragDropEvent;
+import org.primefaces.model.chart.Axis;
+import org.primefaces.model.chart.AxisType;
+import org.primefaces.model.chart.BarChartModel;
+import org.primefaces.model.chart.ChartSeries;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -19,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.surveyvor.manager.SurveyManager;
-import com.surveyvor.manager.UserManager;
 import com.surveyvor.model.Answer;
 import com.surveyvor.model.Comment;
 import com.surveyvor.model.Choice;
@@ -57,6 +61,53 @@ public class SurveyController {
 	public void init(){
 	}
 	//------------ Methodes--------
+	
+	private int numberOfChoice(List<Answer> list,Choice choix){
+		int res=0;
+	
+		for(int i=0;i<list.size();i++){
+			for(int j=0;j<list.get(i).getChoices().size();j++){
+				if(choix.getId()==list.get(i).getChoices().get(j).getId()){
+					res++;
+				}
+			}
+		}
+		return res;
+	}
+	public void inialisationGraphic(){
+		for(int k=0;k<selected.getQuestions().size();k++){
+			BarChartModel barModel = selected.getQuestions().get(k).getBarModel();
+			barModel = new BarChartModel();
+			ChartSeries boys = new ChartSeries();
+				for(int i=0;i<selected.getQuestions().get(k).getChoices().size();i++){
+					int taille= numberOfChoice(selected.getQuestions().get(k).getListAnswers(),
+								selected.getQuestions().get(k).getChoices().get(i));
+					boys.set(selected.getQuestions().get(k).getChoices().get(i).getLabel(), taille);	
+				}
+			
+			barModel.addSeries(boys);
+			Axis xAxis = barModel.getAxis(AxisType.X);
+	        xAxis.setLabel("options");
+	         
+	        Axis yAxis = barModel.getAxis(AxisType.Y);
+	        yAxis.setLabel("Nombre de vote");
+	        yAxis.setMin(0);
+	        yAxis.setMax(200);
+			}
+		}
+	
+	public void onSelectedMultichoix(Question question){
+		if(question.getAnswer().getChoices().size()>question.getMaxChoice()){
+
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, "Nombre de choix autorisé n'est pas respecté !", ""));
+		}
+		if(question.getAnswer().getChoices().size()<question.getMinChoice()){
+
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, "Nombre de choix autorisé n'est pas respecté !", ""));
+		}
+	}
 	public void prepareAnswers(){
 		
 			int size=selected.getQuestions().size();
@@ -71,7 +122,15 @@ public class SurveyController {
 	
 	public String addAnswers(){
 		if(selected.getType().equals(TypeSurvey.REPARTITION)){
-			// code à faire pour répartition 
+			Answer ans= selected.getQuestions().get(0).getAnswer();
+			Map<Long,String> resultats= ans.getValeurs();
+			for(int i=0;i<ans.getChoices().size();i++){
+				resultats.put(ans.getChoices().get(i).getId(),String.valueOf(i));
+			}
+			ans.setValeurs(resultats);
+			ans.setDate(new Date());
+			ans.setQuestion(selected.getQuestions().get(0));;
+			manager.repondreSondage(ans);
 		}
 		else{
 			for(int i=0;i<selected.getQuestions().size();i++)
@@ -96,6 +155,7 @@ public class SurveyController {
 	public void allComments(){
 		alls= manager.getallCommentBySurvey(selected.getId());
 	}
+	
 	public List<Survey> getAll() {
 		list=(List<Survey>) userController.getUser().getOwnedSurveys();
 		return list;
