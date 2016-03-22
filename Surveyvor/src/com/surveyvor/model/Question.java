@@ -63,7 +63,7 @@ public class Question implements Serializable {
 	private BarChartModel barModel;
 	
 	@Valid
-	@OneToMany (orphanRemoval = true, fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+	@OneToMany (orphanRemoval = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name="Id_Question")
 	private List<Answer>listAnswers;
 

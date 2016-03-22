@@ -96,12 +96,14 @@ public class SurveyController {
 			facesContext.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, "Nombre de choix autorisé n'est pas respecté !", ""));
 		}
 	}
+	
 	public void prepareAnswers(){
 		
 			int size=selected.getQuestions().size();
 			for(int i=0;i<size;i++){
 				List<Choice> listchoix = new ArrayList<Choice>();
 				Answer ans=new Answer();
+				ans.setQuestion(selected.getQuestions().get(i));
 				ans.setChoices(listchoix);
 				ans.setChoix(new Choice());
 				selected.getQuestions().get(i).setAnswer(ans);
