@@ -38,9 +38,8 @@ public class Answer {
 	private User answerer;
 
 	@Valid
-	@NotNull
 	@ManyToOne
-	@JoinColumn(name = "Id_Question")
+	@JoinColumn(name="Id_Question", insertable=false, updatable=false)
 	private Question question;
 	
 	@Transient

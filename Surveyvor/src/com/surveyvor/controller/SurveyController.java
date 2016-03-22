@@ -141,6 +141,8 @@ public class SurveyController {
 	}
 	
 	public void allComments(){
+		System.out.println("manager"+manager);
+		System.out.println("selected"+selected);
 		alls= manager.getallCommentBySurvey(selected.getId());
 	}
 	

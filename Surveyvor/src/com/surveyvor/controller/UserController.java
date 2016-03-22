@@ -3,13 +3,12 @@ package com.surveyvor.controller;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
+import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -97,17 +96,30 @@ public class UserController implements Serializable {
 		selectedQuestionType.remove(i);
 		allquestion.remove(question);
 	}
-	
-	public boolean verifierEmail(String mail){
-		Pattern pattern= Pattern.compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");
-		Matcher matcher=pattern.matcher(mail);
-		if(matcher.matches()){
-			return true;}
-		else return false;
+
+	public boolean verifierEmail(String mail) {
+		return EmailValidator.getInstance().isValid(mail);
 	}
-	public void addEmail(){
-		if(verifierEmail(email)){
-			diffusion.add(email);
+
+	public void addEmail() {
+		boolean allgood = true;
+		int i = 0;
+		String[] tmp = email.trim().split(";");
+		List<String> diffusionReal = new ArrayList<String>();
+		System.out.println("Liste de diffusion: " + tmp.length + " " + email);
+		while (i < tmp.length && allgood) {
+			allgood = verifierEmail(tmp[i]);
+			System.out.println(allgood);
+			diffusionReal.add(tmp[i]);
+			System.out.println(tmp[i]);
+			i++;
+		}
+		if (allgood) {
+			for (String mail : diffusionReal) {
+				if (!diffusion.contains(mail)) {
+					diffusion.add(mail);
+				}
+			}
 			email = "";
 		} else {
 			FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -116,43 +128,47 @@ public class UserController implements Serializable {
 		}
 	}
 
+	public void deleteMail(String mail) {
+		diffusion.remove(mail);
+	}
+
 	public String validateMinMaxChoices() {
 		if (survey.getType() == TypeSurvey.REPARTITION) {
 			int minChoice = allquestion.get(0).getMinChoice();
 			int maxChoice = allquestion.get(0).getMaxChoice();
 			System.out.println("MIN/MAX: " + minChoice + "/" + maxChoice);
-			
+
 			if (minChoice > maxChoice || maxChoice > allquestion.get(0).getChoices().size()) {
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 						"Veuillez rentrer des valeurs minimales et maximales correctes", "minWish"));
 				return "2.xhtml";
 			} else {
-				
-				//If maxchoice > 1 -> severalChoice = true
-				if(maxChoice>1){
+
+				// If maxchoice > 1 -> severalChoice = true
+				if (maxChoice > 1) {
 					allquestion.get(0).getParametres().setSeveralAnswers(true);
 				}
-				
+
 				return "3.xhtml?faces-redirect=true";
 			}
 		} else {
-			int i=0;
-			boolean error=false;
-			while(i<allquestion.size() && !error){
+			int i = 0;
+			boolean error = false;
+			while (i < allquestion.size() && !error) {
 				int minChoice = allquestion.get(i).getMinChoice();
 				int maxChoice = allquestion.get(i).getMaxChoice();
 				System.out.println("MIN/MAX: " + minChoice + "/" + maxChoice);
-				System.out.println("SELECTED TYPE: "+ selectedQuestionType.get(i));
-				
-				switch(selectedQuestionType.get(i)){
+				System.out.println("SELECTED TYPE: " + selectedQuestionType.get(i));
+
+				switch (selectedQuestionType.get(i)) {
 				case "0": {
 					allquestion.get(i).getParametres().setWritable(false);
 					allquestion.get(i).getParametres().setSeveralAnswers(true);
-					
+
 					if (minChoice > maxChoice || maxChoice > allquestion.get(i).getChoices().size()) {
-						error=true;
-					} 
+						error = true;
+					}
 				}
 					break;
 				case "1": {
@@ -167,14 +183,14 @@ public class UserController implements Serializable {
 				}
 					break;
 				}
-				
+
 				i++;
 
 			}
 			if (error) {
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-						"Veuillez rentrer des valeurs minimales et maximales correctes", "minChoice"+i));
+						"Veuillez rentrer des valeurs minimales et maximales correctes", "minChoice" + i));
 				return "2.xhtml";
 			} else {
 				return "3.xhtml?faces-redirect=true";
@@ -183,27 +199,47 @@ public class UserController implements Serializable {
 	}
 
 	public String addNewSurvey() {
-
 		if (survey.getType() == TypeSurvey.REPARTITION) {
 			parameters.setPrivateSurvey(true);
 		}
-		
+
 		parameters.setAlgo(-1);
 		survey.setParametres(parameters);
 		survey.setDiffusion(diffusion);
 		survey.setCreator(user);
 		survey.setQuestions(allquestion);
-		surveyManager.addSurvey(survey);
-		FacesContext facesContext = FacesContext.getCurrentInstance();
-		facesContext.addMessage(null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, "Le sondage a bien été enregistré !", ""));
-		survey = new Survey();
-		question = new Question();
-		allquestion = new ArrayList<Question>();
-		parameters = new SurveyParameters();
-		diffusion = new ArrayList<String>();
-		email = "";
-		return "../created.xhtml?faces-redirect=true";
+		try {
+			surveyManager.addSurvey(survey);
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Le sondage a bien été enregistré !", ""));
+			survey = new Survey();
+			question = new Question();
+			allquestion = new ArrayList<Question>();
+			parameters = new SurveyParameters();
+			diffusion = new ArrayList<String>();
+			email = "";
+
+			// Refresh public list on publicsurveycontroler
+			FacesContext context = FacesContext.getCurrentInstance();
+			PublicSurveyController psv = context.getApplication().evaluateExpressionGet(context, "#{publicSurveyBean}",
+					PublicSurveyController.class);
+			psv.refreshList();
+			
+			//Refresh user
+			user = userManager.findUser(user.getId());
+
+			return "../created.xhtml?faces-redirect=true";
+
+		} catch (Exception e) {
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"Il y a eu une erreur lors de l'envoi en base de donnÈes,"
+							+ " vous avez probablement oubliÈ de remplir des champs",
+							""));
+			return "1.xhtml?faces-redirect=true";
+		}
 	}
 
 	// ------------------------getters and setters ----->
@@ -310,6 +346,7 @@ public class UserController implements Serializable {
 	public void setMySurvy(List<Survey> mySurvy) {
 		this.mySurvy = mySurvy;
 	}
+
 	public boolean isConneted() {
 		return conneted;
 	}
@@ -317,5 +354,5 @@ public class UserController implements Serializable {
 	public void setConneted(boolean conneted) {
 		this.conneted = conneted;
 	}
-	
+
 }

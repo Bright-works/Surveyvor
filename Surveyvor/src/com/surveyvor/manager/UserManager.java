@@ -77,6 +77,8 @@ public class UserManager// implements IUser{
 	public Collection<Survey> allSurveysCreated(long id) {
 
 		TypedQuery<Survey> p = em.createQuery("SELECT s FROM Survey s WHERE s.creator.Id_User = :id", Survey.class);
+	//	TypedQuery<Survey> p = em.createQuery("SELECT s FROM Survey s Join s.diffusion WHERE :mail ", Survey.class);
+
 		return p.setParameter("id", id).getResultList();
 	}
 
