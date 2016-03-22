@@ -43,7 +43,6 @@ public class TestSurveyManager {
 	@Autowired
 	SurveyManager surveyManager;
 
-
 	
 	@Test
 	public void testAddSurvey() throws ParseException {

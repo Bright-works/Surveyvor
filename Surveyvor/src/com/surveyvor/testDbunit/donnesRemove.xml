@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <User ID_User="2" name="answerer" lastName="Fred" mail="mail6@mail.com" password="password" admin="ROLE_USER"/>
+</dataset>

@@ -8,8 +8,6 @@
 		algo="1" privateSurvey="0" questionModify="1" visibility="1"
 		startDate="2020-02-16 00:00:00" title="Titre du sondage" type="1"
 		Id_Creator="1" />
-	<surveys_invited Id_Survey="3" Id_Invited="2" />
-	<survey_diffusion Survey_Id="3" diffusion="lol@lol.fr" />
 	<Question Id_Question="4" contenu="Question numero 1"
 		description="description de la question" maxChoice="3" minChoice="1"
 		requested="1" severalAnswers="1" writable="1" Id_Survey="3" />
@@ -17,6 +15,9 @@
 		label="label" quotat="2" Id_Question="4" />
 	<Choice Id_Choice="6" description="description du choix 2"
 		label="labe2" quotat="4" Id_Question="4" />
-
-
+	<surveys_invited Id_Survey="3" Id_Invited="2" />
+	<survey_diffusion Survey_Id="3" diffusion="mail6@mail.com" />
+	<Answers Id_Answer="1" date="2019-02-16 00:00:00" Id_Answerer="2" Id_Question="4" />
+	<Answers_Choice Answer_Id_Answer="1" choices_Id_Choice="5" />
+	<Answer_valeurs Answer_Id_Answer="1" valeurs=" " valeurs_KEY="12" />
 </dataset>
