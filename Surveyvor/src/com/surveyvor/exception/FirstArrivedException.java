@@ -5,7 +5,8 @@
 package com.surveyvor.exception;
 
 /**
- * @author hanatori
+ * @author Brightworks
+ * excetion for FirstArrived Algorithm
  *
  */
 public class FirstArrivedException extends Exception {

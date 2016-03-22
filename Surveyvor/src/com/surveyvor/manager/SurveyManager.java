@@ -24,6 +24,13 @@ import com.surveyvor.model.Question;
 import com.surveyvor.model.Survey;
 import com.surveyvor.model.User;
 
+/**
+ * 
+ * @author Brightworks
+ * all methods related to a survey
+ *
+ */
+
 @Service
 @EnableTransactionManagement
 @Transactional
@@ -54,6 +61,10 @@ public class SurveyManager {
 		System.out.println("CLOSE SurveyManager = " + this);
 	}
 
+	/**
+	 * add survey to databases
+	 * @param survey
+	 */
 	public void addSurvey(Survey survey) {
 		User creator = survey.getCreator();
 		List<Survey> ownedSurveys = creator.getOwnedSurveys();
@@ -62,42 +73,87 @@ public class SurveyManager {
 		em.merge(creator);
 	}
 
+	/**
+	 * update survey to databases
+	 * @param survey
+	 */
 	public void updateSurvey(Survey survey) {
 		em.merge(survey);
 	}
+	
+	/**
+	 * find all surveys in databases
+	 * @return Collection<Survey>
+	 */
 	
 	public Collection<Survey> findSurveys() {
 		return em.createQuery("Select s From Survey s", Survey.class).getResultList();
 	}
 
+	/**
+	 * find all private surveys in databases
+	 * @return Collection<Survey>
+	 */
+	
 	public Collection<Survey> findPrivateSurveys() {
 		return em.createQuery("Select s From Survey s where s.parametres.privateSurvey = true", Survey.class)
 				.getResultList();
 	}
 
+	/**
+	 * find all public surveys in databases
+	 * @return Collection<Survey>
+	 */
+	
 	public Collection<Survey> findPublicSurveys() {
 		return em.createQuery("Select s From Survey s where s.parametres.privateSurvey = false", Survey.class)
 				.getResultList();
 	}
 	
+	/**
+	 * add comment
+	 * @param comment
+	 */
 	public void commentSurvey(Comment comment){
 		em.persist(comment);
 	}
+	
+	/**
+	 * delete all comment for a specific survey
+	 * @param survey
+	 */
 	public void removeCommentAllOfSurvey(Survey survey){
 		em.createQuery("delete Comment c where c.survey.Id=:id").setParameter("id", survey.getId()).executeUpdate();
 	}
+	
+	/**
+	 * find all comments for a specific survey
+	 * @param id_survey
+	 * @return List<Comment>
+	 */
 	
 	public List<Comment> getallCommentBySurvey(long id_survey){
 		return em.createQuery("Select c from Comment c where c.survey.Id=:id_S",Comment.class)
 				.setParameter("id_S",id_survey).getResultList();
 	}
 
+	/**
+	 * find all answers for a specific survey
+	 * @param id_survey
+	 * @return List<Answer>
+	 */
+	
 	public Collection<Answer> allAnswers(Survey survey) {
 		TypedQuery<Answer> a = em.createQuery("SELECT DISTINCT a FROM Answer a WHERE a.question.survey.Id = :id",
 				Answer.class);
 		return a.setParameter("id", survey.getId()).getResultList();
 	}
 
+	/**
+	 * find all survey that just ended 
+	 * @return Collection<Survey>
+	 */
+	
 	public Collection<Survey> findJustEndedSurveys() {
 		System.out.println("Checking if there are ended surveys");
 
@@ -121,18 +177,39 @@ public class SurveyManager {
 				.setParameter("hourbefore", hourBefore).getResultList();
 	}
 
+	/**
+	 * find a specific survey in databases
+	 * @param id
+	 * @return Survey
+	 */
 	public Survey findSurvey(long id) {
 		return em.find(Survey.class, id);
 	}
 
+	/**
+	 * delete survey from databases
+	 * @param id
+	 */
+	
 	public void removeSurvey(long id) {
 		Survey survey = em.find(Survey.class, id);
 		em.remove(survey);
 	}
 	
+	/**
+	 * add answer for a survey 
+	 * @param answer
+	 */
+	
 	public void repondreSondage(Answer answer){
 		em.persist(answer);
 	}
+	
+	/**
+	 * find all surveys (by the title)
+	 * @param filter
+	 * @return List<Survey>
+	 */
 	
 	public List<Survey> findByTitle(String filter){
 		try{
@@ -144,6 +221,12 @@ public class SurveyManager {
 		}
 	}
 	
+	/**
+	 * find all answers containing a specific choice
+	 * @param q
+	 * @param c
+	 * @return
+	 */
 	public List<Answer> numberOfAnswersForChoice(Question q, Choice c){
 		return em.createQuery("SELECT a from Answer a join a.choices c where c.Id_Choice=:choice_id",Answer.class)
 				.setParameter("choice_id",c.getId()).getResultList();

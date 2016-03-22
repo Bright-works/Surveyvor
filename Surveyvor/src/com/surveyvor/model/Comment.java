@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
  * 
  * @author Brightworks
  * Comment in survey
- * contain user, survey, comment, and date of comment
+ * contains user, survey, comment, and date of comment
  */
 
 @Entity
