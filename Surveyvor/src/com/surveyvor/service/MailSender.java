@@ -1,5 +1,5 @@
 /**
- * @author Lï¿½onore des PLAS
+ * @author Léonore des PLAS
  * @date 11 mars 2016
  */
 package com.surveyvor.service;
@@ -19,14 +19,14 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import org.springframework.security.crypto.codec.Hex;
 import org.springframework.stereotype.Service;
 
 import com.surveyvor.model.Survey;
 import com.surveyvor.model.User;
 
 /**
- * @author Brighworks
- * service to send mail
+ * @author Léonore des PLAS
  *
  */
 @Service
@@ -49,16 +49,12 @@ public class MailSender {
 		});
 	}
 	
-	/**
-	 * send an invitation url for a specific survey
-	 * @param survey
-	 * @param url
-	 * @throws MessagingException
-	 */
 	public void sendInvitation(Survey survey, String url) throws MessagingException{
 		List<String> mailingList = survey.getDiffusion();
 		
 		for(String mailAdress : mailingList){
+			
+			String realUrl = url + String.copyValueOf(Hex.encode(mailAdress.getBytes()));
 			
 			Message msg = new MimeMessage(session);
 			msg.setFrom(new InternetAddress("no.reply.myapp@gmail.com"));
@@ -69,15 +65,15 @@ public class MailSender {
 			
 			MimeBodyPart html = new MimeBodyPart();
 			html.setContent("<h1>Bonjour,</h1></br>"
-					+ "<p>Vous recevez ce mail car vous ï¿½tes invitï¿½ au sondage '" + survey.getTitle() + "'.</p>"
-					+ "<p>Pour y rï¿½pondre, veuillez cliquer sur le lien suivant:</p>"
-					+ "<p><a href='"+url+"'>"+url+"</a></p>", "text/html");
+					+ "<p>Vous recevez ce mail car vous êtes invité au sondage '" + survey.getTitle() + "'.</p>"
+					+ "<p>Pour y répondre, veuillez cliquer sur le lien suivant:</p>"
+					+ "<p><a href='"+realUrl+"'>"+realUrl+"</a></p>", "text/html");
 			
 			MimeBodyPart txt = new MimeBodyPart();
 			txt.setText("Bonjour,\n"
-					+ "Vous recevez ce mail car vous ï¿½tes invitï¿½ au sondage '" + survey.getTitle() + "'.\n"
-					+ "Pour y rï¿½pondre, veuillez copier le lien suivant et le coller dans votre navigateur:\n"
-					+ url);
+					+ "Vous recevez ce mail car vous êtes invité au sondage '" + survey.getTitle() + "'.\n"
+					+ "Pour y répondre, veuillez copier le lien suivant et le coller dans votre navigateur:\n"
+					+ realUrl);
 			
 			mm.addBodyPart(txt);
 			mm.addBodyPart(html);
@@ -86,12 +82,6 @@ public class MailSender {
 		}
 	}
 	
-	/**
-	 * send an url to reset password
-	 * @param email
-	 * @param url
-	 * @throws MessagingException
-	 */
 	public void sendResetPassword(String email, String url) throws MessagingException{		
 		
 			Message msg = new MimeMessage(session);
@@ -103,14 +93,14 @@ public class MailSender {
 			
 			MimeBodyPart html = new MimeBodyPart();
 			html.setContent("<h1>Bonjour,</h1></br>"
-					+ "<p>Votre mot de passe est oubliï¿½, pour rï¿½soudre ce problï¿½me, vous trouverez ci-dessous un lien"
-					+ " pour dï¿½finir votre nouveau mot de passe.</p>"
+					+ "<p>Votre mot de passe est oubli, pour rsoudre ce problme, vous trouverez ci-dessous un lien"
+					+ " pour dfinir votre nouveau mot de passe.</p>"
 					+ "<p><a href='"+url+"'>"+url+"</a></p>", "text/html");
 			
 			MimeBodyPart txt = new MimeBodyPart();
 			txt.setText("Bonjour,\n"
-					+ "Votre mot de passe est oubliï¿½, pour rï¿½soudre ce problï¿½me, vous trouverez ci-dessous un lien.\n"
-					+ "pour dï¿½finir votre nouveau mot de passe:\n"
+					+ "Votre mot de passe est oubli, pour rsoudre ce problme, vous trouverez ci-dessous un lien.\n"
+					+ "pour dfinir votre nouveau mot de passe:\n"
 					+ url);
 			
 			mm.addBodyPart(txt);
@@ -119,14 +109,8 @@ public class MailSender {
 			Transport.send(msg);
 	}
 	
-	/**
-	 * send a notify for the end of survey 
-	 * @param survey
-	 * @throws MessagingException
-	 */
-	
 	public void notifySurveyEnded(Survey survey) throws MessagingException{
-		//TODO Mettre le vrai lien vers la visualisation des rï¿½ponses du sondage
+		//TODO Mettre le vrai lien vers la visualisation des réponses du sondage
 		String url = "";
 		User creator = survey.getCreator();
 		
@@ -142,31 +126,23 @@ public class MailSender {
 		MimeBodyPart html = new MimeBodyPart();
 		html.setContent("<h1>Bonjour " + creator.getName() + ",</h1></br>"
 				+ " <p>Vous recevez ce mail car le sondage <b>" + survey.getTitle()
-				+ "</b> que vous avez crï¿½ï¿½ vient de se terminer.</p>"
-				+ "<p>Pour en consulter les rï¿½ponses, veuillez cliquer sur le lien suivant:</p>"
+				+ "</b> que vous avez créé vient de se terminer.</p>"
+				+ "<p>Pour en consulter les réponses, veuillez cliquer sur le lien suivant:</p>"
 				+ "<p><a href='"+url+"'>"+url+"</a></p>"
-				+ "<p>Vous pouvez ï¿½galement y accï¿½der ï¿½ partir de votre profil.</p>", "text/html");
+				+ "<p>Vous pouvez également y accéder à partir de votre profil.</p>", "text/html");
 		
 		MimeBodyPart txt = new MimeBodyPart();
 		txt.setText("Bonjour " + creator.getName() + ",\n"
 				+ "Vous recevez ce mail car le sondage '" + survey.getTitle() 
-				+ "' que vous avez crï¿½ï¿½ vient de se terminer.\n"
-				+ "Pour en consulter les rï¿½ponses, veuillez copier le lien suivant et le coller "
-				+ "dans votre navigateur:\n" + url + "\nVous pouvez ï¿½galement y accï¿½der ï¿½ partir de votre profil.");
+				+ "' que vous avez créé vient de se terminer.\n"
+				+ "Pour en consulter les réponses, veuillez copier le lien suivant et le coller "
+				+ "dans votre navigateur:\n" + url + "\nVous pouvez également y accéder à partir de votre profil.");
 		
 		mm.addBodyPart(txt);
 		mm.addBodyPart(html);
 		msg.setContent(mm);
 		Transport.send(msg);
 	}
-	
-	/**
-	 * send result of survey 
-	 * @param survey
-	 * @param user
-	 * @param groups
-	 * @throws MessagingException
-	 */
 	
 	public void sendOwnResultOnly(Survey survey, User user, List<String> groups) throws MessagingException{
 		String groupnames = "";
@@ -184,19 +160,19 @@ public class MailSender {
 		
 		MimeBodyPart html = new MimeBodyPart();
 		html.setContent("<h1>Bonjour " + user.getName() + ",</h1></br>"
-				+ " <p>Vous recevez ce mail car vous avez ï¿½tï¿½ invitï¿½ au sondage <b>" + survey.getTitle()
-				+ "</b> qui est maintenant terminï¿½.</p>" 
-				+ "<p>Vous ï¿½tes affectï¿½ au(x) groupe(s) suivant(s): "+groupnames+"</p>"
-				+ "<p>Si vous avez une rï¿½clamation vis ï¿½ vis de votre affectation, ne rï¿½pondez pas ï¿½ ce mail."
-				+ "Addressez-vous ï¿½ l'adresse " + survey.getCreator().getMail() + ".</p>", "text/html");
+				+ " <p>Vous recevez ce mail car vous avez été invité au sondage <b>" + survey.getTitle()
+				+ "</b> qui est maintenant terminé.</p>" 
+				+ "<p>Vous êtes affecté au(x) groupe(s) suivant(s): "+groupnames+"</p>"
+				+ "<p>Si vous avez une réclamation vis à vis de votre affectation, ne répondez pas à ce mail."
+				+ "Addressez-vous à l'adresse " + survey.getCreator().getMail() + ".</p>", "text/html");
 		
 		MimeBodyPart txt = new MimeBodyPart();
 		txt.setText("Bonjour " + user.getName() + ",\n"
-				+ "Vous recevez ce mail car vous avez ï¿½tï¿½ invitï¿½ au sondage '" + survey.getTitle()
-				+ "' qui est maintenant terminï¿½.\n"
-				+ "Vous ï¿½tes affectï¿½ au(x) groupe(s) suivant(s): " + groupnames + "\n"
-				+ "Si vous avez une rï¿½clamation vis ï¿½ vis de votre affectation, ne rï¿½pondez pas ï¿½ ce mail."
-				+ "Addressez-vous ï¿½ l'adresse " + survey.getCreator().getMail() + ".");
+				+ "Vous recevez ce mail car vous avez été invité au sondage '" + survey.getTitle()
+				+ "' qui est maintenant terminé.\n"
+				+ "Vous êtes affecté au(x) groupe(s) suivant(s): " + groupnames + "\n"
+				+ "Si vous avez une réclamation vis à vis de votre affectation, ne répondez pas à ce mail."
+				+ "Addressez-vous à l'adresse " + survey.getCreator().getMail() + ".");
 		
 		mm.addBodyPart(txt);
 		mm.addBodyPart(html);
@@ -204,13 +180,6 @@ public class MailSender {
 		Transport.send(msg);
 	}
 	
-	/**
-	 * send result of survey to the group
-	 * @param survey
-	 * @param users
-	 * @param groupname
-	 * @throws MessagingException
-	 */
 	public void sendGroupResult(Survey survey, List<User> users, String groupname) throws MessagingException{
 		String listUsersHtml = "<ul>";
 		String listUsersTxt = "";
@@ -229,23 +198,23 @@ public class MailSender {
 			
 			MimeBodyPart html = new MimeBodyPart();
 			html.setContent("<h1>Bonjour " + user.getName() + ",</h1></br>"
-					+ " <p>Vous recevez ce mail car vous avez ï¿½tï¿½ invitï¿½ au sondage <b>" + survey.getTitle()
-					+ "</b> qui est maintenant terminï¿½.</p>" 
-					+ "<p>Vous avez ï¿½tï¿½ affectï¿½ au groupe <b>"+groupname+"</b>.</p>"
+					+ " <p>Vous recevez ce mail car vous avez été invité au sondage <b>" + survey.getTitle()
+					+ "</b> qui est maintenant terminé.</p>" 
+					+ "<p>Vous avez été affecté au groupe <b>"+groupname+"</b>.</p>"
 					+ "<p>La constitution de ce groupe est la suivante: </p>"
 					+ listUsersHtml
-					+ "<p>Si vous avez une rï¿½clamation vis ï¿½ vis de votre affectation, ne rï¿½pondez pas ï¿½ ce mail."
-					+ "Addressez-vous ï¿½ l'adresse " + survey.getCreator().getMail() + ".</p>", "text/html");
+					+ "<p>Si vous avez une réclamation vis à vis de votre affectation, ne répondez pas à ce mail."
+					+ "Addressez-vous à l'adresse " + survey.getCreator().getMail() + ".</p>", "text/html");
 			
 			MimeBodyPart txt = new MimeBodyPart();
 			txt.setText("Bonjour " + user.getName() + ",\n"
-					+ "Vous recevez ce mail car vous avez ï¿½tï¿½ invitï¿½ au sondage '" + survey.getTitle()
-					+ "' qui est maintenant terminï¿½.\n"
-					+ "Vous ï¿½tes affectï¿½ au groupe: '"+groupname+"'.\n"
+					+ "Vous recevez ce mail car vous avez été invité au sondage '" + survey.getTitle()
+					+ "' qui est maintenant terminé.\n"
+					+ "Vous êtes affecté au groupe: '"+groupname+"'.\n"
 					+ "La constitution de ce groupe est la suivante:\n"
 					+ listUsersTxt
-					+ "Si vous avez une rï¿½clamation vis ï¿½ vis de votre affectation, ne rï¿½pondez pas ï¿½ ce mail."
-					+ "Addressez-vous ï¿½ l'adresse " + survey.getCreator().getMail() + ".");
+					+ "Si vous avez une réclamation vis à vis de votre affectation, ne répondez pas à ce mail."
+					+ "Addressez-vous à l'adresse " + survey.getCreator().getMail() + ".");
 			
 			mm.addBodyPart(txt);
 			mm.addBodyPart(html);
@@ -254,13 +223,6 @@ public class MailSender {
 		}
 	}
 
-	/**
-	 * send result
-	 * @param survey
-	 * @param users
-	 * @param result
-	 * @throws MessagingException
-	 */
 	public void sendAllResults(Survey survey, List<User> users, Map<String, List<String>> result)
 			throws MessagingException {
 		//Construction of the table + list
@@ -293,21 +255,21 @@ public class MailSender {
 			
 			MimeBodyPart html = new MimeBodyPart();
 			html.setContent("<h1>Bonjour " + user.getName() + ",</h1></br>"
-					+ " <p>Vous recevez ce mail car vous avez ï¿½tï¿½ invitï¿½ au sondage '" + survey.getTitle()
-					+ "' qui est maintenant terminï¿½.</p>" 
+					+ " <p>Vous recevez ce mail car vous avez été invité au sondage '" + survey.getTitle()
+					+ "' qui est maintenant terminé.</p>" 
 					+ "<p>Voici la liste des affectations:</p>"
 					+ table 
-					+ "<p>Si vous avez une rï¿½clamation vis ï¿½ vis de votre affectation, ne rï¿½pondez pas ï¿½ ce mail."
-					+ "Addressez-vous ï¿½ l'adresse " + survey.getCreator().getMail() + ".</p>", "text/html");
+					+ "<p>Si vous avez une réclamation vis à vis de votre affectation, ne répondez pas à ce mail."
+					+ "Addressez-vous à l'adresse " + survey.getCreator().getMail() + ".</p>", "text/html");
 			
 			MimeBodyPart txt = new MimeBodyPart();
 			txt.setText("Bonjour " + user.getName() + ",\n"
-					+ "Vous recevez ce mail car vous avez ï¿½tï¿½ invitï¿½ au sondage '" + survey.getTitle()
-					+ "' qui est maintenant terminï¿½.\n"
+					+ "Vous recevez ce mail car vous avez été invité au sondage '" + survey.getTitle()
+					+ "' qui est maintenant terminé.\n"
 					+ "Voici la liste des affectations:\n"
 					+ listText
-					+ "Si vous avez une rï¿½clamation vis ï¿½ vis de votre affectation, ne rï¿½pondez pas ï¿½ ce mail."
-					+ "Addressez-vous ï¿½ l'adresse " + survey.getCreator().getMail() + ".");
+					+ "Si vous avez une réclamation vis à vis de votre affectation, ne répondez pas à ce mail."
+					+ "Addressez-vous à l'adresse " + survey.getCreator().getMail() + ".");
 			
 			mm.addBodyPart(txt);
 			mm.addBodyPart(html);

@@ -41,8 +41,10 @@
 							<div class="col-sm-10">
 								<p:calendar value="#{userBean.survey.startDate}"
 									styleClass="choix" navigator="true" id="date1"
-									popupIconOnly="false" pattern="dd/MM/yyyy HH:mm">
-									<f:ajax execute="@this" event="dateSelect" render="endDate" />
+									mindate="#{userBean.currentDate}" popupIconOnly="false"
+									pattern="dd/MM/yyyy HH:mm">
+									<f:ajax execute="@this" event="dateSelect" render="endDate" update="endDate"/>
+									<f:ajax execute="@this" event="change" render="endDate" update="endDate"/>
 								</p:calendar>
 							</div>
 						</div>
@@ -53,8 +55,8 @@
 								<div class="col-sm-10">
 									<p:calendar value="#{userBean.survey.endDate}"
 										styleClass="choix" navigator="true"
-										mindate="#{userBean.survey.startDate}" popupIconOnly="false"
-										id="date2" pattern="dd/MM/yyyy HH:mm" />
+										mindate="#{userBean.nexDate}" popupIconOnly="false" id="date2"
+										pattern="dd/MM/yyyy HH:mm" />
 								</div>
 							</h:panelGroup>
 						</div>

@@ -210,6 +210,10 @@ public class SurveyController {
 		
 	}
 	
+	public Long getNumberAnswers(Survey survey){
+		return manager.getNumberAnswers(survey);
+	}
+	
 	//----------gtters and setters--------
 	public SurveyManager getManager() {
 		return manager;

@@ -1,12 +1,18 @@
 package com.surveyvor.controller;
 
 import java.io.Serializable;
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.mail.MessagingException;
 
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +28,7 @@ import com.surveyvor.model.Survey;
 import com.surveyvor.model.SurveyParameters;
 import com.surveyvor.model.TypeSurvey;
 import com.surveyvor.model.User;
+import com.surveyvor.service.MailSender;
 
 @Component("userBean")
 @Scope("session")
@@ -32,6 +39,9 @@ public class UserController implements Serializable {
 
 	@Autowired
 	SurveyManager surveyManager;
+	
+	@Autowired
+	MailSender mailSender;
 
 	private static final long serialVersionUID = 1L;
 	private boolean conneted;
@@ -44,6 +54,8 @@ public class UserController implements Serializable {
 	private String email = "";
 	private List<Survey> mySurvy = new ArrayList<Survey>();
 	private List<String> selectedQuestionType = new ArrayList<String>();
+	private Date currentDate = new Date();
+	private Date nexDate = new Date();
 
 	public UserController() {
 		// TODO Auto-generated constructor stub
@@ -57,6 +69,14 @@ public class UserController implements Serializable {
 		addNewChoice(allquestion.get(0));
 		addNewChoice(allquestion.get(0));
 		selectedQuestionType.add("0");
+		survey.setStartDate(new Date());
+		Calendar cal = new GregorianCalendar();
+		cal.setTimeInMillis(survey.getStartDate().getTime());
+		cal.roll(Calendar.DAY_OF_YEAR, true);
+		if(cal.get(Calendar.DAY_OF_YEAR)==1){
+			cal.roll(Calendar.YEAR, true);
+		}
+		survey.setEndDate(new Date(cal.getTimeInMillis()));
 	}
 
 	public TypeSurvey[] getTypes() {
@@ -197,6 +217,29 @@ public class UserController implements Serializable {
 			}
 		}
 	}
+	
+	private void reset(){
+		//Reset
+		survey = new Survey();
+		question = new Question();
+		allquestion = new ArrayList<Question>();
+		parameters = new SurveyParameters();
+		diffusion = new ArrayList<String>();
+		selectedQuestionType = new ArrayList<String>();
+		addNewQuestion();
+		addNewChoice(allquestion.get(0));
+		addNewChoice(allquestion.get(0));
+		selectedQuestionType.add("0");
+		survey.setStartDate(new Date());
+		Calendar cal = new GregorianCalendar();
+		cal.setTimeInMillis(survey.getStartDate().getTime());
+		cal.roll(Calendar.DAY_OF_YEAR, true);
+		if(cal.get(Calendar.DAY_OF_YEAR)==1){
+			cal.roll(Calendar.YEAR, true);
+		}
+		survey.setEndDate(new Date(cal.getTimeInMillis()));
+		email = "";
+	}
 
 	public String addNewSurvey() {
 		if (survey.getType() == TypeSurvey.REPARTITION) {
@@ -209,16 +252,16 @@ public class UserController implements Serializable {
 		survey.setCreator(user);
 		survey.setQuestions(allquestion);
 		try {
+			
+			List<String> diffusion = survey.getDiffusion();
+			
 			surveyManager.addSurvey(survey);
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			facesContext.addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Le sondage a bien été enregistré !", ""));
-			survey = new Survey();
-			question = new Question();
-			allquestion = new ArrayList<Question>();
-			parameters = new SurveyParameters();
-			diffusion = new ArrayList<String>();
-			email = "";
+			
+			String title = survey.getTitle();
+			reset();
 
 			// Refresh public list on publicsurveycontroler
 			FacesContext context = FacesContext.getCurrentInstance();
@@ -229,6 +272,16 @@ public class UserController implements Serializable {
 			//Refresh user
 			user = userManager.findUser(user.getId());
 
+			List<Survey> ownedSurveys = user.getOwnedSurveys();
+			Survey justAddedSurvey = new Survey();
+			for(int i=0; i<ownedSurveys.size(); i++){
+				if(ownedSurveys.get(i).getTitle().compareTo(title)==0){
+					justAddedSurvey = ownedSurveys.get(i);
+				}
+			}
+			justAddedSurvey.setDiffusion(diffusion);
+			sendInvitationMails(justAddedSurvey);
+
 			return "../created.xhtml?faces-redirect=true";
 
 		} catch (Exception e) {
@@ -238,7 +291,24 @@ public class UserController implements Serializable {
 							"Il y a eu une erreur lors de l'envoi en base de donnÈes,"
 							+ " vous avez probablement oubliÈ de remplir des champs",
 							""));
+			e.printStackTrace();
 			return "1.xhtml?faces-redirect=true";
+		}
+	}
+	
+	public void sendInvitationMails(Survey survey){
+		try {
+			String url = "http://"+Inet4Address.getLocalHost().getHostAddress()+":8080/Surveyvor/survey/reponse.xhtml";
+			url = url + "?surveyId=" + survey.getId() + "&userId=";
+			
+			mailSender.sendInvitation(survey, url);
+		} catch (UnknownHostException | MessagingException e) {
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"Il y a eu une erreur lors de l'envoi des messages",
+							""));
+			e.printStackTrace();
 		}
 	}
 
@@ -345,6 +415,52 @@ public class UserController implements Serializable {
 
 	public void setMySurvy(List<Survey> mySurvy) {
 		this.mySurvy = mySurvy;
+	}
+
+	/**
+	 * @return the currentDate
+	 */
+	public Date getCurrentDate() {
+		System.out.println("YA TALKIN' TO ME?");
+		currentDate = new Date();
+		return currentDate;
+	}
+
+	/**
+	 * @param currentDate the currentDate to set
+	 */
+	public void setCurrentDate(Date currentDate) {
+		this.currentDate = currentDate;
+	}
+
+	/**
+	 * @return the date just after survey.startDate
+	 */
+	public Date getNexDate() {
+		if(survey.getStartDate()!=null){
+			System.out.println("YES I'M TALKIN' TO YOU!");
+			Calendar cal = new GregorianCalendar();
+			cal.setTimeInMillis(survey.getStartDate().getTime());
+			cal.roll(Calendar.DAY_OF_YEAR, true);
+			if(cal.get(Calendar.DAY_OF_YEAR)==1){
+				cal.roll(Calendar.YEAR, true);
+			}
+			nexDate = new Date(cal.getTimeInMillis());
+			if(survey.getEndDate().before(survey.getStartDate())){
+				System.out.println("before");
+				survey.setEndDate(nexDate);
+			}
+		}else{
+			nexDate = new Date();
+		}
+		return nexDate;
+	}
+
+	/**
+	 * @param nexDate the nexDate to set
+	 */
+	public void setNexDate(Date nexDate) {
+		this.nexDate = nexDate;
 	}
 
 	public boolean isConneted() {
