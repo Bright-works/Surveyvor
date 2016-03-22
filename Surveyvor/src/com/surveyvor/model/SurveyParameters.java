@@ -3,6 +3,15 @@ package com.surveyvor.model;
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
 
+/**
+ * 
+ * @author Brightworks
+ * SurveyParameters is the parameter of survey
+ * if survey is visible
+ * if a choice can be modified
+ * if is a private or public survey
+ * and if it is a repartitioning survey, which algorithm is selected 
+ */
 @Embeddable
 public class SurveyParameters {
 	

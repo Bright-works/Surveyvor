@@ -2,7 +2,15 @@ package com.surveyvor.model;
 
 import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
-
+/**
+ * 
+ * @author Brightworks
+ * QuestionParameters
+ * defines if quetion requests a answer, 
+ * several answers
+ * or writable
+ *
+ */
 @Embeddable
 public class QuestionParameters {
 	

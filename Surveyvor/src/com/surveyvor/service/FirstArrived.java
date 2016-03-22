@@ -1,6 +1,6 @@
 /**
- * @author Léonore des PLAS
- * @date 04/03/2016
+ * @author Brightworks
+ * Algorithm First Arrived for a repartition survey
  */
 
 package com.surveyvor.service;
@@ -23,8 +23,13 @@ import com.surveyvor.model.User;
 
 @Service
 public class FirstArrived implements IResultGeneratorStrategy<List<User>> {
-	// Comparator
-	public class AnswerComparator implements Comparator<Answer> {
+	
+	/**
+	 * Comparator
+	 * @author Brightworks
+	 *
+	 */
+	private class AnswerComparator implements Comparator<Answer> {
 
 		@Override
 		public int compare(Answer arg0, Answer arg1) {
@@ -32,7 +37,13 @@ public class FirstArrived implements IResultGeneratorStrategy<List<User>> {
 		}
 
 	}
-
+	
+	/**
+	 * sort answers by date
+	 * @param answers : list of answers
+	 * @return List<Answer> : list of sorted answers 
+	 * @throws FirstArrivedException
+	 */
 	public List<Answer> sortByDate(List<Answer> answers) throws FirstArrivedException {
 		List<Answer> result = answers;
 		if (answers != null) {
@@ -48,6 +59,12 @@ public class FirstArrived implements IResultGeneratorStrategy<List<User>> {
 		return result;
 	}
 
+	/**
+	 * build wishes for each user 
+	 * @param wishes
+	 * @return Map<Integer, Long> 
+	 * @throws FirstArrivedException
+	 */
 	public Map<Integer, Long> prepareWishList(Map<Long, String> wishes) throws FirstArrivedException {
 		Map<Integer, Long> invertedMapping = new HashMap<Integer, Long>();
 		if (wishes != null) {
@@ -66,6 +83,12 @@ public class FirstArrived implements IResultGeneratorStrategy<List<User>> {
 	}
 
 	@Override
+	/**
+	 * build result of algorithm,each choice has a list of user 
+	 * @param survey
+	 * @param answers
+	 * @return Map<Long, List<User>>
+	 */
 	public Map<Long, List<User>> generateResult(Survey survey, List<Answer> answers) throws FirstArrivedException {
 		/*
 		 * Some verifications: the survey mustn't be null, the survey must have

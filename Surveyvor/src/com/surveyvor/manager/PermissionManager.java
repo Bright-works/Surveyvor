@@ -14,6 +14,11 @@ import org.springframework.stereotype.Service;
 
 import com.surveyvor.model.User;
 
+/**
+ * manager for authentication
+ * @author boukris
+ *
+ */
 @Service
 @Qualifier(value="permissionManager")
 public class PermissionManager implements UserDetailsService{
@@ -25,6 +30,9 @@ public class PermissionManager implements UserDetailsService{
 		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * authentication
+	 */
 	@Override
 	public UserDetails loadUserByUsername(String login)
 			throws UsernameNotFoundException {

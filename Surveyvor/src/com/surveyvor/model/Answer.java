@@ -21,6 +21,12 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 //import com.surveyvor.model.annotation.SizeChoice;
+/**
+ * 
+ * @author Brightworks
+ * Answer is the response for one question in one survey, 
+ * contains answerer,question,the answer,and the date 
+ */
 
 @Entity
 @Table(name="Answers",uniqueConstraints = {

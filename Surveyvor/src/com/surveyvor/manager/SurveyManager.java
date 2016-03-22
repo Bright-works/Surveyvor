@@ -97,11 +97,24 @@ public class SurveyManager {
 				Answer.class);
 		return a.setParameter("id", survey.getId()).getResultList();
 	}
+	
+	public Long getNumberAnswers(Survey survey){
+		List<Question> questions = survey.getQuestions();
+		Long max=(long)0;
+		TypedQuery<Long> a = em.createQuery("SELECT COUNT(a) FROM Answer a WHERE a.question.Id_Question = :id",
+				Long.class);
+		for(Question question : questions){
+			Long act = a.setParameter("id", question.getId()).getSingleResult();
+			if(act>max){
+				max=act;
+			}
+		}
+		return max;
+	}
 
 	public Collection<Survey> findJustEndedSurveys() {
 		System.out.println("Checking if there are ended surveys");
 
-		Calendar now = new GregorianCalendar();
 		Calendar hourBefore = new GregorianCalendar();
 		if (hourBefore.get(Calendar.HOUR_OF_DAY) < 1) {
 			if (hourBefore.get(Calendar.DAY_OF_MONTH) < 2) {

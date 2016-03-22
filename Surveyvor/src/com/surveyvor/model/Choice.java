@@ -16,6 +16,14 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+/**
+ * 
+ * @author Brightworks
+ * Choice, contains label, description, question, 
+ * quotat and userAttribued if the question is for repartition
+ * 
+ */
+
 @Entity
 public class Choice implements Serializable{
 	
@@ -32,8 +40,7 @@ public class Choice implements Serializable{
 	@NotNull
 	private String label;
 	
-	@NotNull
-	@Size(min=15)
+	@Size(min=5)
 	private String description;
 	
 	@Valid

@@ -19,6 +19,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import org.springframework.security.crypto.codec.Hex;
 import org.springframework.stereotype.Service;
 
 import com.surveyvor.model.Survey;
@@ -53,6 +54,8 @@ public class MailSender {
 		
 		for(String mailAdress : mailingList){
 			
+			String realUrl = url + String.copyValueOf(Hex.encode(mailAdress.getBytes()));
+			
 			Message msg = new MimeMessage(session);
 			msg.setFrom(new InternetAddress("no.reply.myapp@gmail.com"));
 			msg.addRecipient(Message.RecipientType.TO, new InternetAddress(mailAdress));
@@ -64,13 +67,13 @@ public class MailSender {
 			html.setContent("<h1>Bonjour,</h1></br>"
 					+ "<p>Vous recevez ce mail car vous êtes invité au sondage '" + survey.getTitle() + "'.</p>"
 					+ "<p>Pour y répondre, veuillez cliquer sur le lien suivant:</p>"
-					+ "<p><a href='"+url+"'>"+url+"</a></p>", "text/html");
+					+ "<p><a href='"+realUrl+"'>"+realUrl+"</a></p>", "text/html");
 			
 			MimeBodyPart txt = new MimeBodyPart();
 			txt.setText("Bonjour,\n"
 					+ "Vous recevez ce mail car vous êtes invité au sondage '" + survey.getTitle() + "'.\n"
 					+ "Pour y répondre, veuillez copier le lien suivant et le coller dans votre navigateur:\n"
-					+ url);
+					+ realUrl);
 			
 			mm.addBodyPart(txt);
 			mm.addBodyPart(html);

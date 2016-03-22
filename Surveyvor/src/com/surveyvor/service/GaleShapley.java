@@ -17,8 +17,8 @@ import com.surveyvor.model.User;
 
 /**
  * 
- * @author Sarah Boukris, David Sebban
- * Algorithme de répartion Gale-Shapley
+ * @author Brightworks
+ * Algorithm de répartion Gale-Shapley
  *
  */
 @Service
@@ -121,13 +121,11 @@ public class GaleShapley implements IResultGeneratorStrategy<List<User>> {
 	}
 
 	/**
-	 * 
+	 * compare the preferences of the list of preference
 	 * @param userCurrent
 	 * @param groupFormed
 	 * @param choicePreferUser
 	 * @param choiceCurrent
-	 * @return vérifie si l'userCurrent est préféré a un autre utilisateur se trouvant dans la liste du choiceCurrent
-	 * retourne la place de cet utilisateur
 	 */
 	private int checkPref(User userCurrent, Map<Choice, List<User>> groupFormed, Map<Choice, List<User>> choicePreferUser, Choice choiceCurrent )
 	{
@@ -154,7 +152,7 @@ public class GaleShapley implements IResultGeneratorStrategy<List<User>> {
 	}
 
 	/**
-	 * 
+	 * change or not a current user
 	 * @param usersPreferedByChoice
 	 * @param userCurrent
 	 * @return copie dun objet dans la liste usp
@@ -174,12 +172,11 @@ public class GaleShapley implements IResultGeneratorStrategy<List<User>> {
 	}
 	
 	/**
-	 * 
+	 * nominate a choice not proposed yet
 	 * @param user
 	 * @param userProposed
 	 * @param userPreferChoice
-	 * @return un choix qui ne se trouve pas dans userProposed,
-	 * c'est-à-dire un choix qui n'a pas encore était demandé par le user
+	 * @return Choice
 	 */
 	private Choice recupChoicePrefNoProp(User user, Map<User, List<Choice>> userProposed, Map<User, List<Choice>> userPreferChoice )
 	{		
@@ -195,9 +192,9 @@ public class GaleShapley implements IResultGeneratorStrategy<List<User>> {
 	}
 
 	/**
-	 * 
+	 * Build for each user his list of prefer choices
 	 * @param answers
-	 * @return Map des preférence pour les utilisateur
+	 * @return Map<User, List<Choice>> 
 	 */
 	private Map<User, List<Choice>> buidPreferUser(List<Answer> answers)throws GaleShapleyException{
 
@@ -233,11 +230,10 @@ public class GaleShapley implements IResultGeneratorStrategy<List<User>> {
 	}
 
 	/**
-	 * 
+	 * Build for each choice his list of prefer users (completely random)
 	 * @param choices
 	 * @param answers
-	 * @return Map des préférances pour les choix 
-	 * complétements aléatoirement
+	 * @return Map<Choice, List<User>> 
 	 */
 	private Map<Choice, List<User>> buildPreferGroup(List<Choice> choices, List<Answer> answers) {
 
@@ -277,11 +273,10 @@ public class GaleShapley implements IResultGeneratorStrategy<List<User>> {
 	}
 	
 	/**
-	 * 
+	 * Build for each choice his list of prefer users (according to preferences of user)
 	 * @param choices
 	 * @param answers
-	 * @return Map des préférances pour les choix 
-	 * selon l'ordre des préférences des user
+	 * @return Map<Choice, List<User>> 
 	 */
 	private Map<Choice, List<User>> buildPreferGroup2(List<Choice> choices, List<Answer> answers) throws GaleShapleyException{
 		if (choices == null ||choices.isEmpty() || answers == null ||answers.isEmpty())
@@ -310,10 +305,10 @@ public class GaleShapley implements IResultGeneratorStrategy<List<User>> {
 	}
 	
 	/**
-	 * 
+	 * For a specific user build his list of prefer users
 	 * @param choice
 	 * @param answers
-	 * @return ordre de préférences pour un choice
+	 * @return List<User>
 	 * @throws GaleShapleyException 
 	 */
 	private List<User> buildPreferForOneGroup(Choice choice, List<Answer> answers) throws GaleShapleyException {
