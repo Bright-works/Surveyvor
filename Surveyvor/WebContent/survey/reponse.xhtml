@@ -29,11 +29,11 @@
 				<div class="box box-default" style="text-align: center;">
 					<div class="box-header with-border">
 						<h3>
-							<h:outputText value="#{surveyBean.selected.title}" />
+							<h:outputText style="white-space: pre-line" value="#{surveyBean.selected.title}" />
 						</h3>
-							<p:outputLabel value="#{surveyBean.selected.endDate}"
+							<p:outputLabel value=" le #{surveyBean.selected.endDate}"
 								styleClass="pull-right" >
-								<f:convertDateTime pattern="dd/MM/yyyy"/>
+								<f:convertDateTime pattern="dd/MM/yyyy à HH:mm"/>
 							</p:outputLabel>
 							<p:outputLabel styleClass="pull-right" value="Date limite :"/>
 							

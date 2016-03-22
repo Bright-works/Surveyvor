@@ -32,6 +32,13 @@ public class PublicSurveyController {
 
 	@PostConstruct
 	public void initialisation() {
+		refreshList();
+		selected = new Survey();
+		searchString = "";
+
+	}
+	
+	public void refreshList(){
 		try {
 			list = new ArrayList<Survey>(manager.findPublicSurveys());
 		} catch (Exception e) {
@@ -40,10 +47,6 @@ public class PublicSurveyController {
 			facesContext.addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_FATAL, "Probléme d'accés à la base de données", ""));
 		}
-		selected = new Survey();
-		searchString = "";
-
-		
 	}
 
 	public List<Survey> getAll() {
