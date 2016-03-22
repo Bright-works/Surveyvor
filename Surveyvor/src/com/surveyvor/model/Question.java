@@ -23,7 +23,15 @@ import javax.validation.constraints.Size;
 
 
 import org.primefaces.model.chart.BarChartModel;
-
+/**
+ * 
+ * @author Brightworks
+ * question in one survey
+ * contains, contenu (the question), description of question, survey
+ * min and max choice can user choose
+ * list of choice
+ * list of aswerers 
+ */
 @Entity
 public class Question implements Serializable {
 

@@ -22,6 +22,19 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+/**
+ * 
+ * @author Brightworks
+ * Survey
+ * contains a title, a description,
+ * the date when the survey is closed
+ * the creator of survey
+ * the type (Opinion or Repartition)
+ * list of answerers 
+ * list of question in survey
+ * and the parameters of survey 
+ */
+
 @Entity
 public class Survey {
 	
@@ -34,12 +47,12 @@ public class Survey {
 	private String title;  
 	
 	@NotNull
-	@Size(min = 15)
+	@Size(min = 3)
 	private String description;  
 	
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date startDate;  
+	private Date startDate;
 	
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)

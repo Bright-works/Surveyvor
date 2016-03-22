@@ -18,6 +18,15 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
 
+/**
+ * 
+ * @author Brightworks
+ * this is a user of application
+ * contains a name, lastName, mail (each mail is unique)
+ * a password, role of user (admin or simple user) 
+ * List of survey in which the user is invited
+ * list of survey created by user
+ */
 
 @Entity
 public class User {

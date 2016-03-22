@@ -15,6 +15,13 @@ import javax.persistence.TemporalType;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+/**
+ * 
+ * @author Brightworks
+ * Comment in survey
+ * contain user, survey, comment, and date of comment
+ */
+
 @Entity
 @Table(name="Comments")
 public class Comment {
