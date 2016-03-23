@@ -13,6 +13,7 @@ import java.util.Map.Entry;
 import org.junit.Test;
 
 import com.surveyvor.exception.GaleShapleyException;
+import com.surveyvor.exception.QuotatException;
 import com.surveyvor.model.Answer;
 import com.surveyvor.model.Choice;
 import com.surveyvor.model.Question;
@@ -26,7 +27,7 @@ import com.surveyvor.service.GaleShapley;
 public class TestGaleShapley {
 
 	@Test
-	public void testGaleShapleyPetitSameAnswer() throws ParseException, GaleShapleyException
+	public void testGaleShapleyPetitSameAnswer() throws ParseException, GaleShapleyException, QuotatException
 	{
 		User user = new User("Sebban","David","neodav13@hotmail.fr","sarahboukris","User");
 		user.setId(Long.valueOf(1));
@@ -357,8 +358,8 @@ public class TestGaleShapley {
 		
 	}*/
 	
-	@Test (expected = GaleShapleyException.class)
-	public void testGaleShapleyQuotat() throws ParseException, GaleShapleyException
+	@Test (expected = QuotatException.class)
+	public void testGaleShapleyQuotat() throws ParseException, GaleShapleyException, QuotatException
 	{
 
 		List<Choice> choices = new ArrayList<Choice>();
@@ -416,7 +417,7 @@ public class TestGaleShapley {
 	}
 	
 	@Test (expected = GaleShapleyException.class)
-	public void testGaleShapleyNullAnswers() throws ParseException, GaleShapleyException
+	public void testGaleShapleyNullAnswers() throws ParseException, GaleShapleyException, QuotatException
 	{
 
 		List<Choice> choices = new ArrayList<Choice>();
@@ -467,7 +468,7 @@ public class TestGaleShapley {
 	}
 	
 	@Test
-	public void testGaleShapleyAnswersEmpty() throws ParseException, GaleShapleyException
+	public void testGaleShapleyAnswersEmpty() throws ParseException, GaleShapleyException, QuotatException
 	{
 
 		List<Choice> choices = new ArrayList<Choice>();
@@ -515,7 +516,7 @@ public class TestGaleShapley {
 	}
 	
 	@Test (expected = GaleShapleyException.class)
-	public void testGaleShapleyNullSurvey() throws ParseException, GaleShapleyException
+	public void testGaleShapleyNullSurvey() throws ParseException, GaleShapleyException, QuotatException
 	{
 
 		List<Choice> choices = new ArrayList<Choice>();
@@ -554,7 +555,7 @@ public class TestGaleShapley {
 	}
 	
 	@Test (expected = GaleShapleyException.class)
-	public void testGaleShapleyDateFuture() throws ParseException, GaleShapleyException
+	public void testGaleShapleyDateFuture() throws ParseException, GaleShapleyException, QuotatException
 	{
 
 		List<Choice> choices = new ArrayList<Choice>();
@@ -612,7 +613,7 @@ public class TestGaleShapley {
 	}
 	
 	@Test (expected = GaleShapleyException.class)
-	public void testGaleShapleyChoicesNull() throws ParseException, GaleShapleyException
+	public void testGaleShapleyChoicesNull() throws ParseException, GaleShapleyException, QuotatException
 	{
 		
 		List<Question> questions = new ArrayList<Question>();
@@ -656,7 +657,7 @@ public class TestGaleShapley {
 	}
 	
 	@Test (expected = GaleShapleyException.class)
-	public void testGaleShapleyChoicesEmpty() throws ParseException, GaleShapleyException
+	public void testGaleShapleyChoicesEmpty() throws ParseException, GaleShapleyException, QuotatException
 	{
 
 		List<Choice> choices = new ArrayList<Choice>();
@@ -703,7 +704,7 @@ public class TestGaleShapley {
 	}
 	
 	@Test (expected = GaleShapleyException.class)
-	public void testGaleShapleySameAnswer() throws ParseException, GaleShapleyException
+	public void testGaleShapleySameAnswer() throws ParseException, GaleShapleyException, QuotatException
 	{
 
 		List<Choice> choices = new ArrayList<Choice>();
@@ -762,7 +763,7 @@ public class TestGaleShapley {
 
 
 @Test (expected = GaleShapleyException.class)
-public void testGaleShapleyTooChoice() throws ParseException, GaleShapleyException
+public void testGaleShapleyTooChoice() throws ParseException, GaleShapleyException, QuotatException
 {
 
 	List<Choice> choices = new ArrayList<Choice>();
@@ -819,7 +820,7 @@ public void testGaleShapleyTooChoice() throws ParseException, GaleShapleyExcepti
 }
 
 @Test (expected = GaleShapleyException.class)
-public void testGaleShapleyFewChoice() throws ParseException, GaleShapleyException
+public void testGaleShapleyFewChoice() throws ParseException, GaleShapleyException, QuotatException
 {
 
 	List<Choice> choices = new ArrayList<Choice>();
@@ -876,7 +877,7 @@ public void testGaleShapleyFewChoice() throws ParseException, GaleShapleyExcepti
 }
 
 @Test (expected = GaleShapleyException.class)
-public void testGaleShapleyChoiceNull() throws ParseException, GaleShapleyException
+public void testGaleShapleyChoiceNull() throws ParseException, GaleShapleyException, QuotatException
 {
 
 	List<Choice> choices = new ArrayList<Choice>();
@@ -932,7 +933,7 @@ public void testGaleShapleyChoiceNull() throws ParseException, GaleShapleyExcept
 }
 
 @Test
-public void testGaleShapleyLimitQuotat() throws ParseException, GaleShapleyException
+public void testGaleShapleyLimitQuotat() throws ParseException, GaleShapleyException, QuotatException
 {
 
 	List<Choice> choices = new ArrayList<Choice>();

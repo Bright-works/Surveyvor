@@ -14,6 +14,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.surveyvor.exception.FirstArrivedException;
+import com.surveyvor.exception.QuotatException;
 import com.surveyvor.model.Answer;
 import com.surveyvor.model.Choice;
 import com.surveyvor.model.Question;
@@ -345,12 +346,12 @@ public class FirstArrivedTest {
 	 */
 
 	@Test(expected = FirstArrivedException.class)
-	public void testSurveyNull() throws FirstArrivedException {
+	public void testSurveyNull() throws FirstArrivedException, QuotatException {
 		fa.generateResult(null, answers);
 	}
 
 	@Test(expected = FirstArrivedException.class)
-	public void testListAnswersNull() throws FirstArrivedException {
+	public void testListAnswersNull() throws FirstArrivedException, QuotatException {
 		Calendar date = new GregorianCalendar();
 		date.set(Calendar.YEAR, 2016);
 		date.set(Calendar.DAY_OF_YEAR, 32);
@@ -360,7 +361,7 @@ public class FirstArrivedTest {
 	}
 
 	@Test(expected = FirstArrivedException.class)
-	public void testListAnswersEmpty() throws FirstArrivedException {
+	public void testListAnswersEmpty() throws FirstArrivedException, QuotatException {
 		Calendar date = new GregorianCalendar();
 		date.set(Calendar.YEAR, 2014);
 		date.set(Calendar.DAY_OF_YEAR, 32);
@@ -370,7 +371,7 @@ public class FirstArrivedTest {
 	}
 
 	@Test(expected = FirstArrivedException.class)
-	public void testEndDateAfterNow() throws FirstArrivedException {
+	public void testEndDateAfterNow() throws FirstArrivedException, QuotatException {
 		// Set valid answers
 		answers.add(answer2);
 		answers.add(answer);
@@ -386,7 +387,7 @@ public class FirstArrivedTest {
 	}
 
 	@Test
-	public void simpleTest() throws FirstArrivedException {
+	public void simpleTest() throws FirstArrivedException, QuotatException {
 		// Set valid answers
 		answers.add(answer2);
 		answers.add(answer);
@@ -421,7 +422,6 @@ public class FirstArrivedTest {
 		Assert.assertEquals(expected, result);
 		
 	}
-	
 	
 
 }

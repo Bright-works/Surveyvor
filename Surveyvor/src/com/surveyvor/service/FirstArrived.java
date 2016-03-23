@@ -16,6 +16,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.surveyvor.exception.FirstArrivedException;
+import com.surveyvor.exception.QuotatException;
 import com.surveyvor.model.Answer;
 import com.surveyvor.model.Choice;
 import com.surveyvor.model.Survey;
@@ -89,7 +90,7 @@ public class FirstArrived implements IResultGeneratorStrategy<List<User>> {
 	 * @param answers
 	 * @return Map<Long, List<User>>
 	 */
-	public Map<Long, List<User>> generateResult(Survey survey, List<Answer> answers) throws FirstArrivedException {
+	public Map<Long, List<User>> generateResult(Survey survey, List<Answer> answers) throws FirstArrivedException, QuotatException {
 		/*
 		 * Some verifications: the survey mustn't be null, the survey must have
 		 * ended, and the list of answers mustn't be null or empty
@@ -116,6 +117,13 @@ public class FirstArrived implements IResultGeneratorStrategy<List<User>> {
 			Map<Long, Integer> roomLeft = new HashMap<Long, Integer>();
 			Map<Long, List<User>> repartition = new HashMap<Long, List<User>>();
 			List<Choice> choices = answers.get(0).getQuestion().getChoices();
+			
+			int sum=0;
+			for(int j=0; j<choices.size(); j++)
+				sum = choices.get(j).getQuotat()+sum;
+			if (sum < answers.size())
+				throw new QuotatException();
+			
 			for (Choice choice : choices) {
 
 				roomLeft.put(choice.getId(), choice.getQuotat());
