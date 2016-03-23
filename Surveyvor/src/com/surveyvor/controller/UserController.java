@@ -258,7 +258,7 @@ public class UserController implements Serializable {
 			surveyManager.addSurvey(survey);
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			facesContext.addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "Le sondage a bien ŽtŽ enregistrŽ !", ""));
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Le sondage a bien ï¿½tï¿½ enregistrï¿½ !", ""));
 			
 			String title = survey.getTitle();
 			reset();
@@ -285,11 +285,12 @@ public class UserController implements Serializable {
 			return "../created.xhtml?faces-redirect=true";
 
 		} catch (Exception e) {
+			System.out.println("Exception !!!!!");
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			facesContext.addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Il y a eu une erreur lors de l'envoi en base de données,"
-							+ " vous avez probablement oublié de remplir des champs",
+							"Il y a eu une erreur lors de l'envoi en base de donnï¿½es,"
+							+ " vous avez probablement oubliï¿½ de remplir des champs",
 							""));
 			e.printStackTrace();
 			return "1.xhtml?faces-redirect=true";

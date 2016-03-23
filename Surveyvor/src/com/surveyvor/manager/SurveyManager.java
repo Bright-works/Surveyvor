@@ -56,9 +56,7 @@ public class SurveyManager {
 
 	public void addSurvey(Survey survey) {
 		User creator = survey.getCreator();
-		List<Survey> ownedSurveys = creator.getOwnedSurveys();
-		ownedSurveys.add(survey);
-		creator.setOwnedSurveys(ownedSurveys);
+		creator.getOwnedSurveys().add(survey);
 		em.merge(creator);
 	}
 
@@ -161,5 +159,7 @@ public class SurveyManager {
 		return em.createQuery("SELECT a from Answer a join a.choices c where c.Id_Choice=:choice_id",Answer.class)
 				.setParameter("choice_id",c.getId()).getResultList();
 	}
+	
+	
 
 }
