@@ -46,7 +46,7 @@ public class Answer {
 	@Valid
 	@NotNull
 	@ManyToOne
-	@JoinColumn(name="Id_Question", insertable=false, updatable=false)
+	@JoinColumn(name="Id_Question")
 	private Question question;
 	
 	@Transient

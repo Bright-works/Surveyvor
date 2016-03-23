@@ -78,7 +78,22 @@ public class UserController implements Serializable {
 		}
 		survey.setEndDate(new Date(cal.getTimeInMillis()));
 	}
+	
+	public List<Survey> getAllSurveysAnswered() {
+		mySurvy = (List<Survey>) userManager.allSurveysAnswered(user);
+		return mySurvy;
+	}
 
+	public String showSurvey() {
+			return "../reponse.xhtml?faces-redirect=true";
+	}
+	
+	public void updateUser(){
+		userManager.update(user);
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		facesContext.addMessage(null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, "les informations sont modifiés", ""));
+	}
 	public TypeSurvey[] getTypes() {
 		return TypeSurvey.values();
 	}
@@ -285,11 +300,12 @@ public class UserController implements Serializable {
 			return "../created.xhtml?faces-redirect=true";
 
 		} catch (Exception e) {
+			System.out.println("Exception !!!!!");
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			facesContext.addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Il y a eu une erreur lors de l'envoi en base de donnÈes,"
-							+ " vous avez probablement oubliÈ de remplir des champs",
+							"Il y a eu une erreur lors de l'envoi en base de données,"
+							+ " vous avez probablement oublié de remplir des champs",
 							""));
 			e.printStackTrace();
 			return "1.xhtml?faces-redirect=true";
@@ -410,6 +426,7 @@ public class UserController implements Serializable {
 	}
 
 	public List<Survey> getMySurvy() {
+		getAllSurveysAnswered();
 		return mySurvy;
 	}
 

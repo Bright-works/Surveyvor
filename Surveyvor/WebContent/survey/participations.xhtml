@@ -11,7 +11,7 @@
 	<ui:define name="content">
 		<section class="content-header">
           <h4>
-            Mes participations au sondages 
+            Mes participations aux sondages 
             <small>Surveyvor</small>
           </h4>
      	</section>
@@ -20,23 +20,25 @@
 				<div class="box box-default" style="text-align: center;">
 					<div class="box-header with-border" >
 						<p:dataTable rows="15" selectionMode="single" paginatorAlwaysVisible="false" paginator="true"
-						emptyMessage="Il y a aucun sondage crée">
+						emptyMessage="Vous n'avez participé à aucun sondage" value="#{userBean.mySurvy}" var="survey">
 							<f:facet name="header">
 								Liste des participations
 							</f:facet>
 							<p:column headerText="Titre" width="50%">
-								<h:outputText />
+								<h:outputText value="#{survey.title}" />
 							</p:column>
 							<p:column headerText="Date de participation" width="20%">
-								<h:outputText />
+								<h:outputText value="#{survey.endDate}" >
+									<f:convertDateTime pattern="dd/MM/yyyy"/>
+								</h:outputText>
 							</p:column>
 							<p:column headerText="Mode de sondage" width="15%">
-								<h:outputText />
+								<h:outputText value="#{survey.type}" />
 							</p:column>
 							<p:column headerText="Actions" width="15%">
-								<p:commandButton icon="ui-icon-search">
+								<p:commandButton disabled="#{survey.parameters.questionModify ? 'true' : 'false'}" action="#{userBean.showSurvey}" title="Modifier mes reponses" icon="ui-icon-pencil">
 									<i class="fa fa-edit"></i>
-									<f:setPropertyActionListener value="" target=""/>
+									<f:setPropertyActionListener value="#{survey}" target="#{surveyBean.selected}"/>
 								</p:commandButton>
 								<p:commandButton icon="ui-icon-update">
 									<i class="fa fa-search"></i>

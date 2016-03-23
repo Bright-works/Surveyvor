@@ -38,7 +38,7 @@ public class Choice implements Serializable{
 	private Long Id_Choice;
 	
 	@NotNull
-	private String label;
+	private String label="";
 	
 	@Size(min=5)
 	private String description;
@@ -49,7 +49,7 @@ public class Choice implements Serializable{
 	private Question question;
 	
 	@Min(1)
-	private Integer quotat;
+	private Integer quotat=1;
 	
 	@ManyToMany
 	private List<User> usersAttribued;

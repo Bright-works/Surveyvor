@@ -13,6 +13,17 @@
 				Mes sondages crées <small>Surveyvor</small>
 			</h4>
 		</section>
+		<p:dialog widgetVar="dateChange" header="Modifier la date limite" height="100px" width="30%">
+		<h:form>
+			<p:calendar id="endDate" value="#{surveyBean.selected.endDate}" mindate="#{surveyBean.selected.startDate}" 
+			styleClass="choix" navigator="true" popupIconOnly="true" pattern="dd/MM/yyyy HH:mm" >
+				<f:ajax execute="@this" event="dateSelect" render="endDate" update="endDate"/>
+				<f:ajax execute="@this" event="change" render="endDate" update="endDate"/>
+			</p:calendar>
+			<p:commandButton update=":myform:table" action="#{surveyBean.updateDateSurvey}"  styleClass="orange btn-flat" style="width:45% !important;float:right" value="Enregistrer"/>
+			<p:commandButton  onclick="PF('dateChange').hide()" styleClass="orange btn-flat" style="width:45% !important;float:right" value="Annuler"/>
+		</h:form>
+		</p:dialog>
 		<h:form id="myform">
 			<p:growl showDetail="false" autoUpdate="true" />
 			<section class="content">
@@ -50,7 +61,7 @@
 										target="#{surveyBean.selected}" />
 								</p:commandButton>
 								<p:commandButton title="Modifier la date limite du sondage"
-									styleClass="icon orange" icon="ui-icon-gear">
+									styleClass="icon orange" icon="ui-icon-gear" onclick="PF('dateChange').show()">
 									<f:setPropertyActionListener value="#{survey}"
 										target="#{surveyBean.selected}" />
 								</p:commandButton>

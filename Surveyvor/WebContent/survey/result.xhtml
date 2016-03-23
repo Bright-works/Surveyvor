@@ -25,12 +25,16 @@
 					<div class="box-body">
 						<p:outputLabel value="#{surveyBean.selected.description}"/>
 					</div>
+					<hr/>
+					
 				</div>
 				<!-- data table -->
+				
 				<div class="box box-default" style="text-align: center;">
 					<div class="box-header with-border" >
 					
 					<c:if test="#{surveyBean.selected.type eq 'REPARTITION'}">
+						
 						<p:dataTable rows="15" selectionMode="single" paginatorAlwaysVisible="false" paginator="true"
 						emptyMessage="Aucun résultat généré" editable="true" >
 							<f:facet name="header">
@@ -57,7 +61,41 @@
 								<h:outputText />
 							</p:column>
 						</p:dataTable>
+						<br/><br/>
+						<p:fieldset legend="Configuration de répartition" toggleable="true">
+							<div class="box-footer">
+							<div class="col-md-4">
+								<h5>Quotas : ajoutez le nombre maximal pour chaque choix</h5>
+								<c:forEach items="#{surveyBean.selected.questions}" var="question">
+								 	<c:forEach var="choice" items="#{question.choices}">
+								 		<div class="col-md-8" >
+								 			<p:outputLabel value="#{choice.label}"/>
+								 		</div>
+								 		<div class="col-md-4" >
+								 			<p:inputText styleClass="inputs" value="#{choice.quotat}"/>
+								 		</div>
+								 	</c:forEach>
+								</c:forEach>
+							
+							</div>
+							<br/>
+							<div class="col-md-4">
+								<h5>Quotas : ajoutez le nombre maximal pour chaque choix</h5>
+								<br/>
+								<h:selectOneMenu styleClass="inputs" value="#{surveyBean.algo}">
+					 				<f:selectItem itemLabel="Premier arrivé premier servi" itemValue="0"/>
+									<f:selectItem itemLabel="GaleShapley" itemValue="1"/>
+								 </h:selectOneMenu>
+							</div>
+							<div class="col-md-4">
+								
+								<p:commandButton styleClass="btn orange" value="Générer les résultats"/>
+							</div>
+						</div>
+					</p:fieldset>
+					
 					</c:if>
+					
 					<c:if test="#{surveyBean.selected.type eq 'OPINION'}">
 						<c:forEach var="question" items="#{surveyBean.selected.questions}">
 							<div class="col-md-6">

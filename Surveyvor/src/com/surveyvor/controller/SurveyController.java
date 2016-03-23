@@ -28,8 +28,14 @@ import com.surveyvor.model.Answer;
 import com.surveyvor.model.Comment;
 import com.surveyvor.model.Choice;
 import com.surveyvor.model.Question;
+import com.surveyvor.model.Result;
 import com.surveyvor.model.Survey;
 import com.surveyvor.model.TypeSurvey;
+import com.surveyvor.model.User;
+import com.surveyvor.service.FirstArrived;
+import com.surveyvor.service.GaleShapley;
+import com.surveyvor.service.IResultGeneratorStrategy;
+import com.surveyvor.service.ResultGeneratorStrategyContext;
 
 @Controller
 @Component("surveyBean")
@@ -51,16 +57,40 @@ public class SurveyController {
 	private List<Choice> droppedChoices = new ArrayList<Choice>();
 	
 	private List<Survey> invitations= new ArrayList<Survey>();
+	private List<Result> resulat=new ArrayList<Result>();
 	private Answer answer=new Answer();
-	
+	private int algo;
 	
 	public SurveyController() {
+		ResultGeneratorStrategyContext algoContext = new ResultGeneratorStrategyContext();
+		try{
+			if(algo==0){
+				algoContext.setStrategy(new FirstArrived());		
+			}
+			else{
+				algoContext.setStrategy(new GaleShapley());	
+			}
+			Map<Long, List<User>> result=algoContext.GeneratorStrategy(selected, selected.getQuestions().get(0).getListAnswers());
+			
+		}catch(Exception exp){
+			
+		}
 	}
 	
 	@PostConstruct
 	public void init(){
 	}
 	//------------ Methodes--------
+	public void generateResult(){
+		
+	}
+	
+	public void updateDateSurvey(){
+		manager.updateSurvey(selected);
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		facesContext.addMessage(null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, "Date est modifiée", ""));
+	}
 	
 	public BarChartModel inialisationGraphic(Question q){
 			BarChartModel barModel = new BarChartModel();
@@ -113,6 +143,7 @@ public class SurveyController {
 	public String addAnswers(){
 		if(selected.getType().equals(TypeSurvey.REPARTITION)){
 			Answer ans= selected.getQuestions().get(0).getAnswer();
+			ans.setAnswerer(userController.getUser());
 			Map<Long,String> resultats= ans.getValeurs();
 			for(int i=0;i<ans.getChoices().size();i++){
 				resultats.put(ans.getChoices().get(i).getId(),String.valueOf(i));
@@ -124,8 +155,10 @@ public class SurveyController {
 		}
 		else{
 			for(int i=0;i<selected.getQuestions().size();i++)
-			{
-				Answer ans = selected.getQuestions().get(i).getAnswer();
+			{	Answer ans = selected.getQuestions().get(i).getAnswer();
+				if(selected.getParametres().getPrivateSurvey()){
+				ans.setAnswerer(userController.getUser());
+				}
 				ans.setDate(new Date());
 				Question q=selected.getQuestions().get(i);
 				ans.setQuestion(q);
@@ -145,7 +178,9 @@ public class SurveyController {
 	public void allComments(){
 		System.out.println("manager"+manager);
 		System.out.println("selected"+selected);
-		alls= manager.getallCommentBySurvey(selected.getId());
+		if(selected!=null){
+			alls= manager.getallCommentBySurvey(selected.getId());
+		}
 	}
 	
 	public List<Survey> getAll() {
@@ -230,6 +265,14 @@ public class SurveyController {
 		return list;
 	}
 	
+	public int getAlgo() {
+		return algo;
+	}
+
+	public void setAlgo(int algo) {
+		this.algo = algo;
+	}
+
 	public void setList(List<Survey> list) {
 		this.list = list;
 	}
@@ -290,6 +333,14 @@ public class SurveyController {
 
 	public void setAnswer(Answer answer) {
 		this.answer = answer;
+	}
+
+	public List<Result> getResulat() {
+		return resulat;
+	}
+
+	public void setResulat(List<Result> resulat) {
+		this.resulat = resulat;
 	}
 
 	

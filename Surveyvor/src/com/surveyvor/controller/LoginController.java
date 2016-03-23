@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.net.Inet4Address;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
@@ -56,12 +57,18 @@ public class LoginController implements Serializable {
 	private String oldPassword="";
 	private String newPassword="";
 	private String email="";
-	
+	private String url="";
 	public LoginController() {
 	}
 	
 	//-------------------- Action et methodes -------------//
-	
+	public void checkUrl(){
+		FacesContext context = FacesContext.getCurrentInstance();
+		     Map<String, String> paramMap = context.getExternalContext().getRequestParameterMap();
+	        String projectId = paramMap.get("url");
+	        url=projectId;
+	        
+	}
 	public String connecter() throws ServletException, IOException{
 		try{
 			User authen=userManager.findByMail(user.getMail());

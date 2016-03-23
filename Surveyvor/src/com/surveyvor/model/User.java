@@ -1,5 +1,6 @@
 package com.surveyvor.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -58,12 +59,12 @@ public class User {
 
 	@Valid
 	@ManyToMany(mappedBy = "answerers")
-	List<Survey> invitedSurveys;
+	List<Survey> invitedSurveys= new ArrayList<Survey>();;
 
 	@Valid
 	@OneToMany (fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval=true)
 	@JoinColumn(name = "Id_Creator")
-	List<Survey> ownedSurveys;
+	List<Survey> ownedSurveys = new ArrayList<Survey>();
 
 
 	public User() {
@@ -125,9 +126,6 @@ public class User {
 		this.password = password;
 		this.admin = admin;
 	}
-
-
-
 
 	public User clone()
 	{
