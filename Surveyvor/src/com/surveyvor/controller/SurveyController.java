@@ -43,9 +43,9 @@ public class SurveyController {
 	@Autowired
 	private UserController userController;
 
-	private List<Survey> list=new ArrayList<Survey>();
-	private Survey selected;
-	private Comment myComment=new Comment();
+	private List<Survey> list = new ArrayList<Survey>();
+	private Survey selected = new Survey();
+	private Comment myComment = new Comment();
 
 	private List<Comment> alls=new ArrayList<Comment>();
 	private List<Choice> droppedChoices = new ArrayList<Choice>();
@@ -58,7 +58,8 @@ public class SurveyController {
 	}
 
 	@PostConstruct
-	public void init(){
+	public void init() {
+		System.out.println("CREATING " + this);
 	}
 	//------------ Methodes--------
 
@@ -96,15 +97,17 @@ public class SurveyController {
 			facesContext.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, "Nombre de choix autoris� n'est pas respect� !", ""));
 		}
 	}
-	public void prepareAnswers(){
 
-		int size=selected.getQuestions().size();
-		for(int i=0;i<size;i++){
-			List<Choice> listchoix = new ArrayList<Choice>();
-			Answer ans=new Answer();
-			ans.setChoices(listchoix);
-			ans.setChoix(new Choice());
-			selected.getQuestions().get(i).setAnswer(ans);
+	public void prepareAnswers() {
+		if (selected.getQuestions() != null) {
+			int size = selected.getQuestions().size();
+			for (int i = 0; i < size; i++) {
+				List<Choice> listchoix = new ArrayList<Choice>();
+				Answer ans = new Answer();
+				ans.setChoices(listchoix);
+				ans.setChoix(new Choice());
+				selected.getQuestions().get(i).setAnswer(ans);
+			}
 		}
 	}
 
@@ -140,10 +143,14 @@ public class SurveyController {
 
 	}
 
-	public void allComments(){
-		System.out.println("manager"+manager);
-		System.out.println("selected"+selected);
-		alls= manager.getallCommentBySurvey(selected.getId());
+	public void allComments() {
+		System.out.println("manager " + manager);
+		System.out.println("selected " + selected);
+		if (selected.getId() != null) {
+			alls = manager.getallCommentBySurvey(selected.getId());
+		} else {
+			alls = new ArrayList<Comment>();
+		}
 	}
 
 	public List<Survey> getAll() {
