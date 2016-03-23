@@ -88,12 +88,12 @@ public class SurveyController {
 		if(question.getAnswer().getChoices().size()>question.getMaxChoice()){
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
-			facesContext.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, "Nombre de choix autorisŽ n'est pas respectŽ !", ""));
+			facesContext.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, "Nombre de choix autorisï¿½ n'est pas respectï¿½ !", ""));
 		}
 		if(question.getAnswer().getChoices().size()<question.getMinChoice()){
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
-			facesContext.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, "Nombre de choix autorisŽ n'est pas respectŽ !", ""));
+			facesContext.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, "Nombre de choix autorisï¿½ n'est pas respectï¿½ !", ""));
 		}
 	}
 	public void prepareAnswers(){
@@ -147,7 +147,8 @@ public class SurveyController {
 	}
 	
 	public List<Survey> getAll() {
-		list=(List<Survey>) userController.getUser().getOwnedSurveys();
+		Long id = userController.getUser().getId();
+		list=(List<Survey>) userController.getUserManager().allSurveysCreated(id);
 		return list;
 	}
 	
@@ -199,7 +200,7 @@ public class SurveyController {
 		userController.getUser().getOwnedSurveys().remove(index);
 		userController.userManager.update(userController.getUser());
 		FacesContext facesContext = FacesContext.getCurrentInstance();
-	    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, s.getTitle() +" est bien supprimŽ!",""));
+	    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, s.getTitle() +" est bien supprimï¿½!",""));
 	}
 	
 	public void onChoiceDrop(DragDropEvent ddEvent) {
