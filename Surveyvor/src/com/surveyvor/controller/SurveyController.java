@@ -10,6 +10,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
 import org.primefaces.event.DragDropEvent;
+import org.primefaces.event.ReorderEvent;
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.BarChartModel;
@@ -65,6 +66,7 @@ public class SurveyController {
 	private List<Result> resulat = new ArrayList<Result>();
 	private Answer answer = new Answer();
 	private int algo;
+	
 	public SurveyController() {
 	}
 
@@ -74,7 +76,10 @@ public class SurveyController {
 	}
 
 	// ------------ Methodes--------
+	
+	
 	public void generateResult() {
+		GaleShapley galeShapley= new GaleShapley();
 		ResultGeneratorStrategyContext algoContext = new ResultGeneratorStrategyContext();
 		try {
 			if (algo == 0) {
@@ -82,13 +87,14 @@ public class SurveyController {
 			} else {
 				algoContext.setStrategy(new GaleShapley());
 			}
+			System.out.println("le nombre des reponses = "+selected.getQuestions().get(0).getListAnswers().get(0).getChoices().size());
+			//System.out.println(result.get(selected.getQuestions().get(0).getAnswer().getChoix().getId()));
 
-			Map<Long, List<User>> result = algoContext.GeneratorStrategy(selected,
+			Map<Long, List<User>> result = galeShapley.generateResult(selected,
 					selected.getQuestions().get(0).getListAnswers());
-			System.out.println(result.get(selected.getQuestions().get(0).getAnswer().getChoix().getId()));
 
 		} catch (Exception exp) {
-
+			exp.printStackTrace();
 		}
 	}
 
@@ -156,6 +162,7 @@ public class SurveyController {
 		if (selected.getType().equals(TypeSurvey.REPARTITION)) {
 			Answer ans = selected.getQuestions().get(0).getAnswer();
 			ans.setAnswerer(userController.getUser());
+			ans.setChoices(selected.getQuestions().get(0).getChoices());
 			Map<Long, String> resultats = ans.getValeurs();
 			for (int i = 0; i < ans.getChoices().size(); i++) {
 				resultats.put(ans.getChoices().get(i).getId(), String.valueOf(i));
@@ -164,7 +171,6 @@ public class SurveyController {
 			ans.setDate(new Date());
 
 			ans.setQuestion(selected.getQuestions().get(0));
-			;
 			manager.repondreSondage(ans);
 		} else {
 			for (int i = 0; i < selected.getQuestions().size(); i++) {
@@ -180,7 +186,7 @@ public class SurveyController {
 				}
 				selected.getQuestions().get(i).getListAnswers().add(ans);
 				manager.updateSurvey(selected);
-				//manager.repondreSondage(ans);
+				manager.repondreSondage(ans);
 			}
 		}
 		FacesContext facesContext = FacesContext.getCurrentInstance();

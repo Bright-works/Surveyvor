@@ -33,7 +33,7 @@ public class Choice implements Serializable{
 	private static final long serialVersionUID = -7469577458867792848L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "Id_Choice")
 	private Long Id_Choice;
 	

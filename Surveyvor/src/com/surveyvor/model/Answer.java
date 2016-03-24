@@ -1,6 +1,7 @@
 package com.surveyvor.model;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +38,7 @@ public class Answer {
 	
 	@Valid
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private long Id_Answer;
 	
 	@Valid
@@ -60,7 +61,7 @@ public class Answer {
 	private List<Choice> choices;
 	//
 	@ElementCollection
-	private Map<Long,String> valeurs;
+	private Map<Long,String> valeurs=new HashMap<Long, String>();
 	
 	private String opinionText;
 	

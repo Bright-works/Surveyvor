@@ -22,6 +22,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 
+
+import org.hibernate.annotations.Cascade;
 import org.primefaces.model.chart.BarChartModel;
 /**
  * 
@@ -36,7 +38,7 @@ import org.primefaces.model.chart.BarChartModel;
 public class Question implements Serializable {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "Id_Question")
 	private Long Id_Question;
 
@@ -59,13 +61,14 @@ public class Question implements Serializable {
 	private int maxChoice;
 
 	@Valid
-	@OneToMany(orphanRemoval = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "Id_Question")
 	private List<Choice> choices;
 
 
 	@Transient
 	private Answer answer=new Answer();
+	
 	
 	@Transient
 	private BarChartModel barModel;
@@ -81,13 +84,6 @@ public class Question implements Serializable {
 	private QuestionParameters parametres;
 
 	public Question() {
-	}
-
-	public void addChoice(Choice choice) {
-		if (choices == null) {
-			choices = new ArrayList<Choice>();
-		}
-		choices.add(choice);
 	}
 
 	public void removeChoice(Choice choice) {

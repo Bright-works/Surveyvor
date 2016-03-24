@@ -60,6 +60,10 @@ public class SurveyManager {
 		  return result;
 		 }
 	
+	public void updateQuestion(Question question){
+		em.merge(question);
+	}
+	
 	public void addSurvey(Survey survey) {
 		User creator = survey.getCreator();
 		creator.getOwnedSurveys().add(survey);
@@ -153,7 +157,7 @@ public class SurveyManager {
 	
 	public List<Survey> findByTitle(String filter){
 		try{
-		return em.createQuery("SELECT s FROM Survey s where lower(s.title) like lower(:filte) ", Survey.class)
+		return em.createQuery("SELECT s FROM Survey s where  s.parametres.privateSurvey='false' lower(s.title) like lower(:filte) ", Survey.class)
 				.setParameter("filte","%"+filter+"%").getResultList();
 		}
 		catch(Exception exp){

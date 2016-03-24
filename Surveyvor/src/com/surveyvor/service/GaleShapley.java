@@ -36,7 +36,7 @@ public class GaleShapley implements IResultGeneratorStrategy<List<User>> {
 		if (answers == null || answers.isEmpty() || survey == null)
 			throw new GaleShapleyException();
 
-		List<Choice> choices = answers.get(0).getQuestion().getChoices();
+		List<Choice> choices = survey.getQuestions().get(0).getChoices();
 
 		if (choices == null || choices.isEmpty() )
 			throw new GaleShapleyException();

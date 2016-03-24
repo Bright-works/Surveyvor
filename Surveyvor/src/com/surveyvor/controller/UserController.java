@@ -109,7 +109,7 @@ public class UserController implements Serializable {
 		q.setDescription("Empty description");
 		q.setMaxChoice(1);
 		q.setMinChoice(1);
-		q.setSurvey(survey);
+		//q.setSurvey(survey);
 		q.setChoices(new ArrayList<Choice>());
 		// -----
 		param.setRequested(true);
@@ -123,8 +123,9 @@ public class UserController implements Serializable {
 	public void addNewChoice(Question q) {
 		Choice choice = new Choice();
 		choice.setLabel("");
+		choice.setQuestion(q);
 		choice.setDescription("Non description");
-		q.addChoice(choice);
+		q.getChoices().add(choice);
 	}
 
 	public void deleteChoice(Question q, Choice choice) {
@@ -267,7 +268,7 @@ public class UserController implements Serializable {
 		if (survey.getType() == TypeSurvey.REPARTITION) {
 			parameters.setPrivateSurvey(true);
 		}
-
+		
 		parameters.setAlgo(-1);
 		survey.setParametres(parameters);
 		survey.setDiffusion(diffusion);
@@ -281,7 +282,6 @@ public class UserController implements Serializable {
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			facesContext.addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Le sondage a bien �t� enregistr� !", ""));
-			
 			String title = survey.getTitle();
 			reset();
 

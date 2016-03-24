@@ -100,8 +100,8 @@ public class TestGaleShapley {
 		
 	}
 	
-	/*@Test
-	public void testGaleShapleyPetit() throws ParseException
+	@Test
+	public void testGaleShapleyPetit() throws ParseException, GaleShapleyException, QuotatException
 	{
 		User user = new User("Sebban","David","neodav13@hotmail.fr","sarahboukris","User");
 		user.setId(Long.valueOf(1));
@@ -172,7 +172,7 @@ public class TestGaleShapley {
 		    	System.out.println("user "+ valeur.get(i).getName());
 		}
 		
-	}*/
+	}
 	
 	/*@Test
 	public void testGaleShapleyMoyen() throws ParseException, GaleShapleyException
