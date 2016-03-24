@@ -13,7 +13,7 @@
 				Mes sondages crées <small>Surveyvor</small>
 			</h4>
 		</section>
-		<p:dialog widgetVar="dateChange" header="Modifier la date limite" height="100px" width="30%">
+		<p:dialog modal="true" widgetVar="dateChange" header="Modifier la date limite" height="100px" width="30%">
 		<h:form>
 			<p:calendar id="endDate" value="#{surveyBean.selected.endDate}" mindate="#{surveyBean.selected.startDate}" 
 			styleClass="choix" navigator="true" popupIconOnly="true" pattern="dd/MM/yyyy HH:mm" >

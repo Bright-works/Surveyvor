@@ -34,7 +34,6 @@ import com.surveyvor.model.TypeSurvey;
 import com.surveyvor.model.User;
 import com.surveyvor.service.FirstArrived;
 import com.surveyvor.service.GaleShapley;
-import com.surveyvor.service.IResultGeneratorStrategy;
 import com.surveyvor.service.ResultGeneratorStrategyContext;
 
 @Controller
@@ -50,7 +49,7 @@ public class SurveyController {
 	private UserController userController;
 	
 	private List<Survey> list=new ArrayList<Survey>();
-	private Survey selected;
+	private Survey selected=new Survey();
 	private Comment myComment=new Comment();
 
 	private List<Comment> alls=new ArrayList<Comment>();
@@ -61,7 +60,14 @@ public class SurveyController {
 	private Answer answer=new Answer();
 	private int algo;
 	
-	public SurveyController() {
+	public SurveyController() {	
+	}
+	
+	@PostConstruct
+	public void init(){
+	}
+	//------------ Methodes--------
+	public void generateResult(){
 		ResultGeneratorStrategyContext algoContext = new ResultGeneratorStrategyContext();
 		try{
 			if(algo==0){
@@ -71,18 +77,11 @@ public class SurveyController {
 				algoContext.setStrategy(new GaleShapley());	
 			}
 			Map<Long, List<User>> result=algoContext.GeneratorStrategy(selected, selected.getQuestions().get(0).getListAnswers());
+			System.out.println(result.get(selected.getQuestions().get(0).getAnswer().getChoix().getId()));
 			
 		}catch(Exception exp){
 			
 		}
-	}
-	
-	@PostConstruct
-	public void init(){
-	}
-	//------------ Methodes--------
-	public void generateResult(){
-		
 	}
 	
 	public void updateDateSurvey(){
@@ -127,18 +126,18 @@ public class SurveyController {
 		}
 	}
 	
-	public void prepareAnswers(){
-		
-			int size=selected.getQuestions().size();
-			for(int i=0;i<size;i++){
-				List<Choice> listchoix = new ArrayList<Choice>();
-				Answer ans=new Answer();
-				ans.setQuestion(selected.getQuestions().get(i));
-				ans.setChoices(listchoix);
-				ans.setChoix(new Choice());
-				selected.getQuestions().get(i).setAnswer(ans);
-			}
-	}
+	public void prepareAnswers() {
+		  if (selected.getQuestions() != null) {
+		   int size = selected.getQuestions().size();
+		   for (int i = 0; i < size; i++) {
+		    List<Choice> listchoix = new ArrayList<Choice>();
+		    Answer ans = new Answer();
+		    ans.setChoices(listchoix);
+		    ans.setChoix(new Choice());
+		    selected.getQuestions().get(i).setAnswer(ans);
+		   }
+		  }
+		 }
 	
 	public String addAnswers(){
 		if(selected.getType().equals(TypeSurvey.REPARTITION)){

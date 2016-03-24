@@ -54,6 +54,12 @@ public class SurveyManager {
 		System.out.println("CLOSE SurveyManager = " + this);
 	}
 
+	public List<String> getDiffusion(Survey s) {
+		  List<String> result = em.createQuery("SELECT DISTINCT(d) FROM Survey s JOIN s.diffusion d WHERE s.id = :id", String.class)
+		    .setParameter("id", s.getId()).getResultList();
+		  return result;
+		 }
+	
 	public void addSurvey(Survey survey) {
 		User creator = survey.getCreator();
 		List<Survey> ownedSurveys = creator.getOwnedSurveys();
