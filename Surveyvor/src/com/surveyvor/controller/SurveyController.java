@@ -261,6 +261,12 @@ public class SurveyController {
 		manager.removeSurvey(s.getId());
 		userController.getUser().getOwnedSurveys().remove(index);
 		userController.userManager.update(userController.getUser());
+		
+		//Update user
+		User user = userController.getUser();
+		UserManager um = userController.getUserManager();
+		userController.setUser(um.findUser(user.getId()));
+		
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		facesContext.addMessage(null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, s.getTitle() + " est bien supprim�!", ""));

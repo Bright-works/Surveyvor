@@ -359,15 +359,7 @@ public class UserController implements Serializable {
 	public void setUser(User user) {
 		this.user = user;
 	}
-
-	public UserManager getUsermanager() {
-		return userManager;
-	}
-
-	public void setUsermanager(UserManager usermanager) {
-		this.userManager = usermanager;
-	}
-
+	
 	public UserManager getUserManager() {
 		return userManager;
 	}
