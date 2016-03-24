@@ -16,3 +16,4 @@ public class GaleShapleyException extends Exception {
 		super();
 	}
 }
+

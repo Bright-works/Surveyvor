@@ -10,6 +10,7 @@ import java.util.Random;
 import org.springframework.stereotype.Service;
 
 import com.surveyvor.exception.GaleShapleyException;
+import com.surveyvor.exception.QuotatException;
 import com.surveyvor.model.Answer;
 import com.surveyvor.model.Choice;
 import com.surveyvor.model.Survey;
@@ -27,9 +28,10 @@ public class GaleShapley implements IResultGeneratorStrategy<List<User>> {
 	/**
 	 * main function
 	 * @return the result of repartition
+	 * @throws QuotatException 
 	 */
 	@Override
-	public Map<Long, List<User>> generateResult(Survey survey, List<Answer> answers) throws GaleShapleyException {
+	public Map<Long, List<User>> generateResult(Survey survey, List<Answer> answers) throws GaleShapleyException, QuotatException {
 
 		if (answers == null || answers.isEmpty() || survey == null)
 			throw new GaleShapleyException();
@@ -43,7 +45,7 @@ public class GaleShapley implements IResultGeneratorStrategy<List<User>> {
 		for(int j=0; j<choices.size(); j++)
 			sum = choices.get(j).getQuotat()+sum;
 		if (sum < answers.size())
-			throw new GaleShapleyException();
+			throw new QuotatException();
 			
 		
 		Map<User, List<Choice>> userPreferChoice = buidPreferUser(answers);

@@ -44,7 +44,7 @@ public class SurveyController {
 
 	@Autowired
 	private SurveyManager manager;
-	
+
 	@Autowired
 	private UserController userController;
 	
@@ -54,7 +54,7 @@ public class SurveyController {
 
 	private List<Comment> alls=new ArrayList<Comment>();
 	private List<Choice> droppedChoices = new ArrayList<Choice>();
-	
+
 	private List<Survey> invitations= new ArrayList<Survey>();
 	private List<Result> resulat=new ArrayList<Result>();
 	private Answer answer=new Answer();
@@ -62,9 +62,10 @@ public class SurveyController {
 	
 	public SurveyController() {	
 	}
-	
+
 	@PostConstruct
-	public void init(){
+	public void init() {
+		System.out.println("CREATING " + this);
 	}
 	//------------ Methodes--------
 	public void generateResult(){
@@ -92,37 +93,37 @@ public class SurveyController {
 	}
 	
 	public BarChartModel inialisationGraphic(Question q){
-			BarChartModel barModel = new BarChartModel();
-			ChartSeries boys = new ChartSeries();
-			int max=0;
-				for(int i=0;i<q.getChoices().size();i++){
-					int taille=(manager.numberOfAnswersForChoice(q, q.getChoices().get(i))).size();
-					if(taille>max){max=taille;}
-					System.err.println(taille);
-					boys.set(q.getChoices().get(i).getLabel(), taille);	
-				}
-			
-			barModel.addSeries(boys);
-			Axis xAxis = barModel.getAxis(AxisType.X);
-	        xAxis.setLabel("options");
-	         
-	        Axis yAxis = barModel.getAxis(AxisType.Y);
-	        yAxis.setLabel("Nombre de vote");
-	        yAxis.setMin(0);
-	        yAxis.setMax(max);
-	        return barModel;
+		BarChartModel barModel = new BarChartModel();
+		ChartSeries boys = new ChartSeries();
+		int max=0;
+		for(int i=0;i<q.getChoices().size();i++){
+			int taille=(manager.numberOfAnswersForChoice(q, q.getChoices().get(i))).size();
+			if(taille>max){max=taille;}
+			System.err.println(taille);
+			boys.set(q.getChoices().get(i).getLabel(), taille);	
 		}
-	
+
+		barModel.addSeries(boys);
+		Axis xAxis = barModel.getAxis(AxisType.X);
+		xAxis.setLabel("options");
+
+		Axis yAxis = barModel.getAxis(AxisType.Y);
+		yAxis.setLabel("Nombre de vote");
+		yAxis.setMin(0);
+		yAxis.setMax(max);
+		return barModel;
+	}
+
 	public void onSelectedMultichoix(Question question){
 		if(question.getAnswer().getChoices().size()>question.getMaxChoice()){
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
-			facesContext.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, "Nombre de choix autorisŽ n'est pas respectŽ !", ""));
+			facesContext.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, "Nombre de choix autorisï¿½ n'est pas respectï¿½ !", ""));
 		}
 		if(question.getAnswer().getChoices().size()<question.getMinChoice()){
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
-			facesContext.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, "Nombre de choix autorisŽ n'est pas respectŽ !", ""));
+			facesContext.addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, "Nombre de choix autorisï¿½ n'est pas respectï¿½ !", ""));
 		}
 	}
 	
@@ -168,60 +169,62 @@ public class SurveyController {
 			}
 		}
 		FacesContext facesContext = FacesContext.getCurrentInstance();
-	    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," Merci pour votre participation !",""));
-	
+		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," Merci pour votre participation !",""));
+
 		return "/index.xhtml?faces-redirect=true";
-		
+
 	}
-	
-	public void allComments(){
-		System.out.println("manager"+manager);
-		System.out.println("selected"+selected);
-		if(selected!=null){
-			alls= manager.getallCommentBySurvey(selected.getId());
+	public void allComments() {
+		System.out.println("manager " + manager);
+		System.out.println("selected " + selected);
+		if (selected.getId() != null) {
+			alls = manager.getallCommentBySurvey(selected.getId());
+		} else {
+			alls = new ArrayList<Comment>();
 		}
 	}
-	
+
 	public List<Survey> getAll() {
-		list=(List<Survey>) userController.getUser().getOwnedSurveys();
+		Long id = userController.getUser().getId();
+		list=(List<Survey>) userController.getUserManager().allSurveysCreated(id);
 		return list;
 	}
-	
+
 	@RequestMapping(path = "/{param}", method = RequestMethod.GET)
 	public ModelAndView showResult(@PathVariable("param") Integer param){
 		try{
 			Survey searched=manager.findSurvey(param);
 			if(searched.getParametres().getPrivateSurvey())
-				{return new ModelAndView("index");}
+			{return new ModelAndView("index");}
 			if(searched.getId()!=selected.getId())
 			{	selected=searched;}
-			
-			}catch(Exception exp){
-				FacesContext facesContext = FacesContext.getCurrentInstance();
-				facesContext.addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Cette page est introuvable!", ""));
-				return new ModelAndView("index");
-			}
+
+		}catch(Exception exp){
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Cette page est introuvable!", ""));
+			return new ModelAndView("index");
+		}
 		return new ModelAndView("./survey/reponse");
 	}
-	
+
 	public String showSurvey(){
 		return "./details.xhtml?faces-redirect=true";
 	}
-	
+
 	public void addComment(){
 		if(selected.getParametres().getPrivateSurvey()){
 			myComment.setUser(userController.getUser());
 		}
-			myComment.setSurvey(selected);
-			myComment.setDateComment(new Date());
-			manager.commentSurvey(myComment);
-			//System.out.println(myComment.getComment());
-		
-		
+		myComment.setSurvey(selected);
+		myComment.setDateComment(new Date());
+		manager.commentSurvey(myComment);
+		//System.out.println(myComment.getComment());
+
+
 		myComment= new Comment();
 	}
-	
+
 	public void deleteSurvey(Survey s){
 		int index=-1;
 		for(int i=0;i<userController.getUser().getOwnedSurveys().size();i++){
@@ -235,21 +238,21 @@ public class SurveyController {
 		userController.getUser().getOwnedSurveys().remove(index);
 		userController.userManager.update(userController.getUser());
 		FacesContext facesContext = FacesContext.getCurrentInstance();
-	    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, s.getTitle() +" est bien supprimŽ!",""));
+		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, s.getTitle() +" est bien supprimï¿½!",""));
 	}
-	
+
 	public void onChoiceDrop(DragDropEvent ddEvent) {
 		Choice choice = ((Choice) ddEvent.getData());
 		if (! droppedChoices.contains(choice)) {
 			droppedChoices.add(choice);
 		}
-		
+
 	}
-	
+
 	public Long getNumberAnswers(Survey survey){
 		return manager.getNumberAnswers(survey);
 	}
-	
+
 	//----------gtters and setters--------
 	public SurveyManager getManager() {
 		return manager;
@@ -301,7 +304,7 @@ public class SurveyController {
 	public void setAlls(List<Comment> alls) {
 		this.alls = alls;
 	}
-	
+
 	public Comment getMyComment() {
 		return myComment;
 	}
@@ -309,11 +312,11 @@ public class SurveyController {
 	public void setMyComment(Comment myComment) {
 		this.myComment = myComment;
 	}
-	
+
 	public List<Choice> getDroppedChoices() {
 		return droppedChoices;
 	}
-	
+
 	public void setDroppedChoices(List<Choice> droppedChoices) {
 		this.droppedChoices = droppedChoices;
 	}
@@ -342,6 +345,4 @@ public class SurveyController {
 		this.resulat = resulat;
 	}
 
-	
-	
 }

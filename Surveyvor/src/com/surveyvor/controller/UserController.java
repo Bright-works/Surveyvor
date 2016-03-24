@@ -273,7 +273,7 @@ public class UserController implements Serializable {
 			surveyManager.addSurvey(survey);
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			facesContext.addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "Le sondage a bien ŽtŽ enregistrŽ !", ""));
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Le sondage a bien ï¿½tï¿½ enregistrï¿½ !", ""));
 			
 			String title = survey.getTitle();
 			reset();
