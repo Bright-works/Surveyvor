@@ -96,10 +96,10 @@ public class SurveyManager {
 				.setParameter("id_S",id_survey).getResultList();
 	}
 
-	public Collection<Answer> allAnswers(Survey survey) {
+	public Collection<Answer> allAnswers(Question question) {
 		TypedQuery<Answer> a = em.createQuery("SELECT DISTINCT a FROM Answer a WHERE a.question.survey.Id = :id",
 				Answer.class);
-		return a.setParameter("id", survey.getId()).getResultList();
+		return a.setParameter("id", question.getId()).getResultList();
 	}
 	
 	public Long getNumberAnswers(Survey survey){
@@ -115,7 +115,7 @@ public class SurveyManager {
 		}
 		return max;
 	}
-
+	
 	public Collection<Survey> findJustEndedSurveys() {
 		System.out.println("Checking if there are ended surveys");
 

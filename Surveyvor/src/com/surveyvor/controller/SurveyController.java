@@ -59,7 +59,6 @@ public class SurveyController {
 	private List<Result> resulat=new ArrayList<Result>();
 	private Answer answer=new Answer();
 	private int algo;
-	
 	public SurveyController() {	
 	}
 
@@ -67,7 +66,31 @@ public class SurveyController {
 	public void init() {
 		System.out.println("CREATING " + this);
 	}
+	
+	
+	
 	//------------ Methodes--------
+	
+	private Choice getChoiceByID(Question q,Long id){
+		Choice choice=new Choice();
+		for(int i=0;i<q.getChoices().size();i++){
+			if(q.getChoices().get(i).getId()==id){
+				return q.getChoices().get(i);
+			}
+		}
+		return choice;
+	}
+	/*
+	private void chargerResult(Map<Long, List<User>> res){
+		for(int i=0;i<selected.getQuestions().get(0).getChoices().size();i++){
+			Choice ch=selected.getQuestions().get(0).getChoices(0)
+			e.setChoix(getChoiceByID(selected.getQuestions().get(0)),res.get(key));
+			e.setUser(ans.getAnswerer());
+			resulat.add(e);
+		}
+	}
+	*/
+	
 	public void generateResult(){
 		ResultGeneratorStrategyContext algoContext = new ResultGeneratorStrategyContext();
 		try{
@@ -77,17 +100,18 @@ public class SurveyController {
 			else{
 				algoContext.setStrategy(new GaleShapley());	
 			}
+			System.out.println("-----------"+selected.getQuestions().get(0).getListAnswers().size());
 			Map<Long, List<User>> result=algoContext.GeneratorStrategy(selected, selected.getQuestions().get(0).getListAnswers());
-			System.out.println(result.get(selected.getQuestions().get(0).getAnswer().getChoix().getId()));
+			System.out.println("-----------"+result.size()); 
 			
 		}catch(Exception exp){
-			
+			exp.printStackTrace();
 		}
 	}
 	
 	public void updateDateSurvey(){
 		manager.updateSurvey(selected);
-		FacesContext facesContext = FacesContext.getCurrentInstance();
+		FacesContext facesContext = FacesContext.getCurrentInstance(); 
 		facesContext.addMessage(null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, "Date est modifiée", ""));
 	}
@@ -128,6 +152,7 @@ public class SurveyController {
 	}
 	
 	public void prepareAnswers() {
+		if(selected.getType().equals(TypeSurvey.REPARTITION)){
 		  if (selected.getQuestions() != null) {
 		   int size = selected.getQuestions().size();
 		   for (int i = 0; i < size; i++) {
@@ -138,7 +163,8 @@ public class SurveyController {
 		    selected.getQuestions().get(i).setAnswer(ans);
 		   }
 		  }
-		 }
+		}
+	}
 	
 	public String addAnswers(){
 		if(selected.getType().equals(TypeSurvey.REPARTITION)){
@@ -151,7 +177,9 @@ public class SurveyController {
 			ans.setValeurs(resultats);
 			ans.setDate(new Date());
 			ans.setQuestion(selected.getQuestions().get(0));;
-			manager.repondreSondage(ans);
+			//manager.repondreSondage(ans);
+			selected.getQuestions().get(0).getListAnswers().add(ans);
+			manager.updateSurvey(selected);
 		}
 		else{
 			for(int i=0;i<selected.getQuestions().size();i++)
@@ -165,13 +193,15 @@ public class SurveyController {
 				if(q.getParametres().getSeveralAnswers()==false && q.getParametres().getWritable()==false){
 					ans.getChoices().add(ans.getChoix());
 				}
-				manager.repondreSondage(ans);
+				selected.getQuestions().get(i).getListAnswers().add(ans);
+				manager.updateSurvey(selected);
+				//manager.repondreSondage(ans);
 			}
 		}
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," Merci pour votre participation !",""));
 
-		return "/index.xhtml?faces-redirect=true";
+		return null;//"/index.xhtml?faces-redirect=true";
 
 	}
 	public void allComments() {
@@ -238,7 +268,7 @@ public class SurveyController {
 		userController.getUser().getOwnedSurveys().remove(index);
 		userController.userManager.update(userController.getUser());
 		FacesContext facesContext = FacesContext.getCurrentInstance();
-		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, s.getTitle() +" est bien supprimÔøΩ!",""));
+		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, s.getTitle() +" est bien supprimé",""));
 	}
 
 	public void onChoiceDrop(DragDropEvent ddEvent) {
@@ -338,6 +368,7 @@ public class SurveyController {
 	}
 
 	public List<Result> getResulat() {
+		//chargerResult();
 		return resulat;
 	}
 

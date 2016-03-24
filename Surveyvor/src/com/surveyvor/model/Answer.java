@@ -4,8 +4,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -54,7 +56,7 @@ public class Answer {
 	
 	
 	@Valid
-	@ManyToMany
+	@ManyToMany(fetch=FetchType.EAGER,cascade = CascadeType.REMOVE)
 	private List<Choice> choices;
 	//
 	@ElementCollection

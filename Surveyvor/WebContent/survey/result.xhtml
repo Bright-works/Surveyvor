@@ -35,8 +35,8 @@
 					
 					<c:if test="#{surveyBean.selected.type eq 'REPARTITION'}">
 						
-						<p:dataTable rows="15" selectionMode="single" paginatorAlwaysVisible="false" paginator="true"
-						emptyMessage="Aucun résultat généré" editable="true" >
+						<p:dataTable value="#{surveyBean.resulat}" rows="15" selectionMode="single" paginatorAlwaysVisible="false" paginator="true"
+						emptyMessage="Aucun résultat généré" var="res" editable="true" >
 							<f:facet name="header">
 								Liste des participations
 							</f:facet>
@@ -52,13 +52,13 @@
 						            </h:commandLink>
 						        </f:facet>
 							<p:column headerText="Nom" exportable="true">
-								<h:outputText />
+								<h:outputText value="#{res.user.name}" />
 							</p:column>
 							<p:column headerText="Prénom" exportable="true">
-								<h:outputText />
+								<h:outputText value="#{res.user.lastName}" />
 							</p:column>
 							<p:column headerText="Option" exportable="true">
-								<h:outputText />
+								<h:outputText value="#{res.choix.label}" />
 							</p:column>
 						</p:dataTable>
 						<br/><br/>
@@ -89,7 +89,7 @@
 							</div>
 							<div class="col-md-4">
 								
-								<p:commandButton styleClass="btn orange" value="Générer les résultats"/>
+								<p:commandButton ajax="false" action="#{surveyBean.generateResult}" styleClass="btn orange" value="Générer les résultats"/>
 							</div>
 						</div>
 					</p:fieldset>

@@ -54,7 +54,7 @@
 								<c:if test="#{surveyBean.selected.type eq 'REPARTITION'}">
 									<div class="box-body" style="text-align: left;">
 										<h4>#{question.contenu}</h4>
-										<p:orderList value="#{question.choices}"
+										<p:orderList value="#{question.answer.choices}"
 											itemLabel="#{choice.label}" itemValue="#{choice}"
 											var="choice" controlsLocation="right" responsive="true">
 

@@ -12,7 +12,7 @@ public class ResultGeneratorStrategyContext {
 	private IResultGeneratorStrategy<List<User>> strategy;
 	
 	public void setStrategy(IResultGeneratorStrategy<List<User>> strategy){
-		
+		this.strategy= strategy;
 	}
 	
 	public Map<Long, List<User>>   GeneratorStrategy(Survey survey, List<Answer> answers) throws Exception {
