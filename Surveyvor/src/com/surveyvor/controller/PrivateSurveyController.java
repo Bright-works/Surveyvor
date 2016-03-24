@@ -1,7 +1,6 @@
 package com.surveyvor.controller;
 
 import java.nio.charset.StandardCharsets;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +16,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 
 import com.surveyvor.manager.SurveyManager;
+import com.surveyvor.model.Choice;
 import com.surveyvor.model.Question;
 import com.surveyvor.model.Survey;
 import com.surveyvor.model.User;
@@ -90,6 +90,21 @@ public class PrivateSurveyController {
 						}
 					}
 					if(!duplicate){
+						List<Choice> choices = question.getChoices();
+						List<Choice> noduplicateChoice = new ArrayList<Choice>();
+						for(Choice choice : choices){
+							boolean duplicateChoice = false;
+							for(Choice c : noduplicateChoice){
+								if(c.getId()==choice.getId()){
+									duplicateChoice = true;
+									break;
+								}
+							}
+							if(!duplicateChoice){
+								noduplicateChoice.add(choice);
+							}
+						}
+						question.setChoices(noduplicateChoice);
 						noduplicate.add(question);
 					}
 				}
@@ -149,6 +164,7 @@ public class PrivateSurveyController {
 				surveyControler.setSelected(new Survey());
 			} else {
 				if (survey.getParametres() != null && survey.getParametres().getPrivateSurvey()) {
+					survey.setDiffusion(surveyManager.getDiffusion(survey));
 					allgood = checkIfInDiffusion(userControler.getUser(), survey);
 				}
 			}

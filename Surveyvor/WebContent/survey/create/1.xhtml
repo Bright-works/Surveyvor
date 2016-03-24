@@ -48,24 +48,25 @@
 							</div>
 						</div>
 						<c:choose>
-						<c:when test="#{userBean.survey.type eq 'OPINION'}">
-							<div class="form-group">
-								<label for="mode" class="col-sm-2 control-label">Confidentialité
-									*</label>
-								<div class="col-sm-10">
-									<p:selectOneRadio value="#{userBean.parameters.privateSurvey}"
-										styleClass="minimal-red" required="true"
-										requiredMessage="Selectionnez le mode d'accès !" id="mode">
-										<f:selectItem itemValue="false" itemLabel="Public" />
-										<f:selectItem itemValue="true" itemLabel="Privé" />
-									</p:selectOneRadio>
+							<c:when test="#{userBean.survey.type eq 'OPINION'}">
+								<div class="form-group">
+									<label for="mode" class="col-sm-2 control-label">Confidentialité
+										*</label>
+									<div class="col-sm-10">
+										<p:selectOneRadio value="#{userBean.parameters.privateSurvey}"
+											styleClass="minimal-red" required="true"
+											requiredMessage="Selectionnez le mode d'accès !" id="mode">
+											<f:selectItem itemValue="false" itemLabel="Public" />
+											<f:selectItem itemValue="true" itemLabel="Privé" />
+											<f:ajax execute="@this" event="change" render="modif" />
+										</p:selectOneRadio>
+									</div>
 								</div>
-							</div>
-						</c:when>
-						<c:otherwise>
-							<input type="hidden" name="#{userBean.parameters.privateSurvey}"
+							</c:when>
+							<c:otherwise>
+								<input type="hidden" name="#{userBean.parameters.privateSurvey}"
 									value="true" />
-						</c:otherwise>
+							</c:otherwise>
 						</c:choose>
 						<div class="form-group">
 							<label for="visibility" class="col-sm-2 control-label">Visibilité
@@ -80,19 +81,23 @@
 								</p:selectOneRadio>
 							</div>
 						</div>
-						<div class="form-group">
-							<label for="modifiable" class="col-sm-2 control-label">Les
-								utilisateurs peuvent-ils modifier leurs réponses ? *</label>
-							<div class="col-sm-10">
-								<p:selectOneRadio value="#{userBean.parameters.questionModify}"
-									required="true"
-									requiredMessage="Selectionnez l'option de modification !"
-									id="modifiable">
-									<f:selectItem itemValue="false" itemLabel="Oui" />
-									<f:selectItem itemValue="true" itemLabel="Non" />
-								</p:selectOneRadio>
-							</div>
-						</div>
+						<h:panelGroup id="modif">
+							<h:panelGroup rendered="#{userBean.parameters.privateSurvey}">
+								<div class="form-group">
+									<label for="modifiable" class="col-sm-2 control-label">Les
+										utilisateurs peuvent-ils modifier leurs réponses ? *</label>
+									<div class="col-sm-10">
+										<p:selectOneRadio
+											value="#{userBean.parameters.questionModify}" required="true"
+											requiredMessage="Selectionnez l'option de modification !"
+											id="modifiable">
+											<f:selectItem itemValue="false" itemLabel="Oui" />
+											<f:selectItem itemValue="true" itemLabel="Non" />
+										</p:selectOneRadio>
+									</div>
+								</div>
+							</h:panelGroup>
+						</h:panelGroup>
 						<input type="hidden" name="${_csrf.parameterName}"
 							value="${_csrf.token}" />
 

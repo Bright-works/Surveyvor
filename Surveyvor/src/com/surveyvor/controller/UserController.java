@@ -77,6 +77,11 @@ public class UserController implements Serializable {
 			cal.roll(Calendar.YEAR, true);
 		}
 		survey.setEndDate(new Date(cal.getTimeInMillis()));
+
+		parameters.setPrivateSurvey(true);
+		parameters.setQuestionModify(false);
+
+
 	}
 	
 	public List<Survey> getAllSurveysAnswered() {
@@ -144,9 +149,7 @@ public class UserController implements Serializable {
 		System.out.println("Liste de diffusion: " + tmp.length + " " + email);
 		while (i < tmp.length && allgood) {
 			allgood = verifierEmail(tmp[i]);
-			System.out.println(allgood);
-			diffusionReal.add(tmp[i]);
-			System.out.println(tmp[i]);
+			diffusionReal.add(tmp[i].trim());
 			i++;
 		}
 		if (allgood) {
@@ -253,6 +256,10 @@ public class UserController implements Serializable {
 			cal.roll(Calendar.YEAR, true);
 		}
 		survey.setEndDate(new Date(cal.getTimeInMillis()));
+
+		parameters.setPrivateSurvey(true);
+		parameters.setQuestionModify(false);
+
 		email = "";
 	}
 
