@@ -1,5 +1,6 @@
 package com.surveyvor.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -8,7 +9,10 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ComponentSystemEvent;
+import javax.persistence.PersistenceException;
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.primefaces.event.DragDropEvent;
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
@@ -16,6 +20,7 @@ import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.ChartSeries;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -151,37 +156,44 @@ public class SurveyController {
 	}
 
 	public String addAnswers() {
-		if (selected.getType().equals(TypeSurvey.REPARTITION)) {
-			Answer ans = selected.getQuestions().get(0).getAnswer();
-			ans.setAnswerer(userController.getUser());
-			Map<Long, String> resultats = ans.getValeurs();
-			for (int i = 0; i < ans.getChoices().size(); i++) {
-				resultats.put(ans.getChoices().get(i).getId(), String.valueOf(i));
-			}
-			ans.setValeurs(resultats);
-			ans.setDate(new Date());
-			ans.setQuestion(selected.getQuestions().get(0));
-			;
-			manager.repondreSondage(ans);
-		} else {
-			for (int i = 0; i < selected.getQuestions().size(); i++) {
-				Answer ans = selected.getQuestions().get(i).getAnswer();
-				if (selected.getParametres().getPrivateSurvey()) {
-					ans.setAnswerer(userController.getUser());
+		try {
+
+			if (selected.getType().equals(TypeSurvey.REPARTITION)) {
+				Answer ans = selected.getQuestions().get(0).getAnswer();
+				ans.setAnswerer(userController.getUser());
+				Map<Long, String> resultats = ans.getValeurs();
+				for (int i = 0; i < ans.getChoices().size(); i++) {
+					resultats.put(ans.getChoices().get(i).getId(), String.valueOf(i));
 				}
+				ans.setValeurs(resultats);
 				ans.setDate(new Date());
-				Question q = selected.getQuestions().get(i);
-				ans.setQuestion(q);
-				if (q.getParametres().getSeveralAnswers() == false && q.getParametres().getWritable() == false) {
-					ans.getChoices().add(ans.getChoix());
-				}
+				ans.setQuestion(selected.getQuestions().get(0));
+
 				manager.repondreSondage(ans);
+			} else {
+				for (int i = 0; i < selected.getQuestions().size(); i++) {
+					Answer ans = selected.getQuestions().get(i).getAnswer();
+					if (selected.getParametres().getPrivateSurvey()) {
+						ans.setAnswerer(userController.getUser());
+					}
+					ans.setDate(new Date());
+					Question q = selected.getQuestions().get(i);
+					ans.setQuestion(q);
+					if (q.getParametres().getSeveralAnswers() == false && q.getParametres().getWritable() == false) {
+						ans.getChoices().add(ans.getChoix());
+					}
+					manager.repondreSondage(ans);
+				}
 			}
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, " Merci pour votre participation !", ""));
+		} catch (JpaSystemException | ConstraintViolationException | PersistenceException e) {
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Vous avez déjà répondu à ce sondage.", ""));
 		}
-		FacesContext facesContext = FacesContext.getCurrentInstance();
-		facesContext.addMessage(null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, " Merci pour votre participation !", ""));
-		return "/index.xhtml?faces-redirect=true";
+		return "/index.xhtml";
 
 	}
 
@@ -268,6 +280,20 @@ public class SurveyController {
 
 	public String getAnswerView() {
 		return "reponse.xhtml?faces-redirect=true";
+	}
+
+	public void redirectIndex(ComponentSystemEvent event) {
+		try {
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Vous êtes déjà connecté", ""));
+			facesContext.getExternalContext().getFlash().setKeepMessages(true);
+			facesContext.getExternalContext().redirect("index.xhtml");
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		return;
 	}
 
 	// ----------gtters and setters--------

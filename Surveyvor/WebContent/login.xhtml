@@ -13,6 +13,9 @@
 			<p:graphicImage library="img" width="100%" name="logo1orange.gif"/>
 			<br/>
 			<div class="box box-warning">
+				<c:if test="#{userBean.isConneted()}">
+					<f:event type="preRenderView" listener="#{surveyBean.redirectIndex}"/>
+				</c:if>
 				<div class="box-header with-border" >
 					<h3 style="text-align: center;"><h:outputText value="Authentification"/></h3>
 				</div>

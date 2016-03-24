@@ -57,7 +57,8 @@ public class PublicSurveyController {
 	public String search() {
 		matchingSurveys = new ArrayList<Survey>();
 		for (Survey current : list) {
-			if (current.getTitle().contains(searchString)) {
+			String titleLow = current.getTitle().toLowerCase();
+			if (titleLow.contains(searchString.toLowerCase())) {
 				matchingSurveys.add(current);
 			}
 		}
