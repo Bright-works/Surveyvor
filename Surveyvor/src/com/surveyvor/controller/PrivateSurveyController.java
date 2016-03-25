@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -18,8 +19,12 @@ import org.springframework.stereotype.Controller;
 import com.surveyvor.manager.SurveyManager;
 import com.surveyvor.model.Choice;
 import com.surveyvor.model.Question;
+import com.surveyvor.model.Result;
 import com.surveyvor.model.Survey;
 import com.surveyvor.model.User;
+import com.surveyvor.service.FirstArrived;
+import com.surveyvor.service.GaleShapley;
+import com.surveyvor.service.ResultGeneratorStrategyContext;
 
 @Controller
 @Component("privateSurveyBean")
@@ -32,9 +37,13 @@ public class PrivateSurveyController {
 	@Autowired
 	private SurveyController surveyControler;
 	
+	private List<Result> resulat = new ArrayList<Result>();
+
 	private boolean ready = false;
 
 	private boolean allgood = true;
+	
+	private int algo;
 
 	@PostConstruct
 	public void init() {
@@ -54,6 +63,39 @@ public class PrivateSurveyController {
 		// TODO Auto-generated constructor stub
 	}
 
+	public void generateResult() {
+		GaleShapley galeShapley= new GaleShapley();
+		ResultGeneratorStrategyContext algoContext = new ResultGeneratorStrategyContext();
+		try {
+			if (algo == 0) {
+				algoContext.setStrategy(new FirstArrived());
+			} else {
+				algoContext.setStrategy(new GaleShapley());
+			}
+			System.out.println("le nombre des reponses = "+surveyControler.getSelected().getQuestions().get(0).getListAnswers().get(0).getChoices().size());
+			//System.out.println(result.get(selected.getQuestions().get(0).getAnswer().getChoix().getId()));
+
+			Map<Long, List<User>> result = algoContext.GeneratorStrategy(surveyControler.getSelected(),
+					surveyControler.getSelected().getQuestions().get(0).getListAnswers());
+			resulat = new ArrayList<Result>();
+			
+			for(Entry<Long, List<User>> entry : result.entrySet()) {
+				Long cle = entry.getKey();
+				List<User> valeur = entry.getValue();
+				for(int i=0;i<valeur.size();i++){
+					Result res = new Result();
+					res.setUser(valeur.get(i));
+					res.setChoix(surveyManager.getChoiceByID(cle));
+					resulat.add(res);
+				}
+			}
+			System.out.println("taille resultat = "+resulat.size());
+
+		} catch (Exception exp) {
+			exp.printStackTrace();
+		}
+	}
+	
 	public boolean checkAccess() {
 		System.out.println("Called before anything else");
 		FacesContext context = FacesContext.getCurrentInstance();
@@ -206,6 +248,18 @@ public class PrivateSurveyController {
 	public void setAllgood(boolean allgood) {
 		this.allgood = allgood;
 	}
+	public List<Result> getResulat() {
+		return resulat;
+	}
 
+	public void setResulat(List<Result> resulat) {
+		this.resulat = resulat;
+	}
+	public int getAlgo() {
+		return algo;
+	}
 
+	public void setAlgo(int algo) {
+		this.algo = algo;
+	}
 }

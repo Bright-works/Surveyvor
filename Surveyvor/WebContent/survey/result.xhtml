@@ -36,19 +36,19 @@
 					<c:if test="#{surveyBean.selected.type eq 'REPARTITION'}">
 						
 						<p:dataTable id="result" rows="15" paginatorAlwaysVisible="false" paginator="true"
-						emptyMessage="Aucun résultat généré" editable="true" value="#{surveyBean.resulat}"  var="res" >
+						emptyMessage="Aucun résultat généré" editable="true" value="#{privateSurveyBean.resulat}"  var="res" >
 							<f:facet name="header">
 								Liste des participations
 							</f:facet>
 							    <f:facet name="footer">
 						            <h:commandLink>
 						                <p:graphicImage library="img" name="/pdf-icon.png" width="30"/>
-						                <p:dataExporter encoding="UTF-8" type="pdf" target="result" fileName="sondage#{surveyBean.selected.title}" />
+						                <p:dataExporter encoding="UTF-8" type="pdf" target="result" fileName="sondage #{surveyBean.selected.title}" />
 						            </h:commandLink>
 						            <p:spacer height="0" width="10px"/>
 						            <h:commandLink>
 						                <p:graphicImage library="img" name="/excel_icon.png" width="30"/>
-						                <p:dataExporter encoding="UTF-8" type="xls" target="result" fileName="sondage#{surveyBean.selected.title}" />
+						                <p:dataExporter encoding="UTF-8" type="xls" target="result" fileName="sondage #{surveyBean.selected.title}" />
 						            </h:commandLink>
 						        </f:facet>
 							<p:column headerText="Nom" exportable="true">
@@ -82,14 +82,14 @@
 							<div class="col-md-4">
 								<h5>Quotas : ajoutez le nombre maximal pour chaque choix</h5>
 								<br/>
-								<h:selectOneMenu styleClass="inputs" value="#{surveyBean.algo}">
+								<h:selectOneMenu styleClass="inputs" value="#{privateSurveyBean.algo}">
 					 				<f:selectItem itemLabel="Premier arrivé premier servi" itemValue="0"/>
 									<f:selectItem itemLabel="GaleShapley" itemValue="1"/>
 								 </h:selectOneMenu>
 							</div>
 							<div class="col-md-4">
 								
-								<p:commandButton ajax="false" action="#{surveyBean.generateResult}" update="result"
+								<p:commandButton ajax="false" action="#{privateSurveyBean.generateResult}" update="result"
 								styleClass="btn orange" value="Générer les résultats"/>
 							</div>
 						</div>

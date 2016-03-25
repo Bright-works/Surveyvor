@@ -19,7 +19,7 @@
 			<section class="content">
 				<div class="box box-default" style="text-align: center;">
 					<div class="box-header with-border" >
-						<p:dataTable rows="15" selectionMode="single" paginatorAlwaysVisible="false" paginator="true"
+						<p:dataTable rows="15"  paginatorAlwaysVisible="false" paginator="true"
 						emptyMessage="Vous n'avez participé à aucun sondage" value="#{userBean.mySurvy}" var="survey">
 							<f:facet name="header">
 								Liste des participations
@@ -35,16 +35,7 @@
 							<p:column headerText="Mode de sondage" width="15%">
 								<h:outputText value="#{survey.type}" />
 							</p:column>
-							<p:column headerText="Actions" width="15%">
-								<p:commandButton disabled="#{survey.parameters.questionModify ? 'true' : 'false'}" action="#{userBean.showSurvey}" title="Modifier mes reponses" icon="ui-icon-pencil">
-									<i class="fa fa-edit"></i>
-									<f:setPropertyActionListener value="#{survey}" target="#{surveyBean.selected}"/>
-								</p:commandButton>
-								<p:commandButton icon="ui-icon-update">
-									<i class="fa fa-search"></i>
-									<f:setPropertyActionListener value="" target=""/>
-								</p:commandButton>
-							</p:column>
+							
 						</p:dataTable>
 					</div>
 				</div>

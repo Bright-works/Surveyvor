@@ -1,13 +1,12 @@
 package com.surveyvor.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Random;
-
-import org.springframework.stereotype.Service;
 
 import com.surveyvor.exception.GaleShapleyException;
 import com.surveyvor.exception.QuotatException;
@@ -18,11 +17,10 @@ import com.surveyvor.model.User;
 
 /**
  * 
- * @author Brightworks
- * Algorithm de r�partion Gale-Shapley
+ * @author Sarah Boukris, David Sebban
+ * Algorithme de répartion Gale-Shapley
  *
  */
-@Service
 public class GaleShapley implements IResultGeneratorStrategy<List<User>> {
 
 	/**
@@ -33,26 +31,29 @@ public class GaleShapley implements IResultGeneratorStrategy<List<User>> {
 	@Override
 	public Map<Long, List<User>> generateResult(Survey survey, List<Answer> answers) throws GaleShapleyException, QuotatException {
 
-		if (answers == null || answers.isEmpty() || survey == null)
+		if (answers == null || survey == null || survey.getEndDate().after(new Date()))
 			throw new GaleShapleyException();
 
-		List<Choice> choices =answers.get(0).getChoices();
+		Map<Long, List<User>> resultIdChoice = new HashMap<>();
+		if (answers.isEmpty())
+			return resultIdChoice;
+			
+		List<Choice> choices = answers.get(0).getChoices();
 
-		if (choices == null || choices.isEmpty() )
+		if (choices == null || choices.isEmpty())
 			throw new GaleShapleyException();
 		
 		int sum=0;
 		for(int j=0; j<choices.size(); j++)
 			sum = choices.get(j).getQuotat()+sum;
 		if (sum < answers.size())
-			throw new QuotatException();
+			throw new QuotatException("les quotats sont depassé");
 			
 		
 		Map<User, List<Choice>> userPreferChoice = buidPreferUser(answers);
 		Map<Choice, List<User>> choicePreferUser = buildPreferGroup2(choices, answers);
 
 		Map<Choice, List<User>> resultChoice = buildResult(answers, choicePreferUser, userPreferChoice );
-		Map<Long, List<User>> resultIdChoice = new HashMap<>();
 		
 		for(Entry<Choice, List<User>> entry : resultChoice.entrySet()) {
 			Choice cle = entry.getKey();
@@ -61,7 +62,7 @@ public class GaleShapley implements IResultGeneratorStrategy<List<User>> {
 		}
 		
 		if (resultIdChoice.size() != choices.size())
-			throw new GaleShapleyException();
+			throw new GaleShapleyException("verifiez les réponses");
 		
 		return resultIdChoice;
 
@@ -123,11 +124,13 @@ public class GaleShapley implements IResultGeneratorStrategy<List<User>> {
 	}
 
 	/**
-	 * compare the preferences of the list of preference
+	 * 
 	 * @param userCurrent
 	 * @param groupFormed
 	 * @param choicePreferUser
 	 * @param choiceCurrent
+	 * @return vérifie si l'userCurrent est préféré a un autre utilisateur se trouvant dans la liste du choiceCurrent
+	 * retourne la place de cet utilisateur
 	 */
 	private int checkPref(User userCurrent, Map<Choice, List<User>> groupFormed, Map<Choice, List<User>> choicePreferUser, Choice choiceCurrent )
 	{
@@ -154,7 +157,7 @@ public class GaleShapley implements IResultGeneratorStrategy<List<User>> {
 	}
 
 	/**
-	 * change or not a current user
+	 * 
 	 * @param usersPreferedByChoice
 	 * @param userCurrent
 	 * @return copie dun objet dans la liste usp
@@ -174,11 +177,12 @@ public class GaleShapley implements IResultGeneratorStrategy<List<User>> {
 	}
 	
 	/**
-	 * nominate a choice not proposed yet
+	 * 
 	 * @param user
 	 * @param userProposed
 	 * @param userPreferChoice
-	 * @return Choice
+	 * @return un choix qui ne se trouve pas dans userProposed,
+	 * c'est-à-dire un choix qui n'a pas encore était demandé par le user
 	 */
 	private Choice recupChoicePrefNoProp(User user, Map<User, List<Choice>> userProposed, Map<User, List<Choice>> userPreferChoice )
 	{		
@@ -194,9 +198,9 @@ public class GaleShapley implements IResultGeneratorStrategy<List<User>> {
 	}
 
 	/**
-	 * Build for each user his list of prefer choices
+	 * 
 	 * @param answers
-	 * @return Map<User, List<Choice>> 
+	 * @return Map des preférence pour les utilisateur
 	 */
 	private Map<User, List<Choice>> buidPreferUser(List<Answer> answers)throws GaleShapleyException{
 
@@ -207,7 +211,7 @@ public class GaleShapley implements IResultGeneratorStrategy<List<User>> {
 
 		for (int i= 0; i<answers.size(); i++)
 		{
-			if (answers.get(i).getChoices()==null)
+			if (answers.get(i).getChoices()==null || answers.get(i).getChoices().contains(null))
 				throw new GaleShapleyException();
 			
 			if((answers.get(i).getChoices().size() < answers.get(i).getQuestion().getMinChoice()) || (answers.get(i).getChoices().size() > answers.get(i).getQuestion().getMaxChoice()))
@@ -219,23 +223,24 @@ public class GaleShapley implements IResultGeneratorStrategy<List<User>> {
 		for(Entry<User, List<Choice>> entry : userPreferChoice.entrySet()) {
 		    User cle = entry.getKey();
 		    List<Choice> valeur = entry.getValue();
-		    System.out.println("pour le user : " + cle.getLastName());
-		    for (int i=0; i<valeur.size(); i++)
-		    	System.out.print("choix "+ valeur.get(i).getLabel());
-		    System.out.println();
+		   // System.out.println("pour le user : " + cle.getLastName());
+		    //for (int i=0; i<valeur.size(); i++)
+		    //	System.out.print("choix "+ valeur.get(i).getLabel());
+		    //System.out.println();
 		}
 		
 		if (userPreferChoice.size() != answers.size())
-				throw new GaleShapleyException();
+				throw new GaleShapleyException("revisez vos answer");
 
 		return userPreferChoice;
 	}
 
 	/**
-	 * Build for each choice his list of prefer users (completely random)
+	 * 
 	 * @param choices
 	 * @param answers
-	 * @return Map<Choice, List<User>> 
+	 * @return Map des préférances pour les choix 
+	 * complétements aléatoirement
 	 */
 	private Map<Choice, List<User>> buildPreferGroup(List<Choice> choices, List<Answer> answers) {
 
@@ -266,19 +271,20 @@ public class GaleShapley implements IResultGeneratorStrategy<List<User>> {
 		for(Entry<Choice, List<User>> entry : choicePreferUser.entrySet()) {
 		    Choice cle = entry.getKey();
 		    List<User> valeur = entry.getValue();
-		    System.out.println("pr�f�rence choix : " + cle.getLabel());
-		    for (int i=0; i<valeur.size(); i++)
-		    	System.out.println("user "+ valeur.get(i).getName());
+//		    System.out.println("préférence choix : " + cle.getLabel());
+//		    for (int i=0; i<valeur.size(); i++)
+//		    	System.out.println("user "+ valeur.get(i).getName());
 		}
 
 		return choicePreferUser;
 	}
 	
 	/**
-	 * Build for each choice his list of prefer users (according to preferences of user)
+	 * 
 	 * @param choices
 	 * @param answers
-	 * @return Map<Choice, List<User>> 
+	 * @return Map des préférances pour les choix 
+	 * selon l'ordre des préférences des user
 	 */
 	private Map<Choice, List<User>> buildPreferGroup2(List<Choice> choices, List<Answer> answers) throws GaleShapleyException{
 		if (choices == null ||choices.isEmpty() || answers == null ||answers.isEmpty())
@@ -295,10 +301,10 @@ public class GaleShapley implements IResultGeneratorStrategy<List<User>> {
 		for(Entry<Choice, List<User>> entry : choicePreferUser.entrySet()) {
 		    Choice cle = entry.getKey();
 		    List<User> valeur = entry.getValue();
-		    System.out.println("pr�f�rence choix : " + cle.getLabel());
-		    for (int i=0; i<valeur.size(); i++)
-		    	System.out.print("user "+ valeur.get(i).getName());
-		    System.out.println();
+//		    System.out.println("préférence choix : " + cle.getLabel());
+//		    for (int i=0; i<valeur.size(); i++)
+//		    	System.out.print("user "+ valeur.get(i).getName());
+//		    System.out.println();
 		}
 		if (choicePreferUser.size() != choices.size())
 			throw new GaleShapleyException();
@@ -307,10 +313,10 @@ public class GaleShapley implements IResultGeneratorStrategy<List<User>> {
 	}
 	
 	/**
-	 * For a specific user build his list of prefer users
+	 * 
 	 * @param choice
 	 * @param answers
-	 * @return List<User>
+	 * @return ordre de préférences pour un choice
 	 * @throws GaleShapleyException 
 	 */
 	private List<User> buildPreferForOneGroup(Choice choice, List<Answer> answers) throws GaleShapleyException {
@@ -348,6 +354,9 @@ public class GaleShapley implements IResultGeneratorStrategy<List<User>> {
 			}
 		}			
 		
+		for(int i=0; i < answersClone.size(); i++)
+			usersPrefer.add(answersClone.get(i).getAnswerer());
+			
 		if (usersPrefer.size() != answers.size())
 			throw new GaleShapleyException();
 		

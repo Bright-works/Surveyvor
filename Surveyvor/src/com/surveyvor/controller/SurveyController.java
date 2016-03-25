@@ -39,9 +39,6 @@ import com.surveyvor.model.Result;
 import com.surveyvor.model.Survey;
 import com.surveyvor.model.TypeSurvey;
 import com.surveyvor.model.User;
-import com.surveyvor.service.FirstArrived;
-import com.surveyvor.service.GaleShapley;
-import com.surveyvor.service.ResultGeneratorStrategyContext;
 
 @Controller
 @Component("surveyBean")
@@ -68,9 +65,7 @@ public class SurveyController {
 	private List<Choice> droppedChoices = new ArrayList<Choice>();
 
 	private List<Survey> invitations = new ArrayList<Survey>();
-	private List<Result> resulat = new ArrayList<Result>();
 	private Answer answer = new Answer();
-	private int algo;
 
 	public SurveyController() {
 	}
@@ -81,38 +76,7 @@ public class SurveyController {
 	}
 
 	// ------------ Methodes--------
-	public void generateResult() {
-		GaleShapley galeShapley= new GaleShapley();
-		ResultGeneratorStrategyContext algoContext = new ResultGeneratorStrategyContext();
-		try {
-			if (algo == 0) {
-				algoContext.setStrategy(new FirstArrived());
-			} else {
-				algoContext.setStrategy(new GaleShapley());
-			}
-			System.out.println("le nombre des reponses = "+selected.getQuestions().get(0).getListAnswers().get(0).getChoices().size());
-			//System.out.println(result.get(selected.getQuestions().get(0).getAnswer().getChoix().getId()));
-
-			Map<Long, List<User>> result = algoContext.GeneratorStrategy(selected,
-					selected.getQuestions().get(0).getListAnswers());
-			resulat = new ArrayList<Result>();
-			
-			for(Entry<Long, List<User>> entry : result.entrySet()) {
-				Long cle = entry.getKey();
-				List<User> valeur = entry.getValue();
-				for(int i=0;i<valeur.size();i++){
-					Result res = new Result();
-					res.setUser(valeur.get(i));
-					res.setChoix(manager.getChoiceByID(cle));
-					resulat.add(res);
-				}
-			}
-			System.out.println("taille resultat = "+resulat.size());
-
-		} catch (Exception exp) {
-			exp.printStackTrace();
-		}
-	}
+	
 
 	public void updateDateSurvey() {
 		manager.updateSurvey(selected);
@@ -334,13 +298,7 @@ public class SurveyController {
 		return list;
 	}
 
-	public int getAlgo() {
-		return algo;
-	}
 
-	public void setAlgo(int algo) {
-		this.algo = algo;
-	}
 
 	public void setList(List<Survey> list) {
 		this.list = list;
@@ -403,14 +361,6 @@ public class SurveyController {
 
 	public void setAnswer(Answer answer) {
 		this.answer = answer;
-	}
-
-	public List<Result> getResulat() {
-		return resulat;
-	}
-
-	public void setResulat(List<Result> resulat) {
-		this.resulat = resulat;
 	}
 
 	/**
