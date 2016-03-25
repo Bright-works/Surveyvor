@@ -59,7 +59,7 @@ public class Question implements Serializable {
 	private int maxChoice;
 
 	@Valid
-	@OneToMany(orphanRemoval = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "Id_Question")
 	private List<Choice> choices;
 

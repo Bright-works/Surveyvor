@@ -81,6 +81,7 @@ public class SurveyController {
 
 	// ------------ Methodes--------
 	public void generateResult() {
+		GaleShapley galeShapley= new GaleShapley();
 		ResultGeneratorStrategyContext algoContext = new ResultGeneratorStrategyContext();
 		try {
 			if (algo == 0) {
@@ -88,12 +89,14 @@ public class SurveyController {
 			} else {
 				algoContext.setStrategy(new GaleShapley());
 			}
-			Map<Long, List<User>> result = algoContext.GeneratorStrategy(selected,
+			System.out.println("le nombre des reponses = "+selected.getQuestions().get(0).getListAnswers().get(0).getChoices().size());
+			//System.out.println(result.get(selected.getQuestions().get(0).getAnswer().getChoix().getId()));
+
+			Map<Long, List<User>> result = galeShapley.generateResult(selected,
 					selected.getQuestions().get(0).getListAnswers());
-			System.out.println(result.get(selected.getQuestions().get(0).getAnswer().getChoix().getId()));
 
 		} catch (Exception exp) {
-
+			exp.printStackTrace();
 		}
 	}
 
@@ -156,7 +159,7 @@ public class SurveyController {
 	}
 
 	public String addAnswers() {
-		try {
+	 	try {
 
 			if (selected.getType().equals(TypeSurvey.REPARTITION)) {
 				Answer ans = selected.getQuestions().get(0).getAnswer();
@@ -166,6 +169,7 @@ public class SurveyController {
 					resultats.put(ans.getChoices().get(i).getId(), String.valueOf(i));
 				}
 				ans.setValeurs(resultats);
+				ans.setChoices(selected.getQuestions().get(0).getChoices());
 				ans.setDate(new Date());
 				ans.setQuestion(selected.getQuestions().get(0));
 

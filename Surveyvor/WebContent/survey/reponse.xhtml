@@ -54,10 +54,10 @@
 								<c:if test="#{surveyBean.selected.type eq 'REPARTITION'}">
 									<div class="box-body" style="text-align: left;">
 										<h4>#{question.contenu}</h4>
-										<p:orderList value="#{question.choices}"
-											itemLabel="#{choice.label}" itemValue="#{choice}"
+										<p:dataTable value="#{question.choices}" disabledTextSelection="tu a fait ta selection"
+											itemLabel="#{choice.label}" itemValue="#{choice}" draggableRows="true"
 											var="choice" controlsLocation="right" responsive="true">
-
+											
 											<f:facet name="caption">Choisir par priorité les options par (drag and drop) ou par les fléches</f:facet>
 
 											<p:column style="width:5%">
@@ -65,10 +65,10 @@
 													name="drag-drop.png" />
 											</p:column>
 
-											<p:column>
+											<p:column sortBy="#{choice.label}">
 												<h:outputText value="#{choice.label}" />
 											</p:column>
-										</p:orderList>
+										</p:dataTable>
 									</div>
 								</c:if>
 								<!-- Cas d'un sondage d'opinion  -->
