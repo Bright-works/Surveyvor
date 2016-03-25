@@ -13,6 +13,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.mail.MessagingException;
+import javax.persistence.NoResultException;
 
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,11 +94,25 @@ public class UserController implements Serializable {
 			return "../reponse.xhtml?faces-redirect=true";
 	}
 	
-	public void updateUser(){
-		userManager.update(user);
-		FacesContext facesContext = FacesContext.getCurrentInstance();
-		facesContext.addMessage(null,
-				new FacesMessage(FacesMessage.SEVERITY_INFO, "les informations sont modifiŽs", ""));
+	public String updateUser(){
+		
+		try {
+			User existed = userManager.findByMail(user.getMail());
+			if (existed.getId() > 0) {
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				facesContext.addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_FATAL, "L'adresse email est dï¿½jï¿½ utilisï¿½e !", ""));
+				return "edit.xhtml";
+			}
+				
+			}catch(NoResultException expt){
+				userManager.update(user);
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				facesContext.addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO, "les informations sont modifiï¿½s", ""));
+			}
+		return "login.xhtml?faces-redirect=true";
+		
 	}
 	public TypeSurvey[] getTypes() {
 		return TypeSurvey.values();
@@ -311,8 +326,8 @@ public class UserController implements Serializable {
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			facesContext.addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Il y a eu une erreur lors de l'envoi en base de donnŽes,"
-							+ " vous avez probablement oubliŽ de remplir des champs",
+							"Il y a eu une erreur lors de l'envoi en base de donnï¿½es,"
+							+ " vous avez probablement oubliï¿½ de remplir des champs",
 							""));
 			e.printStackTrace();
 			return "1.xhtml?faces-redirect=true";
