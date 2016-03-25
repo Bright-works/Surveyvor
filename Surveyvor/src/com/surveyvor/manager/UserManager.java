@@ -18,8 +18,7 @@ import com.surveyvor.model.User;
 
 /**
  * 
- * @author Brightworks
- * all methods related to a user
+ * @author Brightworks all methods related to a user
  *
  */
 
@@ -56,6 +55,7 @@ public class UserManager// implements IUser{
 
 	/**
 	 * add user to databases
+	 * 
 	 * @param user
 	 */
 	public void add(User user) {
@@ -64,6 +64,7 @@ public class UserManager// implements IUser{
 
 	/**
 	 * update user in databases
+	 * 
 	 * @param user
 	 */
 	public void update(User user) {
@@ -72,6 +73,7 @@ public class UserManager// implements IUser{
 
 	/**
 	 * find all users in databases
+	 * 
 	 * @return
 	 */
 	public Collection<User> findUsers() {
@@ -80,6 +82,7 @@ public class UserManager// implements IUser{
 
 	/**
 	 * find a specific user in databases (by the id)
+	 * 
 	 * @param id
 	 * @return
 	 */
@@ -89,6 +92,7 @@ public class UserManager// implements IUser{
 
 	/**
 	 * remove user from databases
+	 * 
 	 * @param id
 	 */
 	public void removeUser(long id) {
@@ -98,6 +102,7 @@ public class UserManager// implements IUser{
 
 	/**
 	 * find a specific user in databases (by the mail)
+	 * 
 	 * @param mail
 	 * @return
 	 */
@@ -108,7 +113,20 @@ public class UserManager// implements IUser{
 	}
 
 	/**
+	 * Check if the given mail already exists in the database
+	 * 
+	 * @param mail
+	 * @return true if mail exists, else false
+	 */
+	public boolean checkMail(String mail) {
+		TypedQuery<Long> p = em.createQuery("SELECT COUNT(u) FROM User u WHERE u.mail = :mail", Long.class);
+		Long count = p.setParameter("mail", mail).getSingleResult();
+		return count > 0;
+	}
+
+	/**
 	 * find all surveys created by a specific user
+	 * 
 	 * @param id
 	 * @return
 	 */
@@ -121,10 +139,11 @@ public class UserManager// implements IUser{
 
 	/**
 	 * find all surveys answered by a specific user
+	 * 
 	 * @param user
 	 * @return
 	 */
-	
+
 	public Collection<Survey> allSurveysAnswered(User user) {
 
 		TypedQuery<Survey> p = em
@@ -134,18 +153,20 @@ public class UserManager// implements IUser{
 
 	/**
 	 * find all surveys invited by a specific user
+	 * 
 	 * @param user
 	 * @return
 	 */
-	
+
 	public Collection<Survey> allSurveysInvited(User user) {
 
 		TypedQuery<Survey> p = em.createQuery("SELECT s FROM Survey s WHERE :mail MEMBER OF s.diffusion", Survey.class);
 		return p.setParameter("mail", user.getMail()).getResultList();
 	}
-	
+
 	/**
 	 * add one comment
+	 * 
 	 * @param comment
 	 */
 	public void addComment(Comment comment) {
