@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.persistence.NoResultException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -112,10 +113,11 @@ public class LoginController implements Serializable {
 			try {
 				User existed = userManager.findByMail(user.getMail());
 				if (existed.getId() > 0) {
-					user = new User();
 					FacesContext facesContext = FacesContext.getCurrentInstance();
 					facesContext.addMessage(null,
 							new FacesMessage(FacesMessage.SEVERITY_FATAL, "L'adresse email est déjà utilisée !", ""));
+					return "register.xhtml";
+					
 				}
 			}
 			catch(NoResultException expt){
@@ -212,7 +214,7 @@ public class LoginController implements Serializable {
 			}
 			else{
 				FacesContext facesContext = FacesContext.getCurrentInstance();
-			    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Les deux nouveaux mots de passe ne sont indentiques!",""));
+			    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Les deux nouveaux mots de passe ne sont pas identiques!",""));
 			
 			}
 		}
@@ -223,6 +225,14 @@ public class LoginController implements Serializable {
 		}
 		return "./edit.xhml?faces-redirect=true";
 	}
+	
+	public void checkMail(AjaxBehaviorEvent e){
+		if(userManager.checkMail(user.getMail())){
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+		    facesContext.addMessage("register:mail2", new FacesMessage(FacesMessage.SEVERITY_ERROR, "L'adresse mail existe déjà",""));
+		}
+	}
+	
 	//--------------------- getter and setters -------------//
 	public User getUser() {
 		return user;

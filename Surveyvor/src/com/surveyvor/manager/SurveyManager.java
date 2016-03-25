@@ -93,6 +93,13 @@ public class SurveyManager {
 		em.createQuery("delete Comment c where c.survey.Id=:id").setParameter("id", survey.getId()).executeUpdate();
 	}
 
+	public void removeAllChoicesOfSurvey(Survey survey) {
+		for(Question q : survey.getQuestions()){
+
+			em.createQuery("delete Choice c where c.question.Id_Question=:id)").setParameter("id", q.getId()).executeUpdate();
+		}
+	}
+	
 	public List<Comment> getallCommentBySurvey(long id_survey) {
 		return em.createQuery("Select c from Comment c where c.survey.Id=:id_S", Comment.class)
 				.setParameter("id_S", id_survey).getResultList();

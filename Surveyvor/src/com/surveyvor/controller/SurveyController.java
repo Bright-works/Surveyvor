@@ -81,7 +81,7 @@ public class SurveyController {
 
 	// ------------ Methodes--------
 	public void generateResult() {
-		GaleShapley galeShapley= new GaleShapley();
+		GaleShapley galeShapley = new GaleShapley();
 		ResultGeneratorStrategyContext algoContext = new ResultGeneratorStrategyContext();
 		try {
 			if (algo == 0) {
@@ -89,8 +89,9 @@ public class SurveyController {
 			} else {
 				algoContext.setStrategy(new GaleShapley());
 			}
-			System.out.println("le nombre des reponses = "+selected.getQuestions().get(0).getListAnswers().get(0).getChoices().size());
-			//System.out.println(result.get(selected.getQuestions().get(0).getAnswer().getChoix().getId()));
+			System.out.println("le nombre des reponses = "
+					+ selected.getQuestions().get(0).getListAnswers().get(0).getChoices().size());
+			// System.out.println(result.get(selected.getQuestions().get(0).getAnswer().getChoix().getId()));
 
 			Map<Long, List<User>> result = galeShapley.generateResult(selected,
 					selected.getQuestions().get(0).getListAnswers());
@@ -159,7 +160,7 @@ public class SurveyController {
 	}
 
 	public String addAnswers() {
-	 	try {
+		try {
 
 			if (selected.getType().equals(TypeSurvey.REPARTITION)) {
 				Answer ans = selected.getQuestions().get(0).getAnswer();
@@ -262,15 +263,22 @@ public class SurveyController {
 			}
 		}
 		manager.removeCommentAllOfSurvey(s);
+		manager.removeAllChoicesOfSurvey(s);
 		manager.removeSurvey(s.getId());
 		userController.getUser().getOwnedSurveys().remove(index);
 		userController.userManager.update(userController.getUser());
-		
-		//Update user
+
+		// Update user
 		User user = userController.getUser();
 		UserManager um = userController.getUserManager();
 		userController.setUser(um.findUser(user.getId()));
-		
+
+		// Refresh public list on publicsurveycontroler
+		FacesContext context = FacesContext.getCurrentInstance();
+		PublicSurveyController psv = context.getApplication().evaluateExpressionGet(context, "#{publicSurveyBean}",
+				PublicSurveyController.class);
+		psv.refreshList();
+
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		facesContext.addMessage(null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, s.getTitle() + " est bien supprimï¿½!", ""));
@@ -295,8 +303,7 @@ public class SurveyController {
 	public void redirectIndex(ComponentSystemEvent event) {
 		try {
 			FacesContext facesContext = FacesContext.getCurrentInstance();
-			facesContext.addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Vous êtes déjà connecté", ""));
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Vous êtes déjà connecté", ""));
 			facesContext.getExternalContext().getFlash().setKeepMessages(true);
 			facesContext.getExternalContext().redirect("index.xhtml");
 		} catch (IOException e1) {

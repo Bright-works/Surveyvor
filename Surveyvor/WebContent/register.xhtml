@@ -28,21 +28,23 @@
 						<p:messages showDetail="false" />
 						<p:inputText id="prenom" styleClass="inputs"
 							value="#{loginBean.user.lastName}" placeholder="Prénom"
-							requiredMessage="Le prénom est obligatoir" required="true" />
+							requiredMessage="Le prénom est obligatoire" required="true" />
 						<br />
 						<p:inputText styleClass="inputs" id="nom"
 							value="#{loginBean.user.name}"
-							requiredMessage="Le nom est obligatoir" placeholder="Nom"
+							requiredMessage="Le nom est obligatoire" placeholder="Nom"
 							required="true" />
 						<br />
 						<p:inputText styleClass="inputs" type="email" id="mail2"
 							value="#{loginBean.user.mail}" placeholder="Adresse E-mail"
-							required="required" />
+							required="required">
+
+						</p:inputText>
 						<br />
 						<p:password feedback="true" styleClass="inputs" id="password2"
 							value="#{loginBean.user.password}" placeholder="Mot de passe"
 							required="required"
-							requiredMessage="Le mot de passe et obligatoir">
+							requiredMessage="Le mot de passe est obligatoire">
 							<f:validateLength minimum="8" for="password2" />
 						</p:password>
 						<br />
@@ -60,7 +62,7 @@
 							value="Inscription" />
 						<p:separator />
 						<p>
-							Déja membre ?
+							Déjà membre ?
 							<p:spacer height="0px" width="50%" />
 							<a href="./login.xhtml">Connexion</a>
 						</p>
