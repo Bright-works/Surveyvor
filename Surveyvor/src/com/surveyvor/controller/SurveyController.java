@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -92,8 +93,21 @@ public class SurveyController {
 			System.out.println("le nombre des reponses = "+selected.getQuestions().get(0).getListAnswers().get(0).getChoices().size());
 			//System.out.println(result.get(selected.getQuestions().get(0).getAnswer().getChoix().getId()));
 
-			Map<Long, List<User>> result = galeShapley.generateResult(selected,
+			Map<Long, List<User>> result = algoContext.GeneratorStrategy(selected,
 					selected.getQuestions().get(0).getListAnswers());
+			resulat = new ArrayList<Result>();
+			
+			for(Entry<Long, List<User>> entry : result.entrySet()) {
+				Long cle = entry.getKey();
+				List<User> valeur = entry.getValue();
+				for(int i=0;i<valeur.size();i++){
+					Result res = new Result();
+					res.setUser(valeur.get(i));
+					res.setChoix(manager.getChoiceByID(cle));
+					resulat.add(res);
+				}
+			}
+			System.out.println("taille resultat = "+resulat.size());
 
 		} catch (Exception exp) {
 			exp.printStackTrace();

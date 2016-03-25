@@ -35,30 +35,30 @@
 					
 					<c:if test="#{surveyBean.selected.type eq 'REPARTITION'}">
 						
-						<p:dataTable rows="15" selectionMode="single" paginatorAlwaysVisible="false" paginator="true"
-						emptyMessage="Aucun résultat généré" editable="true" >
+						<p:dataTable id="result" rows="15" paginatorAlwaysVisible="false" paginator="true"
+						emptyMessage="Aucun résultat généré" editable="true" value="#{surveyBean.resulat}"  var="res" >
 							<f:facet name="header">
 								Liste des participations
 							</f:facet>
 							    <f:facet name="footer">
 						            <h:commandLink>
 						                <p:graphicImage library="img" name="/pdf-icon.png" width="30"/>
-						                <p:dataExporter type="pdf" target="tbl" fileName="sondage#{surveyBean.selected.id}" />
+						                <p:dataExporter encoding="UTF-8" type="pdf" target="result" fileName="sondage#{surveyBean.selected.title}" />
 						            </h:commandLink>
 						            <p:spacer height="0" width="10px"/>
 						            <h:commandLink>
 						                <p:graphicImage library="img" name="/excel_icon.png" width="30"/>
-						                <p:dataExporter type="xls" target="tbl" fileName="sondage#{surveyBean.selected.id}" />
+						                <p:dataExporter encoding="UTF-8" type="xls" target="result" fileName="sondage#{surveyBean.selected.title}" />
 						            </h:commandLink>
 						        </f:facet>
 							<p:column headerText="Nom" exportable="true">
-								<h:outputText />
+								<h:outputText value="#{res.user.name}" />
 							</p:column>
 							<p:column headerText="Prénom" exportable="true">
-								<h:outputText />
+								<h:outputText value="#{res.user.lastName}" />
 							</p:column>
 							<p:column headerText="Option" exportable="true">
-								<h:outputText />
+								<h:outputText value="#{res.choix.label}" />
 							</p:column>
 						</p:dataTable>
 						<br/><br/>
@@ -69,7 +69,7 @@
 								<c:forEach items="#{surveyBean.selected.questions}" var="question">
 								 	<c:forEach var="choice" items="#{question.choices}">
 								 		<div class="col-md-8" >
-								 			<p:outputLabel value="#{choice.label}"/>
+								 			<h:outputLabel value="#{choice.label}"/>
 								 		</div>
 								 		<div class="col-md-4" >
 								 			<p:inputText styleClass="inputs" value="#{choice.quotat}"/>
@@ -89,7 +89,8 @@
 							</div>
 							<div class="col-md-4">
 								
-								<p:commandButton ajax="false" action="#{surveyBean.generateResult}" styleClass="btn orange" value="Générer les résultats"/>
+								<p:commandButton ajax="false" action="#{surveyBean.generateResult}" update="result"
+								styleClass="btn orange" value="Générer les résultats"/>
 							</div>
 						</div>
 					</p:fieldset>

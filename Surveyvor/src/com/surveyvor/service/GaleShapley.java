@@ -19,7 +19,7 @@ import com.surveyvor.model.User;
 /**
  * 
  * @author Brightworks
- * Algorithm de r√©partion Gale-Shapley
+ * Algorithm de répartion Gale-Shapley
  *
  */
 @Service
@@ -36,7 +36,7 @@ public class GaleShapley implements IResultGeneratorStrategy<List<User>> {
 		if (answers == null || answers.isEmpty() || survey == null)
 			throw new GaleShapleyException();
 
-		List<Choice> choices = answers.get(0).getQuestion().getChoices();
+		List<Choice> choices =answers.get(0).getChoices();
 
 		if (choices == null || choices.isEmpty() )
 			throw new GaleShapleyException();
@@ -266,7 +266,7 @@ public class GaleShapley implements IResultGeneratorStrategy<List<User>> {
 		for(Entry<Choice, List<User>> entry : choicePreferUser.entrySet()) {
 		    Choice cle = entry.getKey();
 		    List<User> valeur = entry.getValue();
-		    System.out.println("pr√©f√©rence choix : " + cle.getLabel());
+		    System.out.println("préférence choix : " + cle.getLabel());
 		    for (int i=0; i<valeur.size(); i++)
 		    	System.out.println("user "+ valeur.get(i).getName());
 		}
@@ -295,7 +295,7 @@ public class GaleShapley implements IResultGeneratorStrategy<List<User>> {
 		for(Entry<Choice, List<User>> entry : choicePreferUser.entrySet()) {
 		    Choice cle = entry.getKey();
 		    List<User> valeur = entry.getValue();
-		    System.out.println("pr√©f√©rence choix : " + cle.getLabel());
+		    System.out.println("préférence choix : " + cle.getLabel());
 		    for (int i=0; i<valeur.size(); i++)
 		    	System.out.print("user "+ valeur.get(i).getName());
 		    System.out.println();

@@ -53,7 +53,11 @@ public class SurveyManager {
 	public void close() {
 		System.out.println("CLOSE SurveyManager = " + this);
 	}
-
+	
+	public Choice getChoiceByID(Long id){
+		return em.find(Choice.class,id);
+	}
+	
 	public List<String> getDiffusion(Survey s) {
 		List<String> result = em
 				.createQuery("SELECT DISTINCT(d) FROM Survey s JOIN s.diffusion d WHERE s.id = :id", String.class)
