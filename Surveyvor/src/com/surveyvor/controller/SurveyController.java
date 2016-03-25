@@ -66,6 +66,8 @@ public class SurveyController {
 
 	private List<Survey> invitations = new ArrayList<Survey>();
 	private Answer answer = new Answer();
+	
+	private List<Choice> choices = new ArrayList<Choice>();
 
 	public SurveyController() {
 	}
@@ -142,11 +144,11 @@ public class SurveyController {
 				Answer ans = selected.getQuestions().get(0).getAnswer();
 				ans.setAnswerer(userController.getUser());
 				Map<Long, String> resultats = ans.getValeurs();
+				ans.setChoices(choices);
 				for (int i = 0; i < ans.getChoices().size(); i++) {
 					resultats.put(ans.getChoices().get(i).getId(), String.valueOf(i));
 				}
 				ans.setValeurs(resultats);
-				ans.setChoices(selected.getQuestions().get(0).getChoices());
 				ans.setDate(new Date());
 				ans.setQuestion(selected.getQuestions().get(0));
 
@@ -382,6 +384,20 @@ public class SurveyController {
 	 */
 	public void setListInvited(List<Survey> listInvited) {
 		this.listInvited = listInvited;
+	}
+
+	/**
+	 * @return the choices
+	 */
+	public List<Choice> getChoices() {
+		return choices;
+	}
+
+	/**
+	 * @param choices the choices to set
+	 */
+	public void setChoices(List<Choice> choices) {
+		this.choices = choices;
 	}
 
 }

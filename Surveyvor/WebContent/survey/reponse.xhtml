@@ -103,7 +103,7 @@
 										<c:if
 											test="#{question.parametres.severalAnswers and !question.parametres.writable}">
 
-											<p:dataTable value="#{question.choices}"
+											<p:dataTable value="#{surveyBean.choices}"
 												rowKey="#{choice.label}"
 												selection="#{question.answer.choices}" var="choice"
 												styleClass="" emptyMessage="Liste est vide">

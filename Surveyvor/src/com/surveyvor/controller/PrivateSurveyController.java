@@ -21,6 +21,7 @@ import com.surveyvor.model.Choice;
 import com.surveyvor.model.Question;
 import com.surveyvor.model.Result;
 import com.surveyvor.model.Survey;
+import com.surveyvor.model.TypeSurvey;
 import com.surveyvor.model.User;
 import com.surveyvor.service.FirstArrived;
 import com.surveyvor.service.GaleShapley;
@@ -162,6 +163,10 @@ public class PrivateSurveyController {
 				// to
 				// it
 				if (survey.getParametres().getPrivateSurvey()) {
+					
+					if(survey.getType().equals(TypeSurvey.REPARTITION)){
+						surveyControler.setChoices(survey.getQuestions().get(0).getChoices());
+					}
 
 					// If he is already connected, he has to be the right one
 					if (userControler.isConneted()) {
