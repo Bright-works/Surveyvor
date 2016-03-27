@@ -96,6 +96,7 @@ public class LoginController implements Serializable {
 		return null;
 
 	}
+	
 
 	public String logout() {
 		user = new User();
@@ -115,7 +116,7 @@ public class LoginController implements Serializable {
 				if (existed.getId() > 0) {
 					FacesContext facesContext = FacesContext.getCurrentInstance();
 					facesContext.addMessage(null,
-							new FacesMessage(FacesMessage.SEVERITY_FATAL, "L'adresse email est dÈj‡ utilisÈe !", ""));
+							new FacesMessage(FacesMessage.SEVERITY_FATAL, "L'adresse email est dÔøΩjÔøΩ utilisÔøΩe !", ""));
 					return "register.xhtml";
 					
 				}
@@ -126,7 +127,7 @@ public class LoginController implements Serializable {
 				user.setPassword(encoder.encode(user.getPassword()));
 				userManager.add(this.user);
 				FacesContext facesContext = FacesContext.getCurrentInstance();
-			    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Vous êtes bien inscrit!",""));	
+			    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Vous ÔøΩtes bien inscrit!",""));	
 			    /*try {
 			        UserDetails userDetails = permissionManager.loadUserByUsername(user.getMail());
 			        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, verifPassword, userDetails.getAuthorities());
@@ -163,7 +164,7 @@ public class LoginController implements Serializable {
 		}
 		else{
 			FacesContext facesContext = FacesContext.getCurrentInstance();
-		    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Vérifier le format d'email",""));
+		    facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "VÔøΩrifier le format d'email",""));
 		}
 		return "/login.xhtml?faces-redirect=true";
 	}
@@ -180,7 +181,7 @@ public class LoginController implements Serializable {
 			return new ModelAndView("resetPassword");
 	} 
 	/**
-	 * Dans le cas d'un mot de passe oublié 
+	 * Dans le cas d'un mot de passe oubliÔøΩ 
 	 * @return
 	 */
 	public String resetPassword(){
@@ -229,7 +230,7 @@ public class LoginController implements Serializable {
 	public void checkMail(AjaxBehaviorEvent e){
 		if(userManager.checkMail(user.getMail())){
 			FacesContext facesContext = FacesContext.getCurrentInstance();
-		    facesContext.addMessage("register:mail2", new FacesMessage(FacesMessage.SEVERITY_ERROR, "L'adresse mail existe dÈj‡",""));
+		    facesContext.addMessage("register:mail2", new FacesMessage(FacesMessage.SEVERITY_ERROR, "L'adresse mail existe dÔøΩjÔøΩ",""));
 		}
 	}
 	

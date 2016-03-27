@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -47,6 +48,7 @@ public class Survey {
 	private String title;  
 	
 	@NotNull
+	@Column(columnDefinition="TEXT")
 	@Size(min = 3)
 	private String description;  
 	

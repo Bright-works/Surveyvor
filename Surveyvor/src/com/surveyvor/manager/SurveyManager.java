@@ -159,6 +159,10 @@ public class SurveyManager {
 		em.remove(survey);
 	}
 
+	public void repondreSondageRepartition(Answer answer) {
+		em.persist(em.merge(answer));
+	}
+	
 	public void repondreSondage(Answer answer) {
 		em.persist(answer);
 	}

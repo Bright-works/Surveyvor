@@ -1,11 +1,12 @@
 package com.surveyvor.controller;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -35,7 +36,6 @@ import com.surveyvor.model.Answer;
 import com.surveyvor.model.Choice;
 import com.surveyvor.model.Comment;
 import com.surveyvor.model.Question;
-import com.surveyvor.model.Result;
 import com.surveyvor.model.Survey;
 import com.surveyvor.model.TypeSurvey;
 import com.surveyvor.model.User;
@@ -44,7 +44,9 @@ import com.surveyvor.model.User;
 @Component("surveyBean")
 @Scope("session")
 @RequestMapping(value = "/Sondage")
-public class SurveyController {
+public class SurveyController implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	@Autowired
 	private SurveyManager manager;
@@ -66,7 +68,7 @@ public class SurveyController {
 
 	private List<Survey> invitations = new ArrayList<Survey>();
 	private Answer answer = new Answer();
-	
+
 	private List<Choice> choices = new ArrayList<Choice>();
 
 	public SurveyController() {
@@ -82,7 +84,7 @@ public class SurveyController {
 	public void updateDateSurvey() {
 		manager.updateSurvey(selected);
 		FacesContext facesContext = FacesContext.getCurrentInstance();
-		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Date est modifiŽe", ""));
+		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Date est modifiï¿½e", ""));
 	}
 
 	public BarChartModel inialisationGraphic(Question q) {
@@ -122,6 +124,7 @@ public class SurveyController {
 			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
 					"Nombre de choix autorisï¿½ n'est pas respectï¿½ !", ""));
 		}
+		System.out.println("au onSelect ##" + question.getAnswer().getChoices().size());
 	}
 
 	public void prepareAnswers() {
@@ -129,53 +132,57 @@ public class SurveyController {
 			int size = selected.getQuestions().size();
 			for (int i = 0; i < size; i++) {
 				List<Choice> listchoix = new ArrayList<Choice>();
-				Answer ans = new Answer();
-				ans.setChoices(listchoix);
-				ans.setChoix(new Choice());
-				selected.getQuestions().get(i).setAnswer(ans);
+				answer = new Answer();
+				answer.setChoices(listchoix);
+				answer.setChoix(new Choice());
+				selected.getQuestions().get(i).setAnswer(answer);
+				choices = selected.getQuestions().get(0).getChoices();
 			}
 		}
 	}
 
 	public String addAnswers() {
-		try {
 
-			if (selected.getType().equals(TypeSurvey.REPARTITION)) {
-				Answer ans = selected.getQuestions().get(0).getAnswer();
+		if (selected.getType().equals(TypeSurvey.REPARTITION)) {
+			Answer ans = selected.getQuestions().get(0).getAnswer();
+			if (selected.getParametres().getPrivateSurvey()) {
 				ans.setAnswerer(userController.getUser());
-				Map<Long, String> resultats = ans.getValeurs();
-				ans.setChoices(choices);
-				for (int i = 0; i < ans.getChoices().size(); i++) {
-					resultats.put(ans.getChoices().get(i).getId(), String.valueOf(i));
-				}
-				ans.setValeurs(resultats);
-				ans.setDate(new Date());
-				ans.setQuestion(selected.getQuestions().get(0));
-
-				manager.repondreSondage(ans);
-			} else {
-				for (int i = 0; i < selected.getQuestions().size(); i++) {
-					Answer ans = selected.getQuestions().get(i).getAnswer();
-					if (selected.getParametres().getPrivateSurvey()) {
-						ans.setAnswerer(userController.getUser());
-					}
-					ans.setDate(new Date());
-					Question q = selected.getQuestions().get(i);
-					ans.setQuestion(q);
-					if (q.getParametres().getSeveralAnswers() == false && q.getParametres().getWritable() == false) {
-						ans.getChoices().add(ans.getChoix());
-					}
-					manager.repondreSondage(ans);
-				}
 			}
-			FacesContext facesContext = FacesContext.getCurrentInstance();
-			facesContext.addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, " Merci pour votre participation !", ""));
-		} catch (JpaSystemException | ConstraintViolationException | PersistenceException e) {
-			FacesContext facesContext = FacesContext.getCurrentInstance();
-			facesContext.addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Vous avez déjà répondu à ce sondage.", ""));
+			ans.setDate(new Date());
+			Question q = selected.getQuestions().get(0);
+			ans.setQuestion(q);
+			if (q.getParametres().getSeveralAnswers() == false && q.getParametres().getWritable() == false) {
+				ans.setChoices(choices);
+			}
+
+			for (int i = 0; i < ans.getChoices().size(); i++) {
+				choices.get(i).setQuestion(selected.getQuestions().get(0));
+			}
+			ans.setChoices(choices);
+			q.getListAnswers().add(ans);
+			selected.getQuestions().set(0, q);
+			manager.updateSurvey(selected);
+		} else {
+			for (int i = 0; i < selected.getQuestions().size(); i++) {
+				Answer ans = selected.getQuestions().get(i).getAnswer();
+				if (selected.getParametres().getPrivateSurvey()) {
+					ans.setAnswerer(userController.getUser());
+				}
+				ans.setDate(new Date());
+				Question q = selected.getQuestions().get(i);
+				ans.setQuestion(q);
+				if (q.getParametres().getSeveralAnswers() == false && q.getParametres().getWritable() == false) {
+					ans.getChoices().add(ans.getChoix());
+				}
+				q.getListAnswers().add(ans);
+				selected.getQuestions().set(0, q);
+				manager.updateSurvey(selected);
+			}
 		}
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		facesContext.addMessage(null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, " Merci pour votre participation !", ""));
+
 		return "/index.xhtml";
 
 	}
@@ -241,7 +248,7 @@ public class SurveyController {
 			}
 		}
 		manager.removeCommentAllOfSurvey(s);
-		manager.removeAllChoicesOfSurvey(s);
+		// manager.removeAllChoicesOfSurvey(s);
 		manager.removeSurvey(s.getId());
 		userController.getUser().getOwnedSurveys().remove(index);
 		userController.userManager.update(userController.getUser());
@@ -281,7 +288,8 @@ public class SurveyController {
 	public void redirectIndex(ComponentSystemEvent event) {
 		try {
 			FacesContext facesContext = FacesContext.getCurrentInstance();
-			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Vous êtes déjà connecté", ""));
+			facesContext.addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Vous ï¿½tes dï¿½jï¿½ connectï¿½", ""));
 			facesContext.getExternalContext().getFlash().setKeepMessages(true);
 			facesContext.getExternalContext().redirect("index.xhtml");
 		} catch (IOException e1) {
@@ -304,8 +312,6 @@ public class SurveyController {
 		getAll();
 		return list;
 	}
-
-
 
 	public void setList(List<Survey> list) {
 		this.list = list;
@@ -394,7 +400,8 @@ public class SurveyController {
 	}
 
 	/**
-	 * @param choices the choices to set
+	 * @param choices
+	 *            the choices to set
 	 */
 	public void setChoices(List<Choice> choices) {
 		this.choices = choices;

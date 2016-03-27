@@ -40,7 +40,7 @@ public class UserController implements Serializable {
 
 	@Autowired
 	SurveyManager surveyManager;
-	
+
 	@Autowired
 	MailSender mailSender;
 
@@ -74,7 +74,7 @@ public class UserController implements Serializable {
 		Calendar cal = new GregorianCalendar();
 		cal.setTimeInMillis(survey.getStartDate().getTime());
 		cal.roll(Calendar.DAY_OF_YEAR, true);
-		if(cal.get(Calendar.DAY_OF_YEAR)==1){
+		if (cal.get(Calendar.DAY_OF_YEAR) == 1) {
 			cal.roll(Calendar.YEAR, true);
 		}
 		survey.setEndDate(new Date(cal.getTimeInMillis()));
@@ -82,38 +82,43 @@ public class UserController implements Serializable {
 		parameters.setPrivateSurvey(true);
 		parameters.setQuestionModify(false);
 
-
 	}
-	
+
 	public List<Survey> getAllSurveysAnswered() {
 		mySurvy = (List<Survey>) userManager.allSurveysAnswered(user);
 		return mySurvy;
 	}
 
 	public String showSurvey() {
-			return "../reponse.xhtml?faces-redirect=true";
+		return "../reponse.xhtml?faces-redirect=true";
 	}
-	
-	public String updateUser(){
-		
+
+	public String updateUser() {
+
 		try {
 			User existed = userManager.findByMail(user.getMail());
-			if (existed.getId() > 0) {
+			if (existed.getId() != user.getId()) {
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_FATAL, "L'adresse email est d�j� utilis�e !", ""));
 				return "edit.xhtml";
-			}
-				
-			}catch(NoResultException expt){
+			} else {
 				userManager.update(user);
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_INFO, "les informations sont modifi�s", ""));
 			}
+
+		} catch (NoResultException expt) {
+			userManager.update(user);
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "les informations sont modifi�s", ""));
+		}
 		return "login.xhtml?faces-redirect=true";
-		
+
 	}
+
 	public TypeSurvey[] getTypes() {
 		return TypeSurvey.values();
 	}
@@ -250,9 +255,9 @@ public class UserController implements Serializable {
 			}
 		}
 	}
-	
-	private void reset(){
-		//Reset
+
+	private void reset() {
+		// Reset
 		survey = new Survey();
 		question = new Question();
 		allquestion = new ArrayList<Question>();
@@ -267,7 +272,7 @@ public class UserController implements Serializable {
 		Calendar cal = new GregorianCalendar();
 		cal.setTimeInMillis(survey.getStartDate().getTime());
 		cal.roll(Calendar.DAY_OF_YEAR, true);
-		if(cal.get(Calendar.DAY_OF_YEAR)==1){
+		if (cal.get(Calendar.DAY_OF_YEAR) == 1) {
 			cal.roll(Calendar.YEAR, true);
 		}
 		survey.setEndDate(new Date(cal.getTimeInMillis()));
@@ -289,14 +294,14 @@ public class UserController implements Serializable {
 		survey.setCreator(user);
 		survey.setQuestions(allquestion);
 		try {
-			
+
 			List<String> diffusion = survey.getDiffusion();
-			
+
 			surveyManager.addSurvey(survey);
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			facesContext.addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO, "Le sondage a bien �t� enregistr� !", ""));
-			
+
 			String title = survey.getTitle();
 			reset();
 
@@ -305,14 +310,14 @@ public class UserController implements Serializable {
 			PublicSurveyController psv = context.getApplication().evaluateExpressionGet(context, "#{publicSurveyBean}",
 					PublicSurveyController.class);
 			psv.refreshList();
-			
-			//Refresh user
+
+			// Refresh user
 			user = userManager.findUser(user.getId());
 
 			List<Survey> ownedSurveys = user.getOwnedSurveys();
 			Survey justAddedSurvey = new Survey();
-			for(int i=0; i<ownedSurveys.size(); i++){
-				if(ownedSurveys.get(i).getTitle().compareTo(title)==0){
+			for (int i = 0; i < ownedSurveys.size(); i++) {
+				if (ownedSurveys.get(i).getTitle().compareTo(title) == 0) {
 					justAddedSurvey = ownedSurveys.get(i);
 				}
 			}
@@ -327,25 +332,24 @@ public class UserController implements Serializable {
 			facesContext.addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
 							"Il y a eu une erreur lors de l'envoi en base de donn�es,"
-							+ " vous avez probablement oubli� de remplir des champs",
+									+ " vous avez probablement oubli� de remplir des champs",
 							""));
 			e.printStackTrace();
 			return "1.xhtml?faces-redirect=true";
 		}
 	}
-	
-	public void sendInvitationMails(Survey survey){
+
+	public void sendInvitationMails(Survey survey) {
 		try {
-			String url = "http://"+Inet4Address.getLocalHost().getHostAddress()+":8080/Surveyvor/survey/reponse.xhtml";
+			String url = "http://" + Inet4Address.getLocalHost().getHostAddress()
+					+ ":8080/Surveyvor/survey/reponse.xhtml";
 			url = url + "?surveyId=" + survey.getId() + "&userId=";
-			
+
 			mailSender.sendInvitation(survey, url);
 		} catch (UnknownHostException | MessagingException e) {
 			FacesContext facesContext = FacesContext.getCurrentInstance();
-			facesContext.addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Il y a eu une erreur lors de l'envoi des messages",
-							""));
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"Il y a eu une erreur lors de l'envoi des messages", ""));
 			e.printStackTrace();
 		}
 	}
@@ -374,7 +378,7 @@ public class UserController implements Serializable {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
+
 	public UserManager getUserManager() {
 		return userManager;
 	}
@@ -458,7 +462,8 @@ public class UserController implements Serializable {
 	}
 
 	/**
-	 * @param currentDate the currentDate to set
+	 * @param currentDate
+	 *            the currentDate to set
 	 */
 	public void setCurrentDate(Date currentDate) {
 		this.currentDate = currentDate;
@@ -468,27 +473,28 @@ public class UserController implements Serializable {
 	 * @return the date just after survey.startDate
 	 */
 	public Date getNexDate() {
-		if(survey.getStartDate()!=null){
+		if (survey.getStartDate() != null) {
 			System.out.println("YES I'M TALKIN' TO YOU!");
 			Calendar cal = new GregorianCalendar();
 			cal.setTimeInMillis(survey.getStartDate().getTime());
 			cal.roll(Calendar.DAY_OF_YEAR, true);
-			if(cal.get(Calendar.DAY_OF_YEAR)==1){
+			if (cal.get(Calendar.DAY_OF_YEAR) == 1) {
 				cal.roll(Calendar.YEAR, true);
 			}
 			nexDate = new Date(cal.getTimeInMillis());
-			if(survey.getEndDate().before(survey.getStartDate())){
+			if (survey.getEndDate().before(survey.getStartDate())) {
 				System.out.println("before");
 				survey.setEndDate(nexDate);
 			}
-		}else{
+		} else {
 			nexDate = new Date();
 		}
 		return nexDate;
 	}
 
 	/**
-	 * @param nexDate the nexDate to set
+	 * @param nexDate
+	 *            the nexDate to set
 	 */
 	public void setNexDate(Date nexDate) {
 		this.nexDate = nexDate;

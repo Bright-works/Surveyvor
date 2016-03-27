@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<h:head>
+	<title>Surveyvor</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1"
+		charset="utf-8" />
+
+	<script type="application/x-javascript">
+		
+		
+addEventListener("load", function() {
+	setTimeout(hideURLbar, 0); }, false);
+function hideURLbar(){ window.scrollTo(0,1); } 
+
+	
+	</script>
+
+	<meta name="keywords"
+		content="Bootstrap Responsive Templates, Iphone Compatible Templates, Smartphone Compatible Templates, Ipad Compatible Templates, Flat Responsive Templates" />
+
+	<h:outputStylesheet library="css2" name="style.css" />
+	<h:outputStylesheet library="css2" name="style1.css" />
+	<h:outputStylesheet library="css2" name="bootstrap.css" />
+
+
+</h:head>
+<h:body>
+	<!--header-->
+	<div class="header">
+		<div class="container">
+			<div class="header-info">
+				<h:form>
+					<input type="hidden" name="${_csrf.parameterName}"
+						value="${_csrf.token}" />
+					<div class="logo">
+						<a href="/Surveyvor/index.xhtml"> <h:graphicImage with="50px"
+								library="img" name="logo1orange.gif" styleClass="img-responsive" />
+						</a>
+					</div>
+					<c:if test="#{userBean.conneted eq false}">
+						<div class="header-right">
+							<div class="menu">
+								<span class="menu">MENU</span>
+								<ul class="navigatoin">
+									<li><p:commandLink
+											styleClass="signup play-icon popup-with-zoom-anim"
+											action="/login.xhtml?faces-redirect=true">Connexion</p:commandLink></li>
+									<li><p:commandLink
+											styleClass="signup play-icon popup-with-zoom-anim"
+											action="/register.xhtml?faces-redirect=true">Inscription</p:commandLink></li>
+								</ul>
+							</div>
+						</div>
+					</c:if>
+					<c:if test="#{userBean.conneted eq true}">
+						<div class="header-right">
+							<div class="menu">
+								<span class="menu">MENU</span>
+								<ul class="navigatoin">
+									<li><h:commandLink
+											styleClass="signup play-icon popup-with-zoom-anim"
+											action="/survey/created.xhtml?faces-redirect=true">Mes informations</h:commandLink></li>
+									<li><h:commandLink
+											styleClass="signup play-icon popup-with-zoom-anim"
+											action="#{loginBean.logout}">Déconnexion</h:commandLink></li>
+								</ul>
+							</div>
+						</div>
+					</c:if>
+				</h:form>
+			</div>
+
+		</div>
+		<div id="Home" class="header-bottom">
+			<div class="container">
+				<div class="h-right">
+					<h2>La page demandé n'est pas accessible</h2>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<!--/header-->
+
+	<!--footer-->
+	<div class="footer">
+		<div class="container">
+			<div class="copy-rights">
+				<p>
+					Created by<a> Brightworks - 2016.</a>
+				</p>
+			</div>
+			<a href="#" id="toTop" style="display: block;"> <span
+				id="toTopHover" style="opacity: 1;"> </span></a>
+		</div>
+	</div>
+	<!--/footer-->
+
+</h:body>
+</html>

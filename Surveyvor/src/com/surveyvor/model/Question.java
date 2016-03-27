@@ -71,7 +71,7 @@ public class Question implements Serializable {
 	private BarChartModel barModel;
 	
 	@Valid
-	@OneToMany (orphanRemoval = true, fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, mappedBy="question")
+	@OneToMany (orphanRemoval = true, fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy="question")
 	private List<Answer>listAnswers;
 
 	@NotNull

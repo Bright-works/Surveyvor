@@ -14,6 +14,16 @@
 		<welcome-file>default.jsp</welcome-file>
 	</welcome-file-list>
 
+	<error-page>
+		<error-code>404</error-code>
+		<location>/exception.xhtml</location>
+	</error-page>
+	<error-page>
+		<exception-type>java.io.FileNotFoundException</exception-type>
+		<location>/exception1.xhtml</location>
+	</error-page>
+
+
 	<context-param>
 		<param-name>javax.faces.PROJECT_STAGE</param-name>
 		<param-value>Development</param-value>
@@ -33,18 +43,18 @@
 
 	<!-- Spring + security Configuration -->
 	<servlet>
-        <servlet-name>Surveyvor</servlet-name>
-        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Surveyvor</servlet-name>
-        <url-pattern>/url/*</url-pattern>
-    </servlet-mapping>
-        <servlet-mapping>
-        <servlet-name>Surveyvor</servlet-name>
-        <url-pattern>/reponse/*</url-pattern>
-    </servlet-mapping>
+		<servlet-name>Surveyvor</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Surveyvor</servlet-name>
+		<url-pattern>/url/*</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>Surveyvor</servlet-name>
+		<url-pattern>/reponse/*</url-pattern>
+	</servlet-mapping>
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>

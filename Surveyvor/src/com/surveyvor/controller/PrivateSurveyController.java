@@ -2,6 +2,7 @@ package com.surveyvor.controller;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -15,6 +16,9 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.security.crypto.codec.Hex;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.surveyvor.manager.SurveyManager;
 import com.surveyvor.model.Choice;
@@ -40,6 +44,8 @@ public class PrivateSurveyController {
 	
 	private List<Result> resulat = new ArrayList<Result>();
 
+	private Map<Long, List<User>> result = new HashMap<Long, List<User>>();
+	
 	private boolean ready = false;
 
 	private boolean allgood = true;
@@ -76,9 +82,18 @@ public class PrivateSurveyController {
 			System.out.println("le nombre des reponses = "+surveyControler.getSelected().getQuestions().get(0).getListAnswers().get(0).getChoices().size());
 			//System.out.println(result.get(selected.getQuestions().get(0).getAnswer().getChoix().getId()));
 
-			Map<Long, List<User>> result = algoContext.GeneratorStrategy(surveyControler.getSelected(),
-					surveyControler.getSelected().getQuestions().get(0).getListAnswers());
+			result = algoContext.GeneratorStrategy(surveyControler.getSelected(),
+					(ArrayList)surveyManager.allAnswers(surveyControler.getSelected()));
 			resulat = new ArrayList<Result>();
+			
+			for(Entry<Long, List<User>> entry : result.entrySet()) {
+			    Long cle = entry.getKey();
+			    List<User> valeur = entry.getValue();
+			    System.out.println("dans le choix : " + cle);
+			    for (int i=0; i<valeur.size(); i++)
+			    	System.out.println("user "+ valeur.get(i).getName());
+			}
+			
 			
 			for(Entry<Long, List<User>> entry : result.entrySet()) {
 				Long cle = entry.getKey();
@@ -180,7 +195,7 @@ public class PrivateSurveyController {
 							FacesContext facesContext = FacesContext.getCurrentInstance();
 							facesContext.addMessage(null,
 									new FacesMessage(FacesMessage.SEVERITY_ERROR,
-											"Vous n'Žtes pas autorisŽ d'accŽder ˆ ce sondage par ce lien. "
+											"Vous n'ï¿½tes pas autorisï¿½ d'accï¿½der ï¿½ ce sondage par ce lien. "
 													+ "Veuillez vous connecter avec le bon compte.",
 											""));
 							survey = new Survey();
@@ -192,7 +207,7 @@ public class PrivateSurveyController {
 						// TODO redirect to login??
 						FacesContext facesContext = FacesContext.getCurrentInstance();
 						facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-								"Vous n'êtes pas autorisé à accéder à ce sondage. " + "Veuillez vous connecter.", ""));
+								"Vous n'ï¿½tes pas autorisï¿½ ï¿½ accï¿½der ï¿½ ce sondage. " + "Veuillez vous connecter.", ""));
 						survey = new Survey();
 						surveyControler.setSelected(survey);
 						allgood = false;
@@ -201,7 +216,7 @@ public class PrivateSurveyController {
 			} else{
 				FacesContext facesContext = FacesContext.getCurrentInstance();
 				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-						"Nous n'avons pas trouvé le sondage auquel vous essayez d'accéder. ", ""));
+						"Nous n'avons pas trouvï¿½ le sondage auquel vous essayez d'accï¿½der. ", ""));
 			}
 
 		} else {
@@ -233,11 +248,12 @@ public class PrivateSurveyController {
 		} else {
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Vous n'êtes pas autorisé à accéder à ce sondage. " + "Veuillez vous connecter avec le bon compte.",
+					"Vous n'ï¿½tes pas autorisï¿½ ï¿½ accï¿½der ï¿½ ce sondage. " + "Veuillez vous connecter avec le bon compte.",
 					""));
 		}
 		return isIn;
 	}
+	
 
 	/**
 	 * @return the allgood

@@ -1,9 +1,11 @@
 package com.surveyvor.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -11,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -32,7 +35,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(name="Answers",uniqueConstraints = {
 		@UniqueConstraint(columnNames = {"Id_Answerer","Id_Question"})})
-public class Answer {
+public class Answer implements Serializable {
 	
 	@Valid
 	@Id
@@ -55,10 +58,12 @@ public class Answer {
 	
 	
 	@Valid
-	@ManyToMany(fetch=FetchType.EAGER)
+	@ManyToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL)
+	@JoinTable(name="Answer_Choices", joinColumns=@JoinColumn(name="Id_Answer"), inverseJoinColumns=@JoinColumn(name="Id_Choice")) 
 	private List<Choice> choices;
+
 	//
-	@ElementCollection
+	@ElementCollection(fetch=FetchType.EAGER)
 	private Map<Long,String> valeurs;
 	
 	private String opinionText;
@@ -96,6 +101,8 @@ public class Answer {
 
 
 	public void setChoices(List<Choice> choices) {
+		for (int i=0; i<choices.size();i++)
+			choices.get(i).setQuestion(question);
 		this.choices = choices;
 	}
 
